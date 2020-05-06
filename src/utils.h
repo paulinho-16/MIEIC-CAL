@@ -2,13 +2,15 @@
 #define CAL_FP05_UTILS_H
 
 #include <iostream>
+#include <fstream>
+#include <sstream>
 
 using namespace std;
 
-void readMap();
+void readMap(string directory);
 
-void readNodes();
-void readEdges();
-void readTags();
+void readNodes(string file_directory);
+void readEdges(string file_directory);
+void readTags(string file_directory);
 
 #endif //CAL_FP05_UTILS_H

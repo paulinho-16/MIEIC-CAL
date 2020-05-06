@@ -1,7 +1,3 @@
-//
-// Created by Mariana Ramos on 06/05/2020.
-//
-
 #include "Restaurante.h"
 
 template<class T>
@@ -27,12 +23,4 @@ Vertex<T> Restaurante<T>::getMorada(){
 template<class T>
 void Restaurante<T>::setMorada(Vertex<T> v){
     this->morada=v;
-}
-template<class T>
-vector<Prato> Restaurante<T>::getPratos(){
-    return pratos;
-}
-template<class T>
-void Restaurante<T>::setPratos(vector<Prato> p){
-    this->pratos=p;
 }

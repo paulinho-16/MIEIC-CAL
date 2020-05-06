@@ -5,6 +5,7 @@
 #define GRAPH_H_
 
 #include <vector>
+#include <iostream>
 #include <queue>
 #include <list>
 #include <limits>

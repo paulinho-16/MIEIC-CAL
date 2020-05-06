@@ -1,18 +1,14 @@
-//
-// Created by Mariana Ramos on 06/05/2020.
-//
-
 #ifndef CAL_FP05_PEDIDO_H
 #define CAL_FP05_PEDIDO_H
 
 #include "Cliente.h"
 #include "Restaurante.h"
 
+template <class T>
 class Pedido {
-    Cliente cliente;
-    Restaurante restaurante;
+    Cliente<T> cliente;
+    Restaurante<T> restaurante;
 
 };
-
 
 #endif //CAL_FP05_PEDIDO_H
