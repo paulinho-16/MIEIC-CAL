@@ -4,6 +4,10 @@
 
 using namespace std;
 
+#include "Restaurante.h"
+#include "Cliente.h"
+#include "Pedido.h"
+
 void Menu_Principal()
 {
     system("CLS");
