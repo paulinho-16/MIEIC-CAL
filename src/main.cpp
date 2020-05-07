@@ -9,6 +9,9 @@ using namespace std;
 //#include "Cliente.h"
 //#include "Pedido.h"
 
+Graph<int> graph;
+
+template <class T>
 int Menu_Mapas() {
     system("CLS");
     Logotipo();
@@ -35,9 +38,9 @@ int Menu_Mapas() {
         case '1':
             readMap("../maps/GridGraphs/4x4"); break;
         case '2':
-            break;
+            readMap("../maps/GridGraphs/8x8"); break;
         case '3':
-            break;
+            readMap("../maps/GridGraphs/16x16"); break;
         case '4':
             break;
         case '5':
@@ -45,7 +48,7 @@ int Menu_Mapas() {
         case '0':
             return 1;
         default:
-            Menu_Mapas(); break;
+            Menu_Mapas<int>(); break;
     }
     return 0;
 }
@@ -89,7 +92,7 @@ void Menu_Principal()
 }
 
 int main(int argc, char* argv[]) {
-    if (Menu_Mapas() == 1)
+    if (Menu_Mapas<int>() == 1)
         return 0;
     //Menu_Principal();
     system("pause");
