@@ -47,6 +47,7 @@ public:
     int getNumEdges() const;
 	double getDist() const;
 	Vertex *getPath() const;
+	vector<Edge<T>> getAdj() const;
 
 	bool operator<(Vertex<T> & vertex) const; // // required by MutablePriorityQueue
 	friend class Graph<T>;
@@ -101,6 +102,11 @@ Vertex<T> *Vertex<T>::getPath() const {
 	return this->path;
 }
 
+template <class T>
+vector<Edge<T>> Vertex<T>::getAdj() const {
+    return adj;
+}
+
 /********************** Edge  ****************************/
 
 template <class T>
@@ -132,6 +138,8 @@ public:
     bool addEdge(T source, T dest);
 	int getNumVertex() const;
 	int getNumEdges() const;
+	void printVertexs();
+	void printEdges();
 	vector<Vertex<T> *> getVertexSet() const;
 
 	// Fp05 - single source
@@ -158,6 +166,21 @@ int Graph<T>::getNumEdges() const {
         sum += v->getNumEdges();
     }
     return sum;
+}
+
+template <class T>
+void Graph<T>::printVertexs() {
+    for (Vertex<T>* v : vertexSet) {
+        cout << "Id: " << v->getInfo() << "   Latitude: " << v->getLatitude() << "   Longitude: " << v->getLongitude() << endl;
+    }
+}
+
+template <class T>
+void Graph<T>::printEdges() {
+    for (Vertex<T>* v : vertexSet) {
+        for (Edge<T> e : v->getAdj())
+            cout << "Source: " << v->getInfo() << "   Dest: " << e.dest->getInfo() << "   Weight: " << e.weight << endl;
+    }
 }
 
 template <class T>
@@ -199,7 +222,8 @@ bool Graph<T>::addEdge(T source, T dest) {
 	auto v2 = findVertex(dest);
 	if (v1 == NULL || v2 == NULL)
 		return false;
-	double weight = sqrt((v1->getLatitude() + v2->getLatitude())*(v1->getLatitude() + v2->getLatitude()) + (v1->getLongitude() + v2->getLongitude())*(v1->getLongitude() + v2->getLongitude()));
+	//cout << "Lat1: " << v1->getLatitude() << "   Lat2: " << v2->getLatitude() << "   Long1 = " << v1->getLongitude() << "   Long2 = " << v2->getLongitude() << endl;
+	double weight = sqrt((v1->getLatitude() - v2->getLatitude())*(v1->getLatitude() - v2->getLatitude()) + (v1->getLongitude() - v2->getLongitude())*(v1->getLongitude() - v2->getLongitude()));
 	v1->addEdge(v2,weight);
 	return true;
 }

@@ -28,6 +28,7 @@ void readNodes(string file_directory) {
         graph.addVertex(vertex);
     }
     cout << "Vertex Lidos: " << graph.getNumVertex() << endl;
+    graph.printVertexs();
     ler.close();
 }
 
@@ -50,6 +51,7 @@ void readEdges(string file_directory) {
         graph.addEdge(stoi(id1), stoi(id2));
     }
     cout << "Edge Lidos: " << graph.getNumEdges() << endl;
+    graph.printEdges();
     ler.close();
 }
 
