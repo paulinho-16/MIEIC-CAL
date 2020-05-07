@@ -9,7 +9,6 @@ template <class T>
 class Restaurante {
     string nome;
     string descricao;
-    //vector<Prato> pratos;
     Vertex<T> morada;
 public:
     string getNome();
@@ -18,8 +17,6 @@ public:
     void setDescricao(string d);
     Vertex<T> getMorada();
     void setMorada(Vertex<T> v);
-    //vector<Prato> getPratos();
-    //void setPratos(vector<Prato> p);
 };
 
 #endif //CAL_FP05_RESTAURANTE_H
