@@ -15,6 +15,8 @@ void Menu_Visualizacao() {
     system("CLS");
     Logotipo();
     cout << "\n\n\t\t     Menu de Visualizacao do Mapa \n\n";
+    cout << "Abrindo Mapa..." << endl;
+    Visualizar_Mapa();
 }
 
 void Menu_Gestao_Restaurantes() {
