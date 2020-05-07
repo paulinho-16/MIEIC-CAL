@@ -115,6 +115,7 @@ class Edge {
 	double weight;         // edge weight
 public:
 	Edge(Vertex<T> *d, double w);
+	Vertex<T>* getDest() const;
 	friend class Graph<T>;
 	friend class Vertex<T>;
 };
@@ -122,6 +123,10 @@ public:
 template <class T>
 Edge<T>::Edge(Vertex<T> *d, double w): dest(d), weight(w) {}
 
+template <class T>
+Vertex<T>* Edge<T>::getDest() const {
+    return dest;
+}
 
 /*************************** Graph  **************************/
 

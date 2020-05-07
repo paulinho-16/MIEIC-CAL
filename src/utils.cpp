@@ -59,3 +59,21 @@ template <class T>
 void readTags(string file_directory) {
 
 }
+
+void Visualizar_Mapa() {
+    GraphViewer *gv = new GraphViewer(600, 600, false);
+    gv->createWindow(600, 600);
+    gv->defineVertexColor("blue");
+    gv->defineEdgeColor("black");
+    for (Vertex<int>* vertex : graph.getVertexSet()) {
+        gv->addNode(vertex->getInfo(), vertex->getLatitude(), vertex->getLongitude());
+    }
+    int edgeID = 0;
+    for (Vertex<int>* vertex : graph.getVertexSet()) {
+        for (Edge<int> edge : vertex->getAdj()) {
+            gv->addEdge(edgeID,vertex->getInfo(), edge.getDest()->getInfo(), EdgeType::DIRECTED);
+            edgeID++;
+        }
+    }
+    gv->rearrange();
+}

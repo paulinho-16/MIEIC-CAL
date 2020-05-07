@@ -94,7 +94,7 @@ void Menu_Principal()
 int main(int argc, char* argv[]) {
     if (Menu_Mapas<int>() == 1)
         return 0;
-    //Menu_Principal();
+    Menu_Principal();
     system("pause");
     return 0;
 }
