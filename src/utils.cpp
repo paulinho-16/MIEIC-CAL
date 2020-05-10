@@ -150,6 +150,7 @@ vector<Estafeta<T>*> recolher_info_estafetas(){
 
 template <class T>
 void buildApp(){
+
     eatExpress.setClientes(recolher_info_clientes<T>());
     eatExpress.setRestaurantes(recolher_info_restaurantes<T>());
     eatExpress.setEstafetas(recolher_info_estafetas<T>());

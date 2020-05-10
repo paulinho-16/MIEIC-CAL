@@ -1,8 +1,8 @@
 #ifndef CAL_FP05_PEDIDO_H
 #define CAL_FP05_PEDIDO_H
 
-#include "Cliente.h"
-#include "Restaurante.h"
+//#include "Cliente.h"
+//#include "Restaurante.h"
 
 template <class T>
 class Pedido {

@@ -1,12 +1,12 @@
 #include <iostream>
 
 #include "Menus.h"
-#include "utils.h"
 
 using namespace std;
 
 Graph<int> graph;
 EatExpress<int> eatExpress;
+
 
 void Menu_Principal();
 
@@ -37,6 +37,7 @@ int Menu_Mapas() {
         case '1':
             readMap("../maps/GridGraphs/4x4");
             Sleep(1000);
+            eatExpress.getClientes();
             Menu_Principal();
             break;
         case '2':
@@ -52,11 +53,10 @@ int Menu_Mapas() {
         case '0':
             return 1;
         default:
-            Menu_Mapas<int>(); break;
+            Menu_Mapas<T>(); break;
     }
     return 0;
 }
-
 
 void Menu_Principal()
 {

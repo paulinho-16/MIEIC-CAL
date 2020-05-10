@@ -37,6 +37,6 @@ template <class T>
 vector<Restaurante<T>*>  recolher_info_restaurantes();
 template <class T>
 vector<Restaurante<T>*>  recolher_info_estafetas();
-
+template <class T>
 void buildApp();
 #endif //CAL_FP05_UTILS_H

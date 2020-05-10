@@ -37,7 +37,7 @@ void Menu_Gestao_Clientes() {
     cout << "\n\n\t\t     Menu de Gestao de Clientes \n\n";
 }
 
-//template <class T>
+
 void Menu_Efetuar_Pedidos() {
     system("CLS");
     Logotipo();
@@ -56,7 +56,7 @@ void Menu_Efetuar_Pedidos() {
     switch(opcao)
     {
         case '1':
-            buildApp();
+            //buildApp<int>();
             break;
         case '2':
             break;
