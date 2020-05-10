@@ -9,12 +9,11 @@
 #include "Graph.h"
 #include "../GraphViewerLib/graphviewer.h"
 
-#include "EatExpress.h"
-
-
+#include "Cliente.h"
+#include "Estafeta.h"
+#include "Restaurante.h"
 
 extern Graph<int> graph;
-extern EatExpress<int> eatExpress;
 
 using namespace std;
 
@@ -31,8 +30,8 @@ void readTags(string file_directory);
 
 void Visualizar_Mapa();
 
-template <class T>
-vector<Cliente<T>*>  recolher_info_clientes();
+//template <class T>
+//vector<Cliente<T>*>  recolher_info_clientes();
 template <class T>
 vector<Restaurante<T>*>  recolher_info_restaurantes();
 template <class T>

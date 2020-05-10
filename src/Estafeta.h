@@ -1,11 +1,10 @@
-//
-// Created by Mariana Ramos on 07/05/2020.
-//
-
 #ifndef CAL_FP05_ESTAFETA_H
 #define CAL_FP05_ESTAFETA_H
 
+#include "Graph.h"
 #include "MeioTransporte.h"
+
+using namespace std;
 
 template <class T>
 class Estafeta {
@@ -24,6 +23,5 @@ public:
     void setTransporte(MeioTransporte t);
 
 };
-
 
 #endif //CAL_FP05_ESTAFETA_H

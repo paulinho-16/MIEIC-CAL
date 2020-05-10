@@ -1,28 +1,38 @@
-//
-// Created by Mariana Ramos on 06/05/2020.
-//
-
 #include "Cliente.h"
 
 template <class T>
-Cliente<T>::Cliente(){
-    this->morada=null;
+Cliente<T>::Cliente(string n, string ni, int id) {
+    nome = n;
+    ni = nif;
+    //morada = nullptr;
 }
-string Cliente::getNome() {
+
+template <class T>
+string Cliente<T>::getNome() {
     return this->nome;
 }
-void Cliente::setNome(string n) {
+
+template <class T>
+void Cliente<T>::setNome(string n) {
     this->nome=n;
 }
-void Cliente::setMorada(Vertex <T> morada) {
+
+/*template <class T>
+void Cliente<T>::setMorada(Vertex<T>* morada) {
     this->morada=morada;
-}
-Vertex<T> Cliente::getMorada() {
-    return this->morada;
-}
-string Cliente::getNif() {
+}*/
+
+/*template <class T>
+Vertex<T>* Cliente::getMorada() {
+    return morada;
+}*/
+
+template <class T>
+string Cliente<T>::getNif() {
     return nif;
 }
-string Cliente::setNif(string n) {
+
+template <class T>
+void Cliente<T>::setNif(string n) {
     this->nif=n;
 }

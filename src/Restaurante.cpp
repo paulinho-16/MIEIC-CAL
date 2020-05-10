@@ -2,7 +2,7 @@
 
 template <class T>
 Restaurante<T>::Restaurante(){
-    this->morada=null;
+    this->morada = nullptr;
 }
 template<class T>
 string Restaurante<T>::getNome() {

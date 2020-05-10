@@ -1,33 +1,40 @@
-//
-// Created by Mariana Ramos on 07/05/2020.
-//
-
 #include "Estafeta.h"
 
-string Estafeta::getNif() {
+template <class T>
+string Estafeta<T>::getNif() {
     return this->nif;
 }
-void Estafeta::setNif(string n) {
+template <class T>
+void Estafeta<T>::setNif(string n) {
     this->nif = n;
 }
 
-string Estafeta::getNome() {
+template <class T>
+string Estafeta<T>::getNome() {
     return this->nome;
 }
-void Estafeta::setNome(string n) {
+
+template <class T>
+void Estafeta<T>::setNome(string n) {
     this->nome = n;
 }
 
-Vertex<T> Estafeta::getPos() {
+template <class T>
+Vertex<T> Estafeta<T>::getPos() {
     return this->pos;
 }
-void Estafeta::setPos(Vertex <T> v) {
+
+template <class T>
+void Estafeta<T>::setPos(Vertex <T> v) {
     this->pos=v;
 }
-MeioTransporte Estafeta::getTransporte() {
+
+template <class T>
+MeioTransporte Estafeta<T>::getTransporte() {
     return this->transporte;
 }
-void Estafeta::setTransporte(MeioTransporte t) {
+
+template <class T>
+void Estafeta<T>::setTransporte(MeioTransporte t) {
     this->transporte=t;
 }
-

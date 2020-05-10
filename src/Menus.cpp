@@ -56,7 +56,6 @@ void Menu_Efetuar_Pedidos() {
     switch(opcao)
     {
         case '1':
-            buildApp();
             break;
         case '2':
             break;

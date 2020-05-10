@@ -1,12 +1,15 @@
 #include <iostream>
 
+#include "Graph.h"
 #include "Menus.h"
 #include "utils.h"
+#include "Cliente.h"
+#include "EatExpress.h"
 
 using namespace std;
 
 Graph<int> graph;
-EatExpress<int> eatExpress;
+//EatExpress<int>* eatExpress;
 
 void Menu_Principal();
 
@@ -96,9 +99,17 @@ void Menu_Principal()
     }
 }
 
+template <class T>
+void recolher_info() {
+    Cliente<T>* cliente1 = new Cliente<T>("Antonio", "123456789", 2);
+    Cliente<T>* cliente2 = new Cliente<T>("Joaquim", "987654321", 6);
+    Cliente<T>* cliente3 = new Cliente<T>("Manuel", "999999999", 12);
+}
+
 int main(int argc, char* argv[]) {
     if (Menu_Mapas<int>() == 1)
         return 0;
+    recolher_info<int>();
     Menu_Principal();
     system("pause");
     return 0;

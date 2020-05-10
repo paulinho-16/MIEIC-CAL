@@ -1,33 +1,20 @@
-//
-// Created by Mariana Ramos on 10/05/2020.
-//
-
 #ifndef CAL_FP05_EATEXPRESS_H
 #define CAL_FP05_EATEXPRESS_H
 
 #include "Cliente.h"
 #include "Restaurante.h"
-#include"Estafeta.h"
 
-template <class T>
+/*template <class T>
 class EatExpress {
-    vector<Cliente<T>*> clientes;
-    vector<Restaurante<T>*> restaurantes;
-    vector<Estafeta<T>*> estafetas;
-    Vertex<T>* casaDosEstafetas;
-public:
-    //EatExpress();
+    private:
+        vector<Cliente*> clientes;
+        vector<Restaurante<T>*> restaurantes;
+    public:
+    EatExpress(const vector<Cliente*> & clientes, const vector<Restaurante<T>*> & restaurantes) : clientes(clientes), restaurantes(restaurantes) {};
     vector<Cliente<T>*> getClientes();
     void setClientes(vector<Cliente<T>*> c);
     vector<Restaurante<T>*> getRestaurantes();
     void setRestaurantes(vector<Restaurante<T>*> r);
-    vector<Estafeta<T>*> getEstafetas();
-    void setEstafetas(vector<Estafeta<T>*> e);
-    void setCasaDosEstafetas(Vertex<T>* v);
-    Vertex<T> getCasaDosEstafetas();
-
-};
-
-
+};*/
 
 #endif //CAL_FP05_EATEXPRESS_H
