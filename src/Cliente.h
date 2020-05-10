@@ -13,14 +13,16 @@ class Cliente {
     string nome;
     string nif;
 public:
+    Cliente();
     string getNome();
     void setNome(string n);
     Vertex<T> getMorada();
-    void setMorada(Vertex<T> morada);
+    void setMorada(Vertex<T>* morada);
     string getNif();
     void setNif(string n);
 
 };
+
 
 
 #endif //CAL_FP05_CLIENTE_H

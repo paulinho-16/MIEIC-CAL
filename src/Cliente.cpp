@@ -4,6 +4,10 @@
 
 #include "Cliente.h"
 
+template <class T>
+Cliente<T>::Cliente(){
+    this->morada=null;
+}
 string Cliente::getNome() {
     return this->nome;
 }

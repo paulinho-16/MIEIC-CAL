@@ -9,7 +9,12 @@
 #include "Graph.h"
 #include "../GraphViewerLib/graphviewer.h"
 
+#include "EatExpress.h"
+
+
+
 extern Graph<int> graph;
+extern EatExpress<int> eatExpress;
 
 using namespace std;
 
@@ -18,10 +23,20 @@ void readMap(string directory);
 template <class T>
 void readNodes(string file_directory);
 template <class T>
+Vertex<T>* readNode(string tuple);
+template <class T>
 void readEdges(string file_directory);
 template <class T>
 void readTags(string file_directory);
 
 void Visualizar_Mapa();
 
+template <class T>
+vector<Cliente<T>*>  recolher_info_clientes();
+template <class T>
+vector<Restaurante<T>*>  recolher_info_restaurantes();
+template <class T>
+vector<Restaurante<T>*>  recolher_info_estafetas();
+
+void buildApp();
 #endif //CAL_FP05_UTILS_H

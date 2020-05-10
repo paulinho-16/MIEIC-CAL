@@ -24,9 +24,10 @@ Vertex<T> Estafeta::getPos() {
 void Estafeta::setPos(Vertex <T> v) {
     this->pos=v;
 }
-MeioTransporte<T> Estafeta::getTransporte() {
+MeioTransporte Estafeta::getTransporte() {
     return this->transporte;
 }
-void Estafeta::setTransporte(MeioTransporte <T> t) {
+void Estafeta::setTransporte(MeioTransporte t) {
     this->transporte=t;
 }
+

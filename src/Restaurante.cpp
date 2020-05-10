@@ -1,5 +1,9 @@
 #include "Restaurante.h"
 
+template <class T>
+Restaurante<T>::Restaurante(){
+    this->morada=null;
+}
 template<class T>
 string Restaurante<T>::getNome() {
     return this->nome;

@@ -5,11 +5,10 @@
 
 using namespace std;
 
-//#include "Restaurante.h"
-//#include "Cliente.h"
-//#include "Pedido.h"
-
 Graph<int> graph;
+EatExpress<int> eatExpress;
+
+void Menu_Principal();
 
 template <class T>
 int Menu_Mapas() {
@@ -36,9 +35,14 @@ int Menu_Mapas() {
     switch(opcao)
     {
         case '1':
-            readMap("../maps/GridGraphs/4x4"); break;
+            readMap("../maps/GridGraphs/4x4");
+            Sleep(1000);
+            Menu_Principal();
+            break;
         case '2':
-            readMap("../maps/GridGraphs/8x8"); break;
+            readMap("../maps/GridGraphs/8x8");
+            Menu_Principal();
+            break;
         case '3':
             readMap("../maps/GridGraphs/16x16"); break;
         case '4':
@@ -52,6 +56,7 @@ int Menu_Mapas() {
     }
     return 0;
 }
+
 
 void Menu_Principal()
 {

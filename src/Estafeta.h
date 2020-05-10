@@ -5,7 +5,9 @@
 #ifndef CAL_FP05_ESTAFETA_H
 #define CAL_FP05_ESTAFETA_H
 
+#include "MeioTransporte.h"
 
+template <class T>
 class Estafeta {
     string nome;
     string nif;
@@ -18,8 +20,8 @@ public:
     void setNif(string n);
     Vertex<T> getPos();
     void setPos(Vertex<T> v);
-    MeioTransporte<T> getTransporte();
-    void setTransporte(MeioTransporte<T> t);
+    MeioTransporte getTransporte();
+    void setTransporte(MeioTransporte t);
 
 };
 
