@@ -23,28 +23,40 @@ class EatExpress {
         clientes = c;
     }
 
-    vector<Restaurante<T>*> getRestaurantes(){
+    vector<Restaurante<T>*> getRestaurantes() {
         return restaurantes;
     }
 
-    void setRestaurantes(vector<Restaurante<T>*> r){
+    void setRestaurantes(vector<Restaurante<T>*> r) {
         restaurantes = r;
     }
 
-    vector<Estafeta<T>*> getEstafetas(){
+    vector<Estafeta<T>*> getEstafetas() {
         return estafetas;
     }
 
-    void setEstafetas(vector<Estafeta<T>*> e){
+    void setEstafetas(vector<Estafeta<T>*> e) {
         estafetas = e;
     }
 
-    T getCasaEstafetas(){
+    T getCasaEstafetas() {
         return casaEstafetas;
     }
 
-    void setCasaEstafetas(T c){
+    void setCasaEstafetas(T c) {
         casaEstafetas = c;
+    }
+
+    int getNumClientes() {
+        return clientes.size();
+    }
+
+    int getNumRestaurantes() {
+        return restaurantes.size();
+    }
+
+    int getNumEstafetas() {
+        return estafetas.size();
     }
 };
 

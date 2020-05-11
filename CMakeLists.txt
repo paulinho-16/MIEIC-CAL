@@ -36,6 +36,6 @@ set(PROJECT_SOURCES
         src/Restaurante.cpp
         GraphViewerLib/connection.cpp
         GraphViewerLib/graphviewer.cpp
-        )
+        src/Algoritmos.h)
 
 add_executable(CAL_FP05 ${PROJECT_SOURCES} ${PROJECT_HEADERS})

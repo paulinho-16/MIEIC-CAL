@@ -14,7 +14,7 @@ class Cliente {
 public:
     Cliente(string n, string ni, T id) {
         nome = n;
-        ni = nif;
+        nif = ni;
         morada = id;
     }
 

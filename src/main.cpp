@@ -1,18 +1,19 @@
 #include <iostream>
 
-
 #include "Graph.h"
 #include "utils.h"
 #include "EatExpress.h"
+#include "Algoritmos.h"
 
 using namespace std;
 
 Graph<int> graph;
 EatExpress<int> eatExpress;
+bool bidirectional_edges;
 
 void Menu_Principal();
 
-void Logotipo() {
+/*void Logotipo() {
     cout << "        ______      _   ______" << endl;
     cout << "       |  ____|    | | |  ____|" << endl;
     cout << "       | |__   __ _| |_| |__  __  ___ __  _ __ ___  ___ ___" << endl;
@@ -21,7 +22,7 @@ void Logotipo() {
     cout << "       |______\\__,_|\\__|______/_/\\_\\ .__/|_|  \\___||___/___/" << endl;
     cout << "                                   | |" << endl;
     cout << "                                   |_|" << endl;
-}
+}*/
 
 char Sair_Programa()
 {
@@ -80,6 +81,8 @@ void Menu_Efetuar_Pedidos() {
     cout << "[2] Um estafeta a realizar multiplos pedidos em simultaneo (carga ilimitada)\n";
     cout << "[3] Multiplos estafetas a atender multiplos pedidos (carga ilimitada) \n";
     cout << "[4] Multiplos estafetas a atender multiplos pedidos (carga limitada) \n";
+    cout << "[5] Voltar ao Menu Principal \n";
+    cout << "\nOpcao: ";
 
     string name;
     cin >> name;
@@ -90,14 +93,19 @@ void Menu_Efetuar_Pedidos() {
     switch(opcao)
     {
         case '1':
+            Um_Estafeta_Um_Pedido<int>();
             break;
         case '2':
+            Um_Estafeta_Varios_Pedidos<int>();
             break;
         case '3':
+            Varios_Estafetas_Sem_Carga<int>();
             break;
         case '4':
+            Varios_Estafetas_Com_Carga<int>();
             break;
         case '5':
+            Menu_Principal();
             break;
         default:
             Menu_Efetuar_Pedidos(); break;
@@ -167,17 +175,22 @@ int Menu_Mapas() {
     switch(opcao)
     {
         case '1':
+            bidirectional_edges = true;
             readMap("../maps/GridGraphs/4x4");
             break;
         case '2':
+            bidirectional_edges = true;
             readMap("../maps/GridGraphs/8x8");
             break;
         case '3':
+            bidirectional_edges = true;
             readMap("../maps/GridGraphs/16x16");
             break;
         case '4':
+            bidirectional_edges = false;
             break;
         case '5':
+            bidirectional_edges = false;
             break;
         case '0':
             return 1;

@@ -11,16 +11,28 @@
 #include "Cliente.h"
 #include "Estafeta.h"
 #include "Restaurante.h"
+#include "Pedido.h"
 
 #include "Graph.h"
 #include "EatExpress.h"
 
 extern Graph<int> graph;
 extern EatExpress<int> eatExpress;
+extern bool bidirectional_edges;
 GraphViewer *gv;
 
 using namespace std;
 
+void Logotipo() {
+    cout << "        ______      _   ______" << endl;
+    cout << "       |  ____|    | | |  ____|" << endl;
+    cout << "       | |__   __ _| |_| |__  __  ___ __  _ __ ___  ___ ___" << endl;
+    cout << "       |  __| / _` | __|  __| \\ \\/ / '_ \\| '__/ _ \\/ __/ __|" << endl;
+    cout << "       | |___| (_| | |_| |____ >  <| |_) | | |  __/\\__ \\__ \\ " << endl;
+    cout << "       |______\\__,_|\\__|______/_/\\_\\ .__/|_|  \\___||___/___/" << endl;
+    cout << "                                   | |" << endl;
+    cout << "                                   |_|" << endl;
+}
 
 template <class T>
 Vertex<T>* readNode(string tuple) {
@@ -76,6 +88,8 @@ void readEdges(string file_directory) {
         getline(ss, id1, ',');
         getline(ss, id2, ',');
         graph.addEdge(stoi(id1), stoi(id2));
+        if (bidirectional_edges)
+            graph.addEdge(stoi(id2), stoi(id1));
     }
     cout << "Edge Lidos: " << graph.getNumEdges() << endl;
     // graph.printEdges();
