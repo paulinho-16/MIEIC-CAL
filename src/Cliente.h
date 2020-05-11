@@ -12,21 +12,35 @@ class Cliente {
     string nome;
     string nif;
 public:
-    Cliente(string n, string ni, int id) {
+    Cliente(string n, string ni, T id) {
         nome = n;
         ni = nif;
-        //morada = nullptr;
+        morada = id;
     }
-    string getNome();
-    void setNome(string n);
+
+    string getNome() {
+        return nome;
+    }
+
+    void setNome(string n) {
+        this->nome=n;
+    }
+
     T getMorada() {
         return morada;
     }
+
     void setMorada(T morada) {
         this->morada=morada;
     }
-    string getNif();
-    void setNif(string n);
+
+    string getNif() {
+        return nif;
+    }
+
+    void setNif(string n) {
+        this->nif=n;
+    }
 };
 
 #endif //CAL_FP05_CLIENTE_H

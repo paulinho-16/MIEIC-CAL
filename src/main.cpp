@@ -65,7 +65,6 @@ void Menu_Efetuar_Pedidos() {
     switch(opcao)
     {
         case '1':
-            buildApp<int>();
             break;
         case '2':
             break;
@@ -83,7 +82,7 @@ void Menu_Efetuar_Pedidos() {
 void Menu_Principal()
 {
     system("CLS");
-   // Logotipo();
+   Logotipo();
     cout << "\n\n\t\t     Menu Principal \n\n";
     cout << "[1] Visualizar o mapa recorrendo ao GraphViewer \n";
     cout << "[2] Gestao de Restaurantes \n";
@@ -121,7 +120,7 @@ void Menu_Principal()
 template <class T>
 int Menu_Mapas() {
     system("CLS");
-    // Logotipo();
+    Logotipo();
     cout << "\n\n\t\t     Menu de Escolha do Mapa \n\n";
     cout << "\t GraphGrid \n";
     cout << "[1] 4x4 \n";
@@ -144,15 +143,13 @@ int Menu_Mapas() {
     {
         case '1':
             readMap("../maps/GridGraphs/4x4");
-            Sleep(1000);
-            Menu_Principal();
             break;
         case '2':
             readMap("../maps/GridGraphs/8x8");
-            Menu_Principal();
             break;
         case '3':
-            readMap("../maps/GridGraphs/16x16"); break;
+            readMap("../maps/GridGraphs/16x16");
+            break;
         case '4':
             break;
         case '5':
@@ -168,6 +165,7 @@ int Menu_Mapas() {
 int main(int argc, char* argv[]) {
     if (Menu_Mapas<int>() == 1)
         return 0;
+    Recolher_Info();
     Menu_Principal();
     system("pause");
     return 0;

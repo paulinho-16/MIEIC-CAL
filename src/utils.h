@@ -95,8 +95,8 @@ void readTags(string file_directory) {
 }
 
 void Visualizar_Mapa() {
-    gv = new GraphViewer(600, 600, false);
-    gv->createWindow(600, 600);
+    gv = new GraphViewer(1200, 900, false);
+    gv->createWindow(1200, 900);
     gv->defineVertexColor("blue");
     gv->defineEdgeColor("black");
     for (Vertex<int>* vertex : graph.getVertexSet()) {
@@ -117,33 +117,37 @@ void recolher_info_clientes(){
     vector<Cliente<T>*> v;
     Cliente<T>* cliente1 = new Cliente<T>("Antonio", "123456789", 2);
     Cliente<T>* cliente2 = new Cliente<T>("Joaquim", "987654321", 6);
-    Cliente<T>* cliente3 = new Cliente<T>("Manuel", "999999999", 12);
+    Cliente<T>* cliente3 = new Cliente<T>("Manuel",  "999999999", 12);
     v.push_back(cliente1);
     v.push_back(cliente2);
     v.push_back(cliente3);
     eatExpress.setClientes(v);
-    for (Vertex<int>* vertex : graph.getVertexSet()) {
-        if(vertex->getInfo()==2){
-            //gv->removeNode(2);
-            //gv->addNode(2);
-        }
-    }
-    return;
 }
 
 template <class T>
 void recolher_info_restaurantes(){
-
+    vector<Restaurante<T>*> v;
+    Restaurante<T>* restaurante1 = new Restaurante<T>("Casa dos Frangos", "Frangos everywhere", 24);
+    Restaurante<T>* restaurante2 = new Restaurante<T>("McDonalds", "Muitos Hamburgueres", 15);
+    Restaurante<T>* restaurante3 = new Restaurante<T>("Pizza Hut",  "Pizzas italianas", 9);
+    v.push_back(restaurante1);
+    v.push_back(restaurante2);
+    v.push_back(restaurante3);
+    eatExpress.setRestaurantes(v);
 }
+
 template <class T>
 void recolher_info_estafetas(){
-
+    vector<Estafeta<T>*> v;
+    Estafeta<T>* estafeta1 = new Estafeta<T>("Toni", "Primeiro Estafeta", 24);
+    v.push_back(estafeta1);
+    eatExpress.setEstafetas(v);
 }
 
-template <class T>
-void buildApp(){
-    recolher_info_clientes<T>();
-    Visualizar_Mapa();
+void Recolher_Info() {
+    recolher_info_clientes<int>();
+    recolher_info_restaurantes<int>();
+    recolher_info_estafetas<int>();
 }
 
 #endif //CAL_FP05_UTILS_H

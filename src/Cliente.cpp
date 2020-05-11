@@ -1,7 +1,7 @@
 #include "Cliente.h"
 
 
-template <class T>
+/*template <class T>
 string Cliente<T>::getNome() {
     return this->nome;
 }
@@ -20,4 +20,4 @@ string Cliente<T>::getNif() {
 template <class T>
 void Cliente<T>::setNif(string n) {
     this->nif=n;
-}
+}*/

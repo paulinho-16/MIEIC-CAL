@@ -12,15 +12,43 @@ class Estafeta {
     T pos;
     MeioTransporte transporte;
 public:
-    string getNome();
-    void setNome(string n);
-    string getNif();
-    void setNif(string n);
-    T getPos();
-    void setPos(T v);
-    MeioTransporte getTransporte();
-    void setTransporte(MeioTransporte t);
+    Estafeta(string n, string ni, T id) {
+        nome = n;
+        nif = ni;
+        pos = id;
+    }
 
+    string getNome() {
+        return nome;
+    }
+
+    void setNome(string n) {
+        nome = n;
+    }
+
+    string getNif() {
+        return nif;
+    }
+
+    void setNif(string n) {
+        nif = n;
+    }
+
+    T getPos() {
+        return pos;
+    }
+
+    void setPos(T v) {
+        pos = v;
+    }
+
+    MeioTransporte getTransporte() {
+        return transporte;
+    }
+
+    void setTransporte(MeioTransporte t) {
+        transporte = t;
+    }
 };
 
 #endif //CAL_FP05_ESTAFETA_H

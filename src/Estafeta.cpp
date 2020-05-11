@@ -1,9 +1,10 @@
 #include "Estafeta.h"
 
-template <class T>
+/*template <class T>
 string Estafeta<T>::getNif() {
     return this->nif;
 }
+
 template <class T>
 void Estafeta<T>::setNif(string n) {
     this->nif = n;
@@ -38,3 +39,4 @@ template <class T>
 void Estafeta<T>::setTransporte(MeioTransporte t) {
     this->transporte=t;
 }
+*/

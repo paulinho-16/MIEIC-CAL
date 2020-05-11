@@ -11,18 +11,31 @@ class EatExpress {
     private:
         vector<Cliente<T>*> clientes;
         vector<Restaurante<T>*> restaurantes;
+        vector<Estafeta<T>*> estafetas;
+
     public:
     vector<Cliente<T>*> getClientes() {
-        return this->clientes;
+        return clientes;
     }
+
     void setClientes(vector<Cliente<T>*> c) {
-        this->clientes=c;
+        clientes = c;
     }
+
     vector<Restaurante<T>*> getRestaurantes(){
-        return this->restaurantes;
+        return restaurantes;
     }
+
     void setRestaurantes(vector<Restaurante<T>*> r){
-        this->restaurantes=r;
+        restaurantes = r;
+    }
+
+    vector<Estafeta<T>*> getEstafetas(){
+        return estafetas;
+    }
+
+    void setEstafetas(vector<Estafeta<T>*> e){
+        estafetas = e;
     }
 };
 

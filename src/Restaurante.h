@@ -10,20 +10,35 @@ class Restaurante {
     string descricao;
     T morada;
 public:
-    Restaurante(){
-        this->morada = nullptr;
-    }
-    string getNome();
-    void setNome(string n);
-    string getDescricao();
-    void setDescricao(string d);
-    T getMorada(){
-        return this->morada;
-    }
-    void setMorada(T v){
-        this->morada=v;
+    Restaurante(string n, string desc, T id) {
+        nome = n;
+        descricao = desc;
+        morada = id;
     }
 
+    string getNome() {
+        return nome;
+    }
+
+    void setNome(string n){
+        nome = n;
+    }
+
+    string getDescricao(){
+        return descricao;
+    }
+
+    void setDescricao(string d){
+        descricao = d;
+    }
+
+    T getMorada() {
+        return morada;
+    }
+
+    void setMorada(T v) {
+        morada = v;
+    }
 };
 
 #endif //CAL_FP05_RESTAURANTE_H
