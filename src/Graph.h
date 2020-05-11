@@ -37,6 +37,8 @@ class Vertex {
 	bool visited = false;		// auxiliary field
 	bool processing = false;	// auxiliary field
 
+	int type = 0;   // 0 se não for ponto de interesse, 1 se for uma morada, 2 se for um restaurante, 3 se estiver ocupado por um estafeta e 4 unicamente para a Casa dos Estafetas
+
 	void addEdge(Vertex<T> *dest, double w);
 
 public:
@@ -48,6 +50,8 @@ public:
 	double getDist() const;
 	Vertex *getPath() const;
 	vector<Edge<T>> getAdj() const;
+	int getType() const;
+	void setType(int type);
 
 	bool operator<(Vertex<T> & vertex) const; // // required by MutablePriorityQueue
 	friend class Graph<T>;
@@ -105,6 +109,16 @@ Vertex<T> *Vertex<T>::getPath() const {
 template <class T>
 vector<Edge<T>> Vertex<T>::getAdj() const {
     return adj;
+}
+
+template <class T>
+int Vertex<T>::getType() const {
+    return type;
+}
+
+template <class T>
+void Vertex<T>::setType(int type) {
+    this->type = type;
 }
 
 /********************** Edge  ****************************/

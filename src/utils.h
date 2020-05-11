@@ -97,9 +97,21 @@ void readTags(string file_directory) {
 void Visualizar_Mapa() {
     gv = new GraphViewer(1200, 900, false);
     gv->createWindow(1200, 900);
-    gv->defineVertexColor("blue");
+    //gv->defineVertexColor("blue");
     gv->defineEdgeColor("black");
     for (Vertex<int>* vertex : graph.getVertexSet()) {
+        switch (vertex->getType()) {
+            case 0:     // Não é ponto de interesse
+                gv->setVertexColor(vertex->getInfo(), "blue"); break;
+            case 1:     // Morada de Cliente
+                gv->setVertexColor(vertex->getInfo(), "green"); break;
+            case 2:     // Restaurante
+                gv->setVertexColor(vertex->getInfo(), "red"); break;
+            case 3:     // Posição de Estafeta
+                gv->setVertexColor(vertex->getInfo(), "purple"); break;
+            case 4:     // Casa dos Estafetas
+                gv->setVertexColor(vertex->getInfo(), "yellow"); break;
+        }
         gv->addNode(vertex->getInfo(), vertex->getLatitude(), vertex->getLongitude());
     }
     int edgeID = 0;
@@ -113,6 +125,13 @@ void Visualizar_Mapa() {
 }
 
 template<class T>
+void recolher_info_casaEstafetas() {
+    eatExpress.setCasaEstafetas(0);
+    Vertex<T>* vertex = graph.findVertex(eatExpress.getCasaEstafetas());
+    vertex->setType(4);
+}
+
+template<class T>
 void recolher_info_clientes(){
     vector<Cliente<T>*> v;
     Cliente<T>* cliente1 = new Cliente<T>("Antonio", "123456789", 2);
@@ -122,6 +141,12 @@ void recolher_info_clientes(){
     v.push_back(cliente2);
     v.push_back(cliente3);
     eatExpress.setClientes(v);
+    for (Cliente<T>* cliente : eatExpress.getClientes()) {
+        Vertex<T>* vertex = graph.findVertex(cliente->getMorada());
+        if (vertex->getType() == 0) {
+            vertex->setType(1);
+        }
+    }
 }
 
 template <class T>
@@ -134,6 +159,12 @@ void recolher_info_restaurantes(){
     v.push_back(restaurante2);
     v.push_back(restaurante3);
     eatExpress.setRestaurantes(v);
+    for (Restaurante<T>* restaurante : eatExpress.getRestaurantes()) {
+        Vertex<T>* vertex = graph.findVertex(restaurante->getMorada());
+        if (vertex->getType() == 0) {
+            vertex->setType(2);
+        }
+    }
 }
 
 template <class T>
@@ -142,9 +173,16 @@ void recolher_info_estafetas(){
     Estafeta<T>* estafeta1 = new Estafeta<T>("Toni", "Primeiro Estafeta", 24);
     v.push_back(estafeta1);
     eatExpress.setEstafetas(v);
+    for (Estafeta<T>* estafeta : eatExpress.getEstafetas()) {
+        Vertex<T>* vertex = graph.findVertex(estafeta->getPos());
+        if (vertex->getType() == 0) {
+            vertex->setType(3);
+        }
+    }
 }
 
 void Recolher_Info() {
+    recolher_info_casaEstafetas<int>();
     recolher_info_clientes<int>();
     recolher_info_restaurantes<int>();
     recolher_info_estafetas<int>();

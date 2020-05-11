@@ -10,6 +10,8 @@ using namespace std;
 Graph<int> graph;
 EatExpress<int> eatExpress;
 
+void Menu_Principal();
+
 void Logotipo() {
     cout << "        ______      _   ______" << endl;
     cout << "       |  ____|    | | |  ____|" << endl;
@@ -21,30 +23,53 @@ void Logotipo() {
     cout << "                                   |_|" << endl;
 }
 
+char Sair_Programa()
+{
+    char sair;
+    cout << "\nSair do Programa? (S/N)\n\n";
+    do{
+        cout << "R: ";
+        cin >> sair;
+    } while(sair != 'N' && sair != 'n' && sair != 'S' && sair != 's');
+    return sair;
+}
+
 void Menu_Visualizacao() {
     system("CLS");
     Logotipo();
     cout << "\n\n\t\t     Menu de Visualizacao do Mapa \n\n";
     cout << "Abrindo Mapa..." << endl;
     Visualizar_Mapa();
+    char sair = Sair_Programa();
+    if (sair == 'N' || sair == 'n')
+        Menu_Principal();
 }
 
 void Menu_Gestao_Restaurantes() {
     system("CLS");
     Logotipo();
     cout << "\n\n\t\t     Menu de Gestao de Restaurantes \n\n";
+    char sair = Sair_Programa();
+    if (sair == 'N' || sair == 'n')
+        Menu_Principal();
 }
 
 void Menu_Gestao_Estafetas() {
     system("CLS");
     Logotipo();
     cout << "\n\n\t\t     Menu de Gestao de Estafetas \n\n";
+    char sair = Sair_Programa();
+    if (sair == 'N' || sair == 'n')
+        Menu_Principal();
 }
 
 void Menu_Gestao_Clientes() {
     system("CLS");
     Logotipo();
     cout << "\n\n\t\t     Menu de Gestao de Clientes \n\n";
+    char sair = Sair_Programa();
+    if (sair == 'N' || sair == 'n')
+        Menu_Principal();
 }
 
 void Menu_Efetuar_Pedidos() {

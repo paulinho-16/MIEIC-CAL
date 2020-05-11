@@ -12,6 +12,7 @@ class EatExpress {
         vector<Cliente<T>*> clientes;
         vector<Restaurante<T>*> restaurantes;
         vector<Estafeta<T>*> estafetas;
+        T casaEstafetas;
 
     public:
     vector<Cliente<T>*> getClientes() {
@@ -36,6 +37,14 @@ class EatExpress {
 
     void setEstafetas(vector<Estafeta<T>*> e){
         estafetas = e;
+    }
+
+    T getCasaEstafetas(){
+        return casaEstafetas;
+    }
+
+    void setCasaEstafetas(T c){
+        casaEstafetas = c;
     }
 };
 
