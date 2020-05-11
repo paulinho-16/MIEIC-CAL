@@ -1,24 +1,36 @@
 #include "Pedido.h"
-
-
-int Pedido::getId(){
+/*
+template <class T>
+int Pedido<T>::getId(){
     return this->id;
 }
-void Pedido::setId(int i) {
+
+template <class T>
+void Pedido<T>::setId(int i) {
     this->id=i;
 }
-Restaurante<T> Pedido::getRestaurante() {
+
+template <class T>
+Restaurante<T> Pedido<T>::getRestaurante() {
     return this->restaurante;
 }
-Cliente<T> Pedido::getCliente() {
+
+template <class T>
+Cliente<T> Pedido<T>::getCliente() {
     return this->cliente;
 }
-void Pedido::setCliente(Cliente c) {
+
+template <class T>
+void Pedido<T>::setCliente(Cliente<T> c) {
     this->cliente=c;
 }
-Estafeta<T> Pedido::getEstafeta() {
+
+template <class T>
+Estafeta<T> Pedido<T>::getEstafeta() {
     return this->estafeta;
 }
-void Pedido::setEstafeta(Estafeta <T> t) {
+
+template <class T>
+void Pedido<T>::setEstafeta(Estafeta <T> t) {
     this->estafeta=t;
-}
+}*/

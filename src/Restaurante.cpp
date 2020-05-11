@@ -1,9 +1,5 @@
 #include "Restaurante.h"
 
-template <class T>
-Restaurante<T>::Restaurante(){
-    this->morada=null;
-}
 template<class T>
 string Restaurante<T>::getNome() {
     return this->nome;
@@ -19,12 +15,4 @@ string Restaurante<T>::getDescricao(){
 template<class T>
 void Restaurante<T>::setDescricao(string d){
     this->descricao=d;
-}
-template<class T>
-Vertex<T> Restaurante<T>::getMorada(){
-    return morada;
-}
-template<class T>
-void Restaurante<T>::setMorada(Vertex<T> v){
-    this->morada=v;
 }

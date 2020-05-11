@@ -1,21 +1,28 @@
 #ifndef CAL_FP05_RESTAURANTE_H
 #define CAL_FP05_RESTAURANTE_H
 
-//#include "Graph.h"
+#include <string>
+using namespace std;
 
 template <class T>
 class Restaurante {
     string nome;
     string descricao;
-    Vertex<T> morada;
+    T morada;
 public:
-    Restaurante();
+    Restaurante(){
+        this->morada = nullptr;
+    }
     string getNome();
     void setNome(string n);
     string getDescricao();
     void setDescricao(string d);
-    Vertex<T> getMorada();
-    void setMorada(Vertex<T> v);
+    T getMorada(){
+        return this->morada;
+    }
+    void setMorada(T v){
+        this->morada=v;
+    }
 
 };
 

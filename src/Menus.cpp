@@ -1,5 +1,6 @@
 #include "Menus.h"
 
+/*
 void Logotipo() {
   cout << "        ______      _   ______" << endl;
   cout << "       |  ____|    | | |  ____|" << endl;
@@ -37,7 +38,6 @@ void Menu_Gestao_Clientes() {
     cout << "\n\n\t\t     Menu de Gestao de Clientes \n\n";
 }
 
-
 void Menu_Efetuar_Pedidos() {
     system("CLS");
     Logotipo();
@@ -56,7 +56,6 @@ void Menu_Efetuar_Pedidos() {
     switch(opcao)
     {
         case '1':
-            //buildApp<int>();
             break;
         case '2':
             break;
@@ -69,4 +68,5 @@ void Menu_Efetuar_Pedidos() {
         default:
             Menu_Efetuar_Pedidos(); break;
     }
-}
+    //recolher_info_clientes<int>();
+}*/

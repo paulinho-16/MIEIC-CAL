@@ -1,8 +1,6 @@
-//
-// Created by Mariana Ramos on 07/05/2020.
-//
-
 #include "MeioTransporte.h"
+
+using namespace std;
 
 void MeioTransporte::setNome(string n) {
     this->nome=n;

@@ -9,5 +9,33 @@ link_libraries(ws2_32 wsock32)
 include_directories(GraphViewerLib)
 include_directories(src)
 include_directories(maps)
-add_executable(CAL_FP05 src/main.cpp src/Graph.h src/MutablePriorityQueue.h src/Menus.cpp src/Menus.h src/utils.cpp src/utils.h
-        GraphViewerLib/connection.cpp GraphViewerLib/graphviewer.cpp)
+
+set(PROJECT_HEADERS
+        src/Cliente.h
+        src/EatExpress.h
+        src/Estafeta.h
+        src/Graph.h
+        src/MeioTransporte.h
+        src/Menus.h
+        src/MutablePriorityQueue.h
+        src/Pedido.h
+        src/Restaurante.h
+        src/utils.h
+        GraphViewerLib/connection.h
+        GraphViewerLib/edgetype.h
+        GraphViewerLib/graphviewer.h
+        )
+set(PROJECT_SOURCES
+        src/main.cpp
+        src/Cliente.cpp
+        src/EatExpress.cpp
+        src/Estafeta.cpp
+        src/MeioTransporte.cpp
+        src/Menus.cpp
+        src/Pedido.cpp
+        src/Restaurante.cpp
+        GraphViewerLib/connection.cpp
+        GraphViewerLib/graphviewer.cpp
+        )
+
+add_executable(CAL_FP05 ${PROJECT_SOURCES} ${PROJECT_HEADERS})
