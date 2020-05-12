@@ -1,7 +1,9 @@
 #ifndef CAL_FP05_ALGORITMOS_H
 #define CAL_FP05_ALGORITMOS_H
 
+
 extern EatExpress<int> eatExpress;
+extern Graph<int> graph;
 
 template <class T>
 void Um_Estafeta_Um_Pedido() {
@@ -45,7 +47,11 @@ void Um_Estafeta_Um_Pedido() {
     } while(n_estafeta < 1 || n_estafeta > eatExpress.getNumEstafetas());
     Estafeta<T>* estafeta = eatExpress.getEstafetas().at(n_estafeta-1);
 
-    // JA TEMOS O CLIENTE, RESTAURANTE E ESTAFETA, AGORA É IMPLEMENTAR O ALGORITMO - CHAMAR AQUI E FAZER EM FUNÇÃO DIFERENTE
+    // JA TEMOS O CLIENTE, RESTAURANTE E ESTAFETA, AGORA É IMPLEMENTAR O ALGORITMO - CHAMAR AQUI E FAZER EM FUNÇÃO DIFERENTE:
+    Pedido<T> *pedido = new Pedido<T>(cliente,restaurante);
+    vector<Vertex<T>*> solutionPath;
+    solutionPath = graph.dijkstraShortestPath2(&graph, estafeta->getPos(), restaurante->getMorada());
+    showPathGV(graph.findVertex(estafeta->getPos()),graph.findVertex(restaurante->getMorada()),solutionPath);
 }
 
 template <class T>

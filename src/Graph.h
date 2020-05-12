@@ -11,6 +11,8 @@
 #include <limits>
 #include <cmath>
 #include <stack>
+#include <algorithm>
+#include <unordered_set>
 #include "MutablePriorityQueue.h"
 
 using namespace std;
@@ -29,11 +31,9 @@ class Vertex {
 	double latitude;
 	double longitude;
 	vector<Edge<T> > adj;		// outgoing edges
-	
 	double dist = 0;
 	Vertex<T> *path = NULL;
 	int queueIndex = 0; 		// required by MutablePriorityQueue
-
 	bool visited = false;		// auxiliary field
 	bool processing = false;	// auxiliary field
 
@@ -52,6 +52,8 @@ public:
 	vector<Edge<T>> getAdj() const;
 	int getType() const;
 	void setType(int type);
+	void setDist(double d);
+	void setPath(Vertex<T>* p);
 
 	bool operator<(Vertex<T> & vertex) const; // // required by MutablePriorityQueue
 	friend class Graph<T>;
@@ -120,6 +122,15 @@ template <class T>
 void Vertex<T>::setType(int type) {
     this->type = type;
 }
+template <class T>
+void Vertex<T>::setDist(double d){
+    this->dist=d;
+}
+
+template <class T>
+void Vertex<T>::setPath(Vertex<T>* p){
+    this->path=p;
+}
 
 /********************** Edge  ****************************/
 
@@ -130,6 +141,7 @@ class Edge {
 public:
 	Edge(Vertex<T> *d, double w);
 	Vertex<T>* getDest() const;
+	double getWeight();
 	friend class Graph<T>;
 	friend class Vertex<T>;
 };
@@ -140,6 +152,11 @@ Edge<T>::Edge(Vertex<T> *d, double w): dest(d), weight(w) {}
 template <class T>
 Vertex<T>* Edge<T>::getDest() const {
     return dest;
+}
+
+template <class T>
+double Edge<T>::getWeight() {
+    return this->weight;
 }
 
 /*************************** Graph  **************************/
@@ -160,10 +177,13 @@ public:
 	void printVertexs();
 	void printEdges();
 	vector<Vertex<T> *> getVertexSet() const;
+    vector<Vertex<T> *> getPath(const T &origin, const T &dest) const;
 
 	// Fp05 - single source
 	void unweightedShortestPath(const T &s);
 	void dijkstraShortestPath(const T &s);
+    bool dijkstraRelax(Vertex<T> *v, Vertex<T> *w, double weight);
+    std::vector<Vertex<T> *> dijkstraShortestPath2(Graph<T> * graph, const T &origin, const T &dest);
 	void bellmanFordShortestPath(const T &s);
 	vector<T> getPathTo(const T &dest) const;
 
@@ -246,6 +266,20 @@ bool Graph<T>::addEdge(T source, T dest) {
 	v1->addEdge(v2,weight);
 	return true;
 }
+template<class T>
+vector<Vertex<T> *> Graph<T>::getPath(const T &origin, const T &dest) const{
+    vector<Vertex<T> *> res;
+    auto o = findVertex(origin);
+    auto v = findVertex(dest);
+    if (v == nullptr || v->dist == INF) // missing or disconnected
+        return res;
+    for ( ; v != o && v != nullptr; v = v->path)
+        res.push_back(v);
+    res.push_back(o);
+    reverse(res.begin(), res.end());
+
+    return res;
+}
 
 
 /**************** Single Source Shortest Path algorithms ************/
@@ -273,7 +307,6 @@ void Graph<T>::unweightedShortestPath(const T &orig) {
     }
 }
 
-
 template<class T>
 void Graph<T>::dijkstraShortestPath(const T &origin) {
 	for (auto vertex : vertexSet) {
@@ -299,6 +332,46 @@ void Graph<T>::dijkstraShortestPath(const T &origin) {
 	}
 }
 
+template <class T>
+bool Graph<T>::dijkstraRelax(Vertex<T> *v, Vertex<T> *w, double weight) {
+    if (v->getDist() + weight < w->getDist()) {
+        w->setDist(v->getDist() + weight);
+        w->setPath(v);
+        return true;
+    }
+    else
+        return false;
+}
+
+template <class T>
+std::vector<Vertex<T> *> Graph<T>::dijkstraShortestPath2(Graph<T> * graph, const T &origin, const T &dest)
+{
+    std::vector<Vertex<T> *> result;
+    auto s = graph->findVertex(origin);
+    Vertex<T>* d = graph->findVertex(dest);
+    MutablePriorityQueue<Vertex<T>> q;
+    q.insert(s);
+
+    while( ! q.empty() ) {
+        auto v = q.extractMin();
+
+        if(v == d)
+            return graph->getPath(origin, dest);
+
+        for(unsigned int i = 0; i < v->getAdj().size(); i++) {
+            auto e = v->getAdj().at(i);
+            auto oldDist = e.getDest()->getDist();
+            if (this->dijkstraRelax(v, e.getDest(),  e.getWeight())) {
+                if (oldDist == INF)
+                    q.insert(e.getDest());
+                else
+                    q.decreaseKey(e.getDest());
+            }
+        }
+    }
+
+    return result;
+}
 
 template<class T>
 void Graph<T>::bellmanFordShortestPath(const T &orig) {
@@ -326,7 +399,6 @@ void Graph<T>::bellmanFordShortestPath(const T &orig) {
         }
     }
 }
-
 
 template<class T>
 vector<T> Graph<T>::getPathTo(const T &dest) const{

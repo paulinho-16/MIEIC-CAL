@@ -202,4 +202,17 @@ void Recolher_Info() {
     recolher_info_estafetas<int>();
 }
 
+template <class T>
+void showPathGV(Vertex<T>* initial,Vertex<T>* final,vector<Vertex<T>*> v){
+    //initial->setType(4);
+    //gv->setVertexColor(initial->getInfo(), "GREEN");
+    //gv->setVertexLabel(initial->getInfo(), "Start");
+
+    //gv->setVertexSize(final->getInfo(), 20);
+    //gv->setVertexColor(final->getInfo(), "RED");
+    //gv->setVertexLabel(final->getInfo(), "End");
+
+    Visualizar_Mapa();
+}
+
 #endif //CAL_FP05_UTILS_H
