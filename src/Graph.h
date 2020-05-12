@@ -39,7 +39,7 @@ class Vertex {
 
 	int type = 0;   // 0 se não for ponto de interesse, 1 se for uma morada, 2 se for um restaurante, 3 se estiver ocupado por um estafeta e 4 unicamente para a Casa dos Estafetas
 
-	void addEdge(Vertex<T> *dest, double w);
+	void addEdge(int id, Vertex<T> *dest, double w);
 
 public:
 	Vertex(T in, double lat, double longt);
@@ -69,8 +69,8 @@ Vertex<T>::Vertex(T in, double lat, double longt): info(in), latitude(lat), long
  * with a given destination vertex (d) and edge weight (w).
  */
 template <class T>
-void Vertex<T>::addEdge(Vertex<T> *d, double w) {
-	adj.push_back(Edge<T>(d, w));
+void Vertex<T>::addEdge(int id, Vertex<T> *d, double w) {
+	adj.push_back(Edge<T>(id, d, w));
 }
 
 template <class T>
@@ -136,18 +136,21 @@ void Vertex<T>::setPath(Vertex<T>* p){
 
 template <class T>
 class Edge {
+    int edgeID;
 	Vertex<T> * dest;      // destination vertex
 	double weight;         // edge weight
 public:
-	Edge(Vertex<T> *d, double w);
+	Edge(int id, Vertex<T> *d, double w);
 	Vertex<T>* getDest() const;
 	double getWeight();
+    int getID();
+    void setID(int id);
 	friend class Graph<T>;
 	friend class Vertex<T>;
 };
 
 template <class T>
-Edge<T>::Edge(Vertex<T> *d, double w): dest(d), weight(w) {}
+Edge<T>::Edge(int id, Vertex<T> *d, double w): dest(d), weight(w), edgeID(id) {}
 
 template <class T>
 Vertex<T>* Edge<T>::getDest() const {
@@ -157,6 +160,16 @@ Vertex<T>* Edge<T>::getDest() const {
 template <class T>
 double Edge<T>::getWeight() {
     return this->weight;
+}
+
+template <class T>
+int Edge<T>::getID() {
+    return this->edgeID;
+}
+
+template <class T>
+void Edge<T>::setID(int id) {
+    this->edgeID = id;
 }
 
 /*************************** Graph  **************************/
@@ -171,7 +184,7 @@ public:
     Vertex<T> * findVertex(T in) const;
 	//bool addVertex(const T &in);
 	bool addVertex(Vertex<T>* vertex);
-    bool addEdge(T source, T dest);
+    bool addEdge(int id, T source, T dest);
 	int getNumVertex() const;
 	int getNumEdges() const;
 	void printVertexs();
@@ -218,7 +231,7 @@ template <class T>
 void Graph<T>::printEdges() {
     for (Vertex<T>* v : vertexSet) {
         for (Edge<T> e : v->getAdj())
-            cout << "Source: " << v->getInfo() << "   Dest: " << e.dest->getInfo() << "   Weight: " << e.weight << endl;
+            cout << "ID: " << e.getID() << "   Source: " << v->getInfo() << "   Dest: " << e.dest->getInfo() << "   Weight: " << e.weight << endl;
     }
 }
 
@@ -256,14 +269,14 @@ bool Graph<T>::addVertex(Vertex<T>* vertex) {
  * Returns true if successful, and false if the source or destination vertex does not exist.
  */
 template <class T>
-bool Graph<T>::addEdge(T source, T dest) {
+bool Graph<T>::addEdge(int id, T source, T dest) {
 	auto v1 = findVertex(source);
 	auto v2 = findVertex(dest);
 	if (v1 == NULL || v2 == NULL)
 		return false;
 	//cout << "Lat1: " << v1->getLatitude() << "   Lat2: " << v2->getLatitude() << "   Long1 = " << v1->getLongitude() << "   Long2 = " << v2->getLongitude() << endl;
 	double weight = sqrt((v1->getLatitude() - v2->getLatitude())*(v1->getLatitude() - v2->getLatitude()) + (v1->getLongitude() - v2->getLongitude())*(v1->getLongitude() - v2->getLongitude()));
-	v1->addEdge(v2,weight);
+	v1->addEdge(id, v2, weight);
 	return true;
 }
 template<class T>

@@ -5,6 +5,9 @@
 extern EatExpress<int> eatExpress;
 extern Graph<int> graph;
 
+void Menu_Principal();
+char Sair_Programa();
+
 template <class T>
 void Um_Estafeta_Um_Pedido() {
     system("CLS");
@@ -49,9 +52,21 @@ void Um_Estafeta_Um_Pedido() {
 
     // JA TEMOS O CLIENTE, RESTAURANTE E ESTAFETA, AGORA É IMPLEMENTAR O ALGORITMO - CHAMAR AQUI E FAZER EM FUNÇÃO DIFERENTE:
     Pedido<T> *pedido = new Pedido<T>(cliente,restaurante);
-    vector<Vertex<T>*> solutionPath;
-    solutionPath = graph.dijkstraShortestPath2(&graph, estafeta->getPos(), restaurante->getMorada());
-    showPathGV(graph.findVertex(estafeta->getPos()),graph.findVertex(restaurante->getMorada()),solutionPath);
+    //vector<Vertex<T>*> solutionPath;
+    //solutionPath = graph.dijkstraShortestPath2(&graph, estafeta->getPos(), restaurante->getMorada());
+    graph.dijkstraShortestPath(estafeta->getPos());
+    vector<Vertex<T>*> estafeta_restaurante = graph.getPath(estafeta->getPos(), restaurante->getMorada());
+    vector<Vertex<T>*> restaurante_cliente = graph.getPath(restaurante->getMorada(), cliente->getMorada());
+    estafeta_restaurante.insert(estafeta_restaurante.end(), restaurante_cliente.begin(), restaurante_cliente.end());
+    cout << endl;
+    for (Vertex<T>* vertex : estafeta_restaurante) {
+        cout << "Vertex " << vertex->getInfo() << " com POS (" << vertex->getLatitude() << ", " << vertex->getLongitude() << ")"<<endl;
+    }
+    showPathGV(estafeta_restaurante);
+    //showPathGV(graph.findVertex(estafeta->getPos()),graph.findVertex(restaurante->getMorada()),solutionPath);
+    char sair = Sair_Programa();
+    if (sair == 'N' || sair == 'n')
+        Menu_Principal();
 }
 
 template <class T>

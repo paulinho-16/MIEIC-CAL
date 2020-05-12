@@ -79,21 +79,35 @@ void readEdges(string file_directory) {
     ler.open(file_directory);
     getline(ler, number);
     int n = stoi(number);
-    for (unsigned int i = 0 ; i < n ; i++) {
-        getline(ler, tuple);
-        tuple = tuple.substr(1, tuple.size() - 2);
+    if (bidirectional_edges) {
+        for (unsigned int i = 0 ; i < 2*n ; i += 2) {
+            getline(ler, tuple);
+            tuple = tuple.substr(1, tuple.size() - 2);
 
-        stringstream ss(tuple);
-        string id1, id2;
-        getline(ss, id1, ',');
-        getline(ss, id2, ',');
-        graph.addEdge(stoi(id1), stoi(id2));
-        if (bidirectional_edges)
-            graph.addEdge(stoi(id2), stoi(id1));
+            stringstream ss(tuple);
+            string id1, id2;
+            getline(ss, id1, ',');
+            getline(ss, id2, ',');
+            graph.addEdge(i + 1, stoi(id1), stoi(id2));
+            graph.addEdge(i + 2, stoi(id2), stoi(id1));
+        }
+    }
+    else {
+        for (unsigned int i = 0; i < n; i++) {
+            getline(ler, tuple);
+            tuple = tuple.substr(1, tuple.size() - 2);
+
+            stringstream ss(tuple);
+            string id1, id2;
+            getline(ss, id1, ',');
+            getline(ss, id2, ',');
+            graph.addEdge(i + 1, stoi(id1), stoi(id2));
+        }
     }
     cout << "Edge Lidos: " << graph.getNumEdges() << endl;
-    // graph.printEdges();
     ler.close();
+    //graph.printEdges();
+    //system("pause");
 }
 
 void readMap(string directory) {
@@ -184,7 +198,7 @@ void recolher_info_restaurantes(){
 template <class T>
 void recolher_info_estafetas(){
     vector<Estafeta<T>*> v;
-    Estafeta<T>* estafeta1 = new Estafeta<T>("Toni", "Primeiro Estafeta", 24);
+    Estafeta<T>* estafeta1 = new Estafeta<T>("Toni", "Primeiro Estafeta", 0);
     v.push_back(estafeta1);
     eatExpress.setEstafetas(v);
     for (Estafeta<T>* estafeta : eatExpress.getEstafetas()) {
@@ -203,7 +217,16 @@ void Recolher_Info() {
 }
 
 template <class T>
-void showPathGV(Vertex<T>* initial,Vertex<T>* final,vector<Vertex<T>*> v){
+bool isIn(const vector<Vertex<T>*> &v, Vertex<T>* vertex) {
+    for (Vertex<T>* vert : v) {
+        if (vert->getInfo() == vertex->getInfo())
+            return true;
+    }
+    return false;
+}
+
+template <class T>
+void showPathGV(vector<Vertex<T>*> v) {
     //initial->setType(4);
     //gv->setVertexColor(initial->getInfo(), "GREEN");
     //gv->setVertexLabel(initial->getInfo(), "Start");
@@ -212,7 +235,46 @@ void showPathGV(Vertex<T>* initial,Vertex<T>* final,vector<Vertex<T>*> v){
     //gv->setVertexColor(final->getInfo(), "RED");
     //gv->setVertexLabel(final->getInfo(), "End");
 
-    Visualizar_Mapa();
+    gv = new GraphViewer(1200, 900, false);
+    gv->createWindow(1200, 900);
+    //gv->defineVertexColor("blue");
+    gv->defineEdgeColor("black");
+    for (Vertex<int>* vertex : graph.getVertexSet()) {
+        if (vertex->getInfo() == v[0]->getInfo()) {
+            gv->setVertexColor(vertex->getInfo(), "orange");
+            gv->setVertexLabel(vertex->getInfo(), "Estafeta");
+        }
+        else if (vertex->getInfo() == v[v.size()-1]->getInfo()) {
+            gv->setVertexColor(vertex->getInfo(), "orange");
+            gv->setVertexLabel(vertex->getInfo(), "Cliente");
+        }
+        else if (isIn(v, vertex)) {
+            if (vertex->getType() == 2) {
+                gv->setVertexColor(vertex->getInfo(), "green");
+                gv->setVertexLabel(vertex->getInfo(), "Restaurante");
+            }
+            else
+                gv->setVertexColor(vertex->getInfo(), "red");
+        }
+        else {
+            gv->setVertexColor(vertex->getInfo(), "blue");
+        }
+        gv->addNode(vertex->getInfo(), vertex->getLatitude(), vertex->getLongitude());
+    }
+    for (Vertex<int>* vertex : graph.getVertexSet()) {
+        for (Edge<int> edge : vertex->getAdj()) {
+            gv->addEdge(edge.getID(),vertex->getInfo(), edge.getDest()->getInfo(), EdgeType::DIRECTED);
+        }
+    }
+    // ERRO AO PINTAR ARESTAS
+    /*for (Vertex<int>* vert : v) {
+        for (Edge<int> edge : vert->getAdj()) {
+            if (edge.getDest()->getInfo() == vert->getPath()->getInfo()) {
+                gv->setEdgeColor(edge.getID(), "yellow");
+            }
+        }
+    }*/
+    gv->rearrange();
 }
 
 #endif //CAL_FP05_UTILS_H
