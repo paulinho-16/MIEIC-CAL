@@ -515,8 +515,7 @@ vector<T> Graph<T>::getPathTo(const T &dest) const{
 
 template<class T>
 void Graph<T>::floydWarshallShortestPath() {
-    bool undirected = true; // In the future replace it by function argument?
-
+    bool undirected = true;
 
     unsigned n = getVertexSet().size();
 
@@ -626,37 +625,87 @@ vector<T> Graph<T>::getfloydWarshallPath(const T &orig, const T &dest) const{
 template <class T>
 std::vector<Vertex<T> *> Graph<T>::NearestNeighborFloyd(const T &origin, vector<Pedido<T>*> pedidos, const T &dest){
     floydWarshallShortestPath();
+
     vector<Vertex<T> *> result;
     int inicial = findVertexIdx(origin);
+    //MutablePriorityQueue<Vertex<T>> Qr;
+    //MutablePriorityQueue<Vertex<T>> Qc;
     MutablePriorityQueue<Vertex<T>> Q;
 
-    //VER RESTAURANTE MAIS PERTO
+    //VER RESTAURANTE/CLIENTE MAIS PERTO
     for(Pedido<T>* pedido: pedidos){
-        Vertex<T>* vertex = findVertex(pedido->getRestaurante()->getMorada());
-        vertex->setDist(getW(inicial, findVertexIdx(pedido->getRestaurante()->getMorada())));
-        Q.insert(vertex);
+        Vertex<T>* vertexRes = findVertex(pedido->getRestaurante()->getMorada());
+        Vertex<T>* vertexCli = findVertex(pedido->getCliente()->getMorada());
+        vertexRes->setDist(getW(inicial, findVertexIdx(pedido->getRestaurante()->getMorada())));
+        vertexCli->setDist(getW(inicial, findVertexIdx(pedido->getCliente()->getMorada())));
+        Q.insert(vertexRes);
+        Q.insert(vertexCli);
     }
 
     result.push_back(findVertex(origin));
 
+    /*while(!Qr.empty()){
+        Vertex<T>* vertex;
+        int vertexIndex;
+
+        Vertex<T>* vertexResPerto= Qr.extractMin();
+        Pedido<T> *ped;
+        for(Pedido<T>* pedido : pedidos) {
+            if (vertexResPerto->getInfo() == pedido->getRestaurante()->getMorada()) {
+                ped = pedido;
+            }
+        }
+        Vertex<T>* vertexClientePerto;
+        do{
+            vertexClientePerto=Qc.extractMin();
+        }while(!ped->getCliente()->getMorada()!=vertexClientePerto->getInfo());
+
+        result.push_back(findVertex(origin));
+
+        if(vertexResPerto->getDist()<vertexClientePerto->getDist()) {
+            vertex = vertexResPerto;
+            vertexIndex = findVertexIdx(vertex->getInfo());
+        }
+        else{
+            vertex=vertexClientePerto;
+            vertexIndex = findVertexIdx(vertex->getInfo());
+        }
+
+        vector<T> path = getfloydWarshallPath((result.back()->getInfo()), vertex->getInfo());
+        for(unsigned i = 1; i < path.size(); i++) {
+            result.push_back(findVertex(path.at(i)));
+        }
+        for(Pedido<T>* pedido : pedidos){
+            vertex->setDist(getW(vertexIndex, findVertexIdx(pedido->getRestaurante()->getMorada())));
+        }
+    }*/
+
+
     while(!Q.empty()) {
-        //comecando pelo restaurante mais perto, passa por todos os restaurantes
         Vertex<T>* vertex = Q.extractMin();
         int vertexIndex =findVertexIdx(vertex->getInfo());
 
         for(Pedido<T>* pedido : pedidos) {
-            if(pedido->getRestaurante()->getMorada() == vertex->getInfo()) {
-                pedido->setAtendido(true);
+            if( vertex->getInfo()==pedido->getRestaurante()->getMorada()) {
+                //É restaurante;
+                pedido->setTemComida(true);
                 break;
+            }
+            if( vertex->getInfo()==pedido->getCliente()->getMorada()) {
+                //É cliente;
+                if(!pedido->getTemComida()){
+                    Vertex<T>* aux=findVertex((pedido->getRestaurante()->getMorada()));
+                    double d=aux->getDist()+1;
+                    vertex->setDist(d);
+                    //Q.heapifyUp(vertex->getInfo());
+                }
             }
         }
 
         vector<T> path = getfloydWarshallPath((result.back()->getInfo()), vertex->getInfo());
-
         for(unsigned i = 1; i < path.size(); i++) {
             result.push_back(findVertex(path.at(i)));
         }
-
         for(Pedido<T>* pedido : pedidos){
             vertex->setDist(getW(vertexIndex, findVertexIdx(pedido->getRestaurante()->getMorada())));
         }

@@ -21,10 +21,12 @@ using namespace std;
 template <class T>
 class MutablePriorityQueue {
 	vector<T *> H;
-	void heapifyUp(unsigned i);
-	void heapifyDown(unsigned i);
+	//void heapifyUp(unsigned i);
+	//void heapifyDown(unsigned i);
 	inline void set(unsigned i, T * x);
 public:
+    void heapifyUp(unsigned i);
+    void heapifyDown(unsigned i);
 	MutablePriorityQueue();
 	void insert(T * x);
 	T * extractMin();

@@ -279,12 +279,15 @@ void showPathGV(vector<Vertex<T>*> v, int restauranteIndex) {
         gv->rearrange();
     }
 }
+
 template <class T>
 void showPathGV2(vector<Vertex<T>*> v,vector<Pedido<T>*> pedidos) {
     gv = new GraphViewer(1000, 900, false);
     gv->createWindow(1200, 900);
     gv->defineEdgeColor("black");
+    int i=0;
     for(Pedido<int>*pedido:pedidos){
+        i++;
         for (Vertex<int>* vertex : graph.getVertexSet()) {
             if (vertex == v[0]) {
                 gv->setVertexColor(vertex->getInfo(), "orange");
@@ -292,11 +295,15 @@ void showPathGV2(vector<Vertex<T>*> v,vector<Pedido<T>*> pedidos) {
             }
             else if (vertex->getInfo() == pedido->getRestaurante()->getMorada()) {
                 gv->setVertexColor(vertex->getInfo(), "orange");
-                gv->setVertexLabel(vertex->getInfo(), "Restaurante");
+                stringstream os;
+                os << "Restaurante" << i;
+                gv->setVertexLabel(vertex->getInfo(), os.str());
             }
             else if (vertex->getInfo() == pedido->getCliente()->getMorada()) {
                 gv->setVertexColor(vertex->getInfo(), "orange");
-                gv->setVertexLabel(vertex->getInfo(), "Cliente");
+                stringstream os;
+                os << "Cliente" << i;
+                gv->setVertexLabel(vertex->getInfo(), os.str());
             }
             else if (isIn(v, vertex)) {
                 gv->setVertexColor(vertex->getInfo(), "red");
@@ -313,15 +320,14 @@ void showPathGV2(vector<Vertex<T>*> v,vector<Pedido<T>*> pedidos) {
             gv->addEdge(edge.getID(),vertex->getInfo(), edge.getDest()->getInfo(), EdgeType::DIRECTED);
         }
     }
-    for (Vertex<int>* vert : v) {
+    for (unsigned int i = 0 ; i < v.size() - 1 ; i++) {
         Sleep(1000);
-        for (Vertex<int> *vert2: v) {
-            if(getIndex(v,vert2)==getIndex(v,vert)+1){
-                for (Edge<int> edge : vert->getAdj()) {
-                    if (edge.getDest() == vert2) {
-                        gv->setEdgeColor(edge.getID(), "red");
-                    }
-                }
+        /*if (i != restauranteIndex - 1 && i != v.size() - 2)     // Para evitar pintar o restaurante e a morada do Cliente.
+            gv->setVertexColor(v[i+1]->getInfo(), "red");*/
+        for (Edge<int> edge : v[i]->getAdj()) {
+            if (edge.getDest() == v[i+1]) {
+                gv->setEdgeColor(edge.getID(), "red");
+                break;
             }
         }
         gv->rearrange();
