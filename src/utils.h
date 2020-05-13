@@ -231,12 +231,12 @@ int getIndex(vector<Vertex<int>*>v, Vertex<int>* a){
         if (vert==a) return i;
         i++;
     }
+    return -1;
 }
 template <class T>
-void showPathGV(vector<Vertex<T>*> v) {
+void showPathGV(vector<Vertex<T>*> v, int restauranteIndex) {
     gv = new GraphViewer(1000, 900, false);
     gv->createWindow(1200, 900);
-    //gv->defineVertexColor("blue");
     gv->defineEdgeColor("black");
     for (Vertex<int>* vertex : graph.getVertexSet()) {
         if (vertex == v[0]) {
@@ -252,8 +252,6 @@ void showPathGV(vector<Vertex<T>*> v) {
                 gv->setVertexColor(vertex->getInfo(), "green");
                 gv->setVertexLabel(vertex->getInfo(), "Restaurante");
             }
-            else
-                gv->setVertexColor(vertex->getInfo(), "red");
         }
         else {
             gv->setVertexColor(vertex->getInfo(), "blue");
@@ -265,15 +263,17 @@ void showPathGV(vector<Vertex<T>*> v) {
             gv->addEdge(edge.getID(),vertex->getInfo(), edge.getDest()->getInfo(), EdgeType::DIRECTED);
         }
     }
-    for (Vertex<int>* vert : v) {
+
+    Sleep(2000);
+
+    for (unsigned int i = 0 ; i < v.size() - 1 ; i++) {
         Sleep(1000);
-        for (Vertex<int> *vert2: v) {
-            if(getIndex(v,vert2)==getIndex(v,vert)+1){
-                for (Edge<int> edge : vert->getAdj()) {
-                    if (edge.getDest() == vert2) {
-                        gv->setEdgeColor(edge.getID(), "red");
-                    }
-                }
+        if (i != restauranteIndex - 1 && i != v.size() - 2)     // Para evitar pintar o restaurante e a morada do Cliente.
+            gv->setVertexColor(v[i+1]->getInfo(), "red");
+        for (Edge<int> edge : v[i]->getAdj()) {
+            if (edge.getDest() == v[i+1]) {
+                gv->setEdgeColor(edge.getID(), "red");
+                break;
             }
         }
         gv->rearrange();

@@ -58,18 +58,16 @@ void Um_Estafeta_Um_Pedido() {
     graph.dijkstraShortestPath(restaurante->getMorada());
     vector<Vertex<T>*> restaurante_cliente = graph.getPath(restaurante->getMorada(), cliente->getMorada());
 
-    vector<Vertex<T>*> total;
-    for (Vertex<T>* vertex : estafeta_restaurante)
-        total.push_back(vertex);
-    for (Vertex<T>* vertex : restaurante_cliente)
-        total.push_back(vertex);
+    int restauranteIndex = estafeta_restaurante.size() - 1;  // Para evitar pintar o vértice do Restaurante no showPathGV
 
-   // estafeta_restaurante.insert(estafeta_restaurante.end(), restaurante_cliente.begin(), restaurante_cliente.end());
+    restaurante_cliente.erase(restaurante_cliente.begin());
+    estafeta_restaurante.insert(estafeta_restaurante.end(), restaurante_cliente.begin(), restaurante_cliente.end());
+
     cout << endl;
-    for (Vertex<T>* vertex : total) {
+    for (Vertex<T>* vertex : estafeta_restaurante) {
         cout << "Vertex " << vertex->getInfo() << " com POS (" << vertex->getLatitude() << ", " << vertex->getLongitude() << ")"<<endl;
     }
-    showPathGV(total);
+    showPathGV(estafeta_restaurante, restauranteIndex);
 
     char sair = Sair_Programa();
     if (sair == 'N' || sair == 'n')
