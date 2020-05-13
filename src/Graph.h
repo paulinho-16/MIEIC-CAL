@@ -15,6 +15,8 @@
 #include <unordered_set>
 #include "MutablePriorityQueue.h"
 
+#include "Pedido.h"
+
 using namespace std;
 
 template <class T> class Edge;
@@ -177,10 +179,15 @@ void Edge<T>::setID(int id) {
 template <class T>
 class Graph {
 	vector<Vertex<T> *> vertexSet;    // vertex set
-	vector<vector<double>> distMin;
-	vector<vector<Vertex<T>*>> predecessores;
+	//vector<vector<double>> distMin;
+	//vector<vector<Vertex<T>*>> predecessores;
+
     // Matrix of distances between vertex, used in Floyd-Warshall Algorithm
-    vector<vector<double>>  W;
+    vector<vector<double>>  W; //distMin
+
+    // Matrix of paths between vertex, used in Floyd-Warshall Algorithm
+    vector<vector<int>> P; //predecedores
+
 
 public:
     Vertex<T> * findVertex(T in) const;
@@ -196,18 +203,26 @@ public:
     int findVertexIdx(const T &in) const;
     double getW(int i, int j) const;
     void setW(int i, int j, double value);
+    int getP(int i, int j) const;
+    void setP(int i, int j, int index);
+    void resetMatrixW(int n);
+    void resetMatrixP(int n);
+
+    int nextVertex(int i, int j);
+    double edgeWeight(int i, int j);
 
     // Fp05 - single source
 	void unweightedShortestPath(const T &s);
 	void dijkstraShortestPath(const T &s);
-    bool dijkstraRelax(Vertex<T> *v, Vertex<T> *w, double weight);
-    std::vector<Vertex<T> *> dijkstraShortestPath2(Graph<T> * graph, const T &origin, const T &dest);
+   // bool dijkstraRelax(Vertex<T> *v, Vertex<T> *w, double weight);
+    // std::vector<Vertex<T> *> dijkstraShortestPath2(Graph<T> * graph, const T &origin, const T &dest);
 	void bellmanFordShortestPath(const T &s);
 	vector<T> getPathTo(const T &dest) const;
 
 	// Fp05 - all pairs
 	void floydWarshallShortestPath();
 	vector<T> getfloydWarshallPath(const T &origin, const T &dest) const;
+    vector<Vertex<T> *> NearestNeighborFloyd(const T &origin, vector<Pedido<T>*> pedidos, const T &dest);
 
 };
 
@@ -317,6 +332,47 @@ void Graph<T>::setW(int i, int j, double value){
     W.at(i).at(j) = value;
 }
 
+template <class T>
+int Graph<T>::getP(int i, int j) const{
+    return P.at(i).at(j);
+}
+
+template <class T>
+void Graph<T>::setP(int i, int j, int index){
+    P.at(i).at(j) = index;
+}
+
+template <class T>
+void Graph<T>::resetMatrixW(int n) {
+    W = vector<vector<double>> (n, vector<double> (n));
+}
+
+template <class T>
+void Graph<T>::resetMatrixP(int n) {
+    P = vector<vector<int>> (n, vector<int> (n));
+}
+
+template <class T>
+int Graph<T>::nextVertex(int i, int j){
+    for(Edge<T> edge : (vertexSet.at(i)->getAdj())){
+        if(edge.dest == vertexSet.at(j))
+            return j;
+    }
+
+    return -1;
+}
+template <class T>
+double Graph<T>::edgeWeight(int i, int j){
+    if(i == j) return 0;
+
+    for(Edge<T> edge : (vertexSet.at(i)->getAdj())){
+        if(edge.dest == vertexSet.at(j))
+            return edge.getWeight();
+    }
+
+    return INF;
+}
+
 /**************** Single Source Shortest Path algorithms ************/
 
 template<class T>
@@ -366,7 +422,7 @@ void Graph<T>::dijkstraShortestPath(const T &origin) {
 	    }
 	}
 }
-
+/*
 template <class T>
 bool Graph<T>::dijkstraRelax(Vertex<T> *v, Vertex<T> *w, double weight) {
     if (v->getDist() + weight < w->getDist()) {
@@ -407,6 +463,7 @@ std::vector<Vertex<T> *> Graph<T>::dijkstraShortestPath2(Graph<T> * graph, const
 
     return result;
 }
+*/
 
 template<class T>
 void Graph<T>::bellmanFordShortestPath(const T &orig) {
@@ -458,7 +515,39 @@ vector<T> Graph<T>::getPathTo(const T &dest) const{
 
 template<class T>
 void Graph<T>::floydWarshallShortestPath() {
-    distMin.clear();
+    bool undirected = true; // In the future replace it by function argument?
+
+
+    unsigned n = getVertexSet().size();
+
+    resetMatrixW(n);
+    resetMatrixP(n);
+
+    for (unsigned i = 0; i < n; i++) {
+        for (unsigned j = i; j < n; j++) {
+            setW(i, j,edgeWeight(i, j));
+            setW(j, i, edgeWeight(j, i));
+            setP(i, j, nextVertex(i, j));
+            setP(j, i, nextVertex(j, i));
+        }
+    }
+
+    for(unsigned k = 0; k < n; k++)
+        for(unsigned j = 0; j < n; j++)
+            for(unsigned i = undirected ? j + 1 : 0; i < n; i++) {
+                if(j == k || i == k || i == j ||getW(i, k) == INF ||getW(k, j) == INF)
+                    continue; // avoid overflow and unnecessary calculations
+                double val =getW(i, k) + getW(k, j);
+                if (val < getW(i, j)) {
+                    setW(i, j, val);
+                    if(undirected) setW(j, i, val);
+
+                    setP(i, j, getP(i, k));
+                    if(undirected) setP(j, i, getP(j, k));
+                }
+            }
+
+    /*distMin.clear();
     predecessores.clear();                  // Aloca memória para as Matrizes
     distMin = vector<vector<double>>(getNumVertex(), vector<double>(getNumVertex(), INF));
     predecessores = vector<vector<Vertex<T>*>>(getNumVertex(), vector<Vertex<T>*>(getNumVertex(), NULL));
@@ -487,12 +576,32 @@ void Graph<T>::floydWarshallShortestPath() {
                 }
             }
         }
-    }
+    }*/
 }
 
 template<class T>
 vector<T> Graph<T>::getfloydWarshallPath(const T &orig, const T &dest) const{
-	vector<T> res;
+    vector<T> res;
+    int i = findVertexIdx(orig);
+    int j = findVertexIdx(dest);
+    cout << "Initial point: " << i << endl;
+    cout << "Final point: " << j << endl;
+    if (i == -1 || j == -1 || getW(i, j) == INF)  // missing or disconnected
+        return res;
+
+    res.push_back(vertexSet[i]->info);
+
+    while(i != j){
+        i = getP(i, j);
+
+        if(i < 0)
+            break;
+
+        res.push_back(vertexSet[i]->info);
+    }
+
+    return res;
+    /*vector<T> res;
     int indexOrigem, indexDestino;
     for (int i = 0 ; i < getNumVertex() ; i++) {
         if (vertexSet[i]->info == orig)
@@ -500,7 +609,6 @@ vector<T> Graph<T>::getfloydWarshallPath(const T &orig, const T &dest) const{
         else if (vertexSet[i]-> info == dest)
             indexDestino = i;
     }
-
     while (predecessores[indexOrigem][indexDestino] != vertexSet[indexOrigem]) {
         res.emplace(res.begin(), predecessores[indexOrigem][indexDestino]->info);
         for (int j = 0 ; j < getNumVertex() ; j++) {
@@ -510,10 +618,57 @@ vector<T> Graph<T>::getfloydWarshallPath(const T &orig, const T &dest) const{
             }
         }
     }
-
     res.push_back(dest);
     res.insert(res.begin(), orig);
-    return res;
+    return res;*/
+}
+
+template <class T>
+std::vector<Vertex<T> *> Graph<T>::NearestNeighborFloyd(const T &origin, vector<Pedido<T>*> pedidos, const T &dest){
+    floydWarshallShortestPath();
+    vector<Vertex<T> *> result;
+    int inicial = findVertexIdx(origin);
+    MutablePriorityQueue<Vertex<T>> Q;
+
+    //VER RESTAURANTE MAIS PERTO
+    for(Pedido<T>* pedido: pedidos){
+        Vertex<T>* vertex = findVertex(pedido->getRestaurante()->getMorada());
+        vertex->setDist(getW(inicial, findVertexIdx(pedido->getRestaurante()->getMorada())));
+        Q.insert(vertex);
+    }
+
+    result.push_back(findVertex(origin));
+
+    while(!Q.empty()) {
+        //comecando pelo restaurante mais perto, passa por todos os restaurantes
+        Vertex<T>* vertex = Q.extractMin();
+        int vertexIndex =findVertexIdx(vertex->getInfo());
+
+        for(Pedido<T>* pedido : pedidos) {
+            if(pedido->getRestaurante()->getMorada() == vertex->getInfo()) {
+                pedido->setAtendido(true);
+                break;
+            }
+        }
+
+        vector<T> path = getfloydWarshallPath((result.back()->getInfo()), vertex->getInfo());
+
+        for(unsigned i = 1; i < path.size(); i++) {
+            result.push_back(findVertex(path.at(i)));
+        }
+
+        for(Pedido<T>* pedido : pedidos){
+            vertex->setDist(getW(vertexIndex, findVertexIdx(pedido->getRestaurante()->getMorada())));
+        }
+    }
+
+    //termina
+    vector<T> path =getfloydWarshallPath((result.back()->getInfo()), dest);
+    for(unsigned i = 1; i < path.size(); i++ ){
+        result.push_back(findVertex(path.at(i)));
+    }
+
+    return result;
 }
 
 

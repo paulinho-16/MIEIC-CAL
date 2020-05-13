@@ -328,52 +328,5 @@ void showPathGV2(vector<Vertex<T>*> v,vector<Pedido<T>*> pedidos) {
     }
 }
 
-template <class T>
-std::vector<Vertex<T> *> NearestNeighborFloyd(Graph<T> * graph1, const T &origin, vector<Pedido<T>*> pedidos, const T &dest){
-    vector<Vertex<T> *> result;
-    int inicial = graph1->findVertexIdx(origin);
-    MutablePriorityQueue<Vertex<T>> Q;
-
-    //VER RESTAURANTE MAIS PERTO
-    for(Pedido<T>* pedido: pedidos){
-        Vertex<T>* vertex = graph1->findVertex(pedido->getRestaurante()->getMorada());
-        vertex->setDist(graph1->getW(inicial, graph1->findVertexIdx(pedido->getRestaurante()->getMorada())));
-        Q.insert(vertex);
-    }
-
-    result.push_back(graph1->findVertex(origin));
-
-    while(!Q.empty()) {
-        //comecando pelo restaurante mais perto, passa por todos os restaurantes
-        Vertex<T>* vertex = Q.extractMin();
-        int vertexIndex = graph1->findVertexIdx(vertex->getInfo());
-
-        for(Pedido<T>* pedido : pedidos) {
-            if(pedido->getRestaurante()->getMorada() == vertex->getInfo()) {
-                pedido->setAtendido(true);
-                break;
-            }
-        }
-
-        vector<T> path = graph1->getfloydWarshallPath((result.back()->getInfo()), vertex->getInfo());
-        //isto esta a retornar vazio (?)
-        for(unsigned i = 1; i < path.size(); i++) {
-            result.push_back(graph1->findVertex(path.at(i)));
-        }
-
-        for(Pedido<T>* pedido : pedidos){
-            vertex->setDist(graph1->getW(vertexIndex, graph1->findVertexIdx(pedido->getRestaurante()->getMorada())));
-        }
-    }
-
-    //termina
-    /*vector<T> path = graph1->getfloydWarshallPath((result.back()->getInfo()), dest);
-    for(unsigned i = 1; i < path.size(); i++ ){
-        result.push_back(graph1->findVertex(path.at(i)));
-    }*/
-
-
-    return result;
-}
 
 #endif //CAL_FP05_UTILS_H

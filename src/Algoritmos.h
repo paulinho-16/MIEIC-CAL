@@ -55,6 +55,7 @@ void Um_Estafeta_Um_Pedido() {
 
     graph.dijkstraShortestPath(estafeta->getPos());
     vector<Vertex<T>*> estafeta_restaurante = graph.getPath(estafeta->getPos(), restaurante->getMorada());
+    graph.dijkstraShortestPath(restaurante->getMorada());
     vector<Vertex<T>*> restaurante_cliente = graph.getPath(restaurante->getMorada(), cliente->getMorada());
 
     vector<Vertex<T>*> total;
@@ -136,7 +137,7 @@ void Um_Estafeta_Varios_Pedidos() {
 
     // JA TEMOS A LISTA DE PEDIDOS E O ESTAFETA, AGORA É IMPLEMENTAR O ALGORITMO - CHAMAR AQUI E FAZER EM FUNÇÃO DIFERENTE
 
-    vector<Vertex<T>*> caminho= NearestNeighborFloyd(&graph, estafeta->getPos(), pedidos, cliente->getMorada());
+    vector<Vertex<T>*> caminho= graph.NearestNeighborFloyd( estafeta->getPos(), pedidos, cliente->getMorada());
     showPathGV2(caminho,pedidos);
 
 }
