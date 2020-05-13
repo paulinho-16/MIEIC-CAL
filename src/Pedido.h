@@ -11,6 +11,7 @@ class Pedido {
     Cliente<T>* cliente;
     Restaurante<T>* restaurante;
     //Estafeta<T>* estafeta;
+    bool atendido;
 public:
     //int getId();
     //void setId(int i);
@@ -34,6 +35,14 @@ public:
 
     void setRestaurante(Restaurante<T>* r) {
         restaurante = r;
+    }
+
+    void setAtendido(bool a){
+        this->atendido=a;
+    }
+
+    bool getAtendido(){
+        return this->atendido;
     }
 
     //Estafeta<T> getEstafeta();

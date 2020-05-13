@@ -225,26 +225,25 @@ bool isIn(const vector<Vertex<T>*> &v, Vertex<T>* vertex) {
     return false;
 }
 
+int getIndex(vector<Vertex<int>*>v, Vertex<int>* a){
+    int i=0;
+    for (Vertex<int>* vert : v) {
+        if (vert==a) return i;
+        i++;
+    }
+}
 template <class T>
 void showPathGV(vector<Vertex<T>*> v) {
-    //initial->setType(4);
-    //gv->setVertexColor(initial->getInfo(), "GREEN");
-    //gv->setVertexLabel(initial->getInfo(), "Start");
-
-    //gv->setVertexSize(final->getInfo(), 20);
-    //gv->setVertexColor(final->getInfo(), "RED");
-    //gv->setVertexLabel(final->getInfo(), "End");
-
-    gv = new GraphViewer(1200, 900, false);
+    gv = new GraphViewer(1000, 900, false);
     gv->createWindow(1200, 900);
     //gv->defineVertexColor("blue");
     gv->defineEdgeColor("black");
     for (Vertex<int>* vertex : graph.getVertexSet()) {
-        if (vertex->getInfo() == v[0]->getInfo()) {
+        if (vertex == v[0]) {
             gv->setVertexColor(vertex->getInfo(), "orange");
             gv->setVertexLabel(vertex->getInfo(), "Estafeta");
         }
-        else if (vertex->getInfo() == v[v.size()-1]->getInfo()) {
+        else if (vertex == v[v.size()-1]) {
             gv->setVertexColor(vertex->getInfo(), "orange");
             gv->setVertexLabel(vertex->getInfo(), "Cliente");
         }
@@ -266,15 +265,115 @@ void showPathGV(vector<Vertex<T>*> v) {
             gv->addEdge(edge.getID(),vertex->getInfo(), edge.getDest()->getInfo(), EdgeType::DIRECTED);
         }
     }
-    // ERRO AO PINTAR ARESTAS
-    /*for (Vertex<int>* vert : v) {
-        for (Edge<int> edge : vert->getAdj()) {
-            if (edge.getDest()->getInfo() == vert->getPath()->getInfo()) {
-                gv->setEdgeColor(edge.getID(), "yellow");
+    for (Vertex<int>* vert : v) {
+        Sleep(1000);
+        for (Vertex<int> *vert2: v) {
+            if(getIndex(v,vert2)==getIndex(v,vert)+1){
+                for (Edge<int> edge : vert->getAdj()) {
+                    if (edge.getDest() == vert2) {
+                        gv->setEdgeColor(edge.getID(), "red");
+                    }
+                }
             }
         }
+        gv->rearrange();
+    }
+}
+template <class T>
+void showPathGV2(vector<Vertex<T>*> v,vector<Pedido<T>*> pedidos) {
+    gv = new GraphViewer(1000, 900, false);
+    gv->createWindow(1200, 900);
+    gv->defineEdgeColor("black");
+    for(Pedido<int>*pedido:pedidos){
+        for (Vertex<int>* vertex : graph.getVertexSet()) {
+            if (vertex == v[0]) {
+                gv->setVertexColor(vertex->getInfo(), "orange");
+                gv->setVertexLabel(vertex->getInfo(), "Estafeta");
+            }
+            else if (vertex->getInfo() == pedido->getRestaurante()->getMorada()) {
+                gv->setVertexColor(vertex->getInfo(), "orange");
+                gv->setVertexLabel(vertex->getInfo(), "Restaurante");
+            }
+            else if (vertex->getInfo() == pedido->getCliente()->getMorada()) {
+                gv->setVertexColor(vertex->getInfo(), "orange");
+                gv->setVertexLabel(vertex->getInfo(), "Cliente");
+            }
+            else if (isIn(v, vertex)) {
+                gv->setVertexColor(vertex->getInfo(), "red");
+            }
+            else {
+                gv->setVertexColor(vertex->getInfo(), "blue");
+            }
+            gv->addNode(vertex->getInfo(), vertex->getLatitude(), vertex->getLongitude());
+        }
+    }
+
+    for (Vertex<int>* vertex : graph.getVertexSet()) {
+        for (Edge<int> edge : vertex->getAdj()) {
+            gv->addEdge(edge.getID(),vertex->getInfo(), edge.getDest()->getInfo(), EdgeType::DIRECTED);
+        }
+    }
+    for (Vertex<int>* vert : v) {
+        Sleep(1000);
+        for (Vertex<int> *vert2: v) {
+            if(getIndex(v,vert2)==getIndex(v,vert)+1){
+                for (Edge<int> edge : vert->getAdj()) {
+                    if (edge.getDest() == vert2) {
+                        gv->setEdgeColor(edge.getID(), "red");
+                    }
+                }
+            }
+        }
+        gv->rearrange();
+    }
+}
+
+template <class T>
+std::vector<Vertex<T> *> NearestNeighborFloyd(Graph<T> * graph1, const T &origin, vector<Pedido<T>*> pedidos, const T &dest){
+    vector<Vertex<T> *> result;
+    int inicial = graph1->findVertexIdx(origin);
+    MutablePriorityQueue<Vertex<T>> Q;
+
+    //VER RESTAURANTE MAIS PERTO
+    for(Pedido<T>* pedido: pedidos){
+        Vertex<T>* vertex = graph1->findVertex(pedido->getRestaurante()->getMorada());
+        vertex->setDist(graph1->getW(inicial, graph1->findVertexIdx(pedido->getRestaurante()->getMorada())));
+        Q.insert(vertex);
+    }
+
+    result.push_back(graph1->findVertex(origin));
+
+    while(!Q.empty()) {
+        //comecando pelo restaurante mais perto, passa por todos os restaurantes
+        Vertex<T>* vertex = Q.extractMin();
+        int vertexIndex = graph1->findVertexIdx(vertex->getInfo());
+
+        for(Pedido<T>* pedido : pedidos) {
+            if(pedido->getRestaurante()->getMorada() == vertex->getInfo()) {
+                pedido->setAtendido(true);
+                break;
+            }
+        }
+
+        vector<T> path = graph1->getfloydWarshallPath((result.back()->getInfo()), vertex->getInfo());
+        //isto esta a retornar vazio (?)
+        for(unsigned i = 1; i < path.size(); i++) {
+            result.push_back(graph1->findVertex(path.at(i)));
+        }
+
+        for(Pedido<T>* pedido : pedidos){
+            vertex->setDist(graph1->getW(vertexIndex, graph1->findVertexIdx(pedido->getRestaurante()->getMorada())));
+        }
+    }
+
+    //termina
+    /*vector<T> path = graph1->getfloydWarshallPath((result.back()->getInfo()), dest);
+    for(unsigned i = 1; i < path.size(); i++ ){
+        result.push_back(graph1->findVertex(path.at(i)));
     }*/
-    gv->rearrange();
+
+
+    return result;
 }
 
 #endif //CAL_FP05_UTILS_H

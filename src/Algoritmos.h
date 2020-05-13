@@ -52,18 +52,24 @@ void Um_Estafeta_Um_Pedido() {
 
     // JA TEMOS O CLIENTE, RESTAURANTE E ESTAFETA, AGORA É IMPLEMENTAR O ALGORITMO - CHAMAR AQUI E FAZER EM FUNÇÃO DIFERENTE:
     Pedido<T> *pedido = new Pedido<T>(cliente,restaurante);
-    //vector<Vertex<T>*> solutionPath;
-    //solutionPath = graph.dijkstraShortestPath2(&graph, estafeta->getPos(), restaurante->getMorada());
+
     graph.dijkstraShortestPath(estafeta->getPos());
     vector<Vertex<T>*> estafeta_restaurante = graph.getPath(estafeta->getPos(), restaurante->getMorada());
     vector<Vertex<T>*> restaurante_cliente = graph.getPath(restaurante->getMorada(), cliente->getMorada());
-    estafeta_restaurante.insert(estafeta_restaurante.end(), restaurante_cliente.begin(), restaurante_cliente.end());
+
+    vector<Vertex<T>*> total;
+    for (Vertex<T>* vertex : estafeta_restaurante)
+        total.push_back(vertex);
+    for (Vertex<T>* vertex : restaurante_cliente)
+        total.push_back(vertex);
+
+   // estafeta_restaurante.insert(estafeta_restaurante.end(), restaurante_cliente.begin(), restaurante_cliente.end());
     cout << endl;
-    for (Vertex<T>* vertex : estafeta_restaurante) {
+    for (Vertex<T>* vertex : total) {
         cout << "Vertex " << vertex->getInfo() << " com POS (" << vertex->getLatitude() << ", " << vertex->getLongitude() << ")"<<endl;
     }
-    showPathGV(estafeta_restaurante);
-    //showPathGV(graph.findVertex(estafeta->getPos()),graph.findVertex(restaurante->getMorada()),solutionPath);
+    showPathGV(total);
+
     char sair = Sair_Programa();
     if (sair == 'N' || sair == 'n')
         Menu_Principal();
@@ -129,6 +135,10 @@ void Um_Estafeta_Varios_Pedidos() {
     Estafeta<T>* estafeta = eatExpress.getEstafetas().at(n_estafeta-1);
 
     // JA TEMOS A LISTA DE PEDIDOS E O ESTAFETA, AGORA É IMPLEMENTAR O ALGORITMO - CHAMAR AQUI E FAZER EM FUNÇÃO DIFERENTE
+
+    vector<Vertex<T>*> caminho= NearestNeighborFloyd(&graph, estafeta->getPos(), pedidos, cliente->getMorada());
+    showPathGV2(caminho,pedidos);
+
 }
 
 template <class T>

@@ -179,6 +179,8 @@ class Graph {
 	vector<Vertex<T> *> vertexSet;    // vertex set
 	vector<vector<double>> distMin;
 	vector<vector<Vertex<T>*>> predecessores;
+    // Matrix of distances between vertex, used in Floyd-Warshall Algorithm
+    vector<vector<double>>  W;
 
 public:
     Vertex<T> * findVertex(T in) const;
@@ -191,8 +193,11 @@ public:
 	void printEdges();
 	vector<Vertex<T> *> getVertexSet() const;
     vector<Vertex<T> *> getPath(const T &origin, const T &dest) const;
+    int findVertexIdx(const T &in) const;
+    double getW(int i, int j) const;
+    void setW(int i, int j, double value);
 
-	// Fp05 - single source
+    // Fp05 - single source
 	void unweightedShortestPath(const T &s);
 	void dijkstraShortestPath(const T &s);
     bool dijkstraRelax(Vertex<T> *v, Vertex<T> *w, double weight);
@@ -294,6 +299,23 @@ vector<Vertex<T> *> Graph<T>::getPath(const T &origin, const T &dest) const{
     return res;
 }
 
+template <class T>
+int Graph<T>::findVertexIdx(const T &in) const {
+    for (unsigned i = 0; i < vertexSet.size(); i++)
+        if (vertexSet[i]->info == in)
+            return i;
+    return -1;
+}
+
+template <class T>
+double Graph<T>::getW(int i, int j) const{
+    return W.at(i).at(j);
+}
+
+template <class T>
+void Graph<T>::setW(int i, int j, double value){
+    W.at(i).at(j) = value;
+}
 
 /**************** Single Source Shortest Path algorithms ************/
 
