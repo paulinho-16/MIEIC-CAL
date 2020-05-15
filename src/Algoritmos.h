@@ -118,6 +118,7 @@ void Um_Estafeta_Varios_Pedidos() {
         }
     } while (n_cliente != 0 && n_restaurante != 0);
 
+    eatExpress.setPedidos(pedidos);
 
     cout << endl;
     for (Estafeta<T>* estafeta : eatExpress.getEstafetas()) {

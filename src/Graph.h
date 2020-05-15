@@ -626,23 +626,23 @@ template <class T>
 std::vector<Vertex<T> *> Graph<T>::NearestNeighborFloyd(const T &origin, vector<Pedido<T>*> pedidos, const T &dest){
     floydWarshallShortestPath();
 
-    vector<Vertex<T> *> result;
-    int inicial = findVertexIdx(origin);
-    //MutablePriorityQueue<Vertex<T>> Qr;
-    //MutablePriorityQueue<Vertex<T>> Qc;
-    MutablePriorityQueue<Vertex<T>> Q;
 
-    //VER RESTAURANTE/CLIENTE MAIS PERTO
-    for(Pedido<T>* pedido: pedidos){
-        Vertex<T>* vertexRes = findVertex(pedido->getRestaurante()->getMorada());
-        Vertex<T>* vertexCli = findVertex(pedido->getCliente()->getMorada());
-        vertexRes->setDist(getW(inicial, findVertexIdx(pedido->getRestaurante()->getMorada())));
-        vertexCli->setDist(getW(inicial, findVertexIdx(pedido->getCliente()->getMorada())));
-        Q.insert(vertexRes);
-        Q.insert(vertexCli);
-    }
+   vector<Vertex<T> *> result;
+   int inicial = findVertexIdx(origin);
+   //MutablePriorityQueue<Vertex<T>> Qr;
+   //MutablePriorityQueue<Vertex<T>> Qc;
+   MutablePriorityQueue<Vertex<T>> Q;
 
-    result.push_back(findVertex(origin));
+   for(Pedido<T>* pedido: pedidos){
+       Vertex<T>* vertexRes = findVertex(pedido->getRestaurante()->getMorada());
+       Vertex<T>* vertexCli = findVertex(pedido->getCliente()->getMorada());
+       vertexRes->setDist(getW(inicial, findVertexIdx(pedido->getRestaurante()->getMorada())));
+       vertexCli->setDist(getW(inicial, findVertexIdx(pedido->getCliente()->getMorada())));
+       Q.insert(vertexRes);
+       Q.insert(vertexCli);
+   }
+
+   result.push_back(findVertex(origin));
 
     /*while(!Qr.empty()){
         Vertex<T>* vertex;
