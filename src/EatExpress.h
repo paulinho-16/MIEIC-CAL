@@ -5,6 +5,9 @@
 #include "Cliente.h"
 #include "Restaurante.h"
 #include "Estafeta.h"
+#include "Pedido.h"
+
+#include "Graph.h"
 
 template <class T>
 class EatExpress {
@@ -12,6 +15,7 @@ class EatExpress {
         vector<Cliente<T>*> clientes;
         vector<Restaurante<T>*> restaurantes;
         vector<Estafeta<T>*> estafetas;
+        vector<Pedido<T>*> pedidos;
         T casaEstafetas;
 
     public:
@@ -39,6 +43,14 @@ class EatExpress {
         estafetas = e;
     }
 
+    vector<Pedido<T>*> getPedidos() {
+        return pedidos;
+    }
+
+    void setPedidos(vector<Pedido<T>*> p) {
+        pedidos = p;
+    }
+
     T getCasaEstafetas() {
         return casaEstafetas;
     }
@@ -57,6 +69,18 @@ class EatExpress {
 
     int getNumEstafetas() {
         return estafetas.size();
+    }
+
+    int getNumPedidos() {
+        return pedidos.size();
+    }
+
+    Pedido<T>* findPedido(T info) {
+        for (Pedido<T>* pedido : pedidos) {
+            if(pedido->getCliente()->getMorada() == info || pedido->getRestaurante()->getMorada() == info)
+                return pedido;
+        }
+        return nullptr;
     }
 };
 

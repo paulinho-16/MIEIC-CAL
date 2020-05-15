@@ -11,7 +11,7 @@ class Pedido {
     Cliente<T>* cliente;
     Restaurante<T>* restaurante;
     //Estafeta<T>* estafeta;
-    bool temComida;
+    bool requisitado;
 public:
     //int getId();
     //void setId(int i);
@@ -37,12 +37,12 @@ public:
         restaurante = r;
     }
 
-    void setTemComida(bool a){
-        this->temComida=a;
+    void setRequisitado(bool a){
+        requisitado=a;
     }
 
-    bool getTemComida(){
-        return this->temComida;
+    bool isRequisitado() {
+        return requisitado;
     }
 
     //Estafeta<T> getEstafeta();
