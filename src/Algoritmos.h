@@ -5,6 +5,8 @@
 extern EatExpress<int> eatExpress;
 extern Graph<int> graph;
 
+Estafeta<int>* estafeta_ativo;
+
 void Menu_Principal();
 char Sair_Programa();
 
@@ -83,7 +85,20 @@ struct Compare {
     {
         // return "true" if "p1" is ordered
         // before "p2", for example:
-        return graph.getDist(0, p1->getInfo()) > graph.getDist(0, p2->getInfo());       // MUDAR CONDIÇÕES
+        if (p1->getType() == 2 && p2->getType() == 2) {
+            return graph.getDist(estafeta_ativo->getPos(), p1->getInfo()) > graph.getDist(estafeta_ativo->getPos(), p2->getInfo());
+        }
+        else if (p1->getType() == 1 && p2->getType() == 2) {
+            if (graph.getDist(estafeta_ativo->getPos(), p1->getInfo()) > graph.getDist(estafeta_ativo->getPos(), p2->getInfo())) {
+                if (eatExpress.findPedido(p1->getInfo()) != eatExpress.findPedido(p2->getInfo())) {
+                    return true;
+                }
+            }
+        }
+        else if (p1->getType() == 1 && p2->getType() == 1) {
+            return graph.getDist(estafeta_ativo->getPos(), p1->getInfo()) > graph.getDist(estafeta_ativo->getPos(), p2->getInfo());
+        }
+        return false;
     }
 };
 
@@ -148,6 +163,7 @@ void Um_Estafeta_Varios_Pedidos() {
 
     // JA TEMOS A LISTA DE PEDIDOS E O ESTAFETA, AGORA É IMPLEMENTAR O ALGORITMO - CHAMAR AQUI E FAZER EM FUNÇÃO DIFERENTE
 
+    estafeta_ativo = estafeta;
     eatExpress.setPedidos(pedidos);
 
     //graph.floydWarshallShortestPath();
@@ -157,8 +173,14 @@ void Um_Estafeta_Varios_Pedidos() {
     priority_queue<Vertex<T>*, vector<Vertex<T>*>, Compare<T>> Q;
 
     for (Pedido<T>* pedido : eatExpress.getPedidos()) {
-        Q.push(graph.findVertex(pedido->getRestaurante()->getMorada()));
+        if (!pedido->getRestaurante()->RestauranteJaPedido()) {
+            Q.push(graph.findVertex(pedido->getRestaurante()->getMorada()));
+            pedido->getRestaurante()->setJaPedido(true);
+        }
+    }
+    for (Pedido<T>* pedido : eatExpress.getPedidos()) {
         Q.push(graph.findVertex(pedido->getCliente()->getMorada()));
+        pedido->getRestaurante()->setJaPedido(false);
     }
     // MOSTRAR Q
     /*while (!Q.empty()) {
@@ -201,6 +223,8 @@ void Um_Estafeta_Varios_Pedidos() {
 
     //vector<Vertex<T>*> caminho= graph.NearestNeighborFloyd(estafeta->getPos());
     showPathGV(percurso);
+
+    estafeta->setPos(eatExpress.getCasaEstafetas());
 
     char sair = Sair_Programa();
     if (sair == 'N' || sair == 'n')

@@ -9,11 +9,13 @@ class Restaurante {
     string nome;
     string descricao;
     T morada;
+    bool ja_pedido;
 public:
     Restaurante(string n, string desc, T id) {
         nome = n;
         descricao = desc;
         morada = id;
+        ja_pedido = false;
     }
 
     string getNome() {
@@ -38,6 +40,14 @@ public:
 
     void setMorada(T v) {
         morada = v;
+    }
+
+    bool RestauranteJaPedido() {
+        return ja_pedido;
+    }
+
+    void setJaPedido(bool b) {
+        ja_pedido = b;
     }
 };
 
