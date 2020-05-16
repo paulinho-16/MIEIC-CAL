@@ -28,7 +28,7 @@ template <class T> class Vertex;
 
 #define INF std::numeric_limits<double>::max()
 
-/************************* Vertex  **************************/
+/**************************************************** Vertex  *****************************************************************/
 
 template <class T>
 class Vertex {
@@ -145,7 +145,7 @@ void Vertex<T>::setPath(Vertex<T>* p){
     this->path=p;
 }
 
-/********************** Edge  ****************************/
+/************************************************************ Edge  *******************************************************************/
 
 template <class T>
 class Edge {
@@ -185,13 +185,11 @@ void Edge<T>::setID(int id) {
     this->edgeID = id;
 }
 
-/*************************** Graph  **************************/
+/********************************************************* Graph  **********************************************************************/
 
 template <class T>
 class Graph {
-	vector<Vertex<T> *> vertexSet;    // vertex set
-	//vector<vector<double>> distMin;
-	//vector<vector<Vertex<T>*>> predecessores;
+	vector<Vertex<T> *> vertexSet;
 
     // Matrix of distances between vertex, used in Floyd-Warshall Algorithm
     vector<vector<double>>  W; //distMin
@@ -234,6 +232,9 @@ public:
 	void floydWarshallShortestPath();
 	vector<T> getfloydWarshallPath(const T &origin, const T &dest) const;
     vector<Vertex<T> *> NearestNeighborFloyd(const T &origin);
+
+    vector<T> dfs() const;
+    void dfsVisit(Vertex<T> *v, vector<T> & res) const;
 
 };
 
@@ -310,6 +311,7 @@ bool Graph<T>::addEdge(int id, T source, T dest) {
 	v1->addEdge(id, v2, weight);
 	return true;
 }
+
 template<class T>
 vector<Vertex<T> *> Graph<T>::getPath(const T &origin, const T &dest) const{
     vector<Vertex<T> *> res;
@@ -372,6 +374,7 @@ int Graph<T>::nextVertex(int i, int j){
 
     return -1;
 }
+
 template <class T>
 double Graph<T>::edgeWeight(int i, int j){
     if(i == j) return 0;
@@ -639,11 +642,8 @@ std::vector<Vertex<T> *> Graph<T>::NearestNeighborFloyd(const T &origin){
 
     vector<Vertex<T> *> result;
     int inicial = findVertexIdx(origin);
-    //MutablePriorityQueue<Vertex<T>> Qr;
-    //MutablePriorityQueue<Vertex<T>> Qc;
     MutablePriorityQueue<Vertex<T>> Q;
 
-    //VER RESTAURANTE/CLIENTE MAIS PERTO
     for(Pedido<T>* pedido : eatExpress.getPedidos()) {
         Vertex<T>* vertexRes = findVertex(pedido->getRestaurante()->getMorada());
         Vertex<T>* vertexCli = findVertex(pedido->getCliente()->getMorada());
@@ -701,23 +701,6 @@ std::vector<Vertex<T> *> Graph<T>::NearestNeighborFloyd(const T &origin){
         Vertex<T>* vertex = Q.extractMin();
         int vertexIndex =findVertexIdx(vertex->getInfo());
 
-        for(Pedido<T>* pedido : eatExpress.getPedidos()) {
-            if( vertex->getInfo()==pedido->getRestaurante()->getMorada()) {
-                //É restaurante;
-                //pedido->setRequisitado(true);
-                break;
-            }
-            if( vertex->getInfo()==pedido->getCliente()->getMorada()) {
-                //É cliente;
-                if(!pedido->isRequisitado()){
-                    Vertex<T>* aux=findVertex((pedido->getRestaurante()->getMorada()));
-                    double d=aux->getDist()+1;
-                    vertex->setDist(d);
-                    //Q.heapifyUp(vertex->getInfo());
-                }
-            }
-        }
-
         vector<T> path = getfloydWarshallPath((result.back()->getInfo()), vertex->getInfo());
         for(unsigned i = 1; i < path.size(); i++) {
             result.push_back(findVertex(path.at(i)));
@@ -737,4 +720,40 @@ std::vector<Vertex<T> *> Graph<T>::NearestNeighborFloyd(const T &origin){
 }
 
 
+/**************************************************************************************************************************/
+/*
+ * Performs a depth-first search (dfs) in a graph (this).
+ * Returns a vector with the contents of the vertices by dfs order.
+ * Follows the algorithm described in theoretical classes.
+ */
+template <class T>
+vector<T> Graph<T>::dfs() const {
+    vector<T> res;
+    typename vector<Vertex<T>*>::const_iterator it;
+    for(it=vertexSet.begin(); it!=vertexSet.end(); it++){
+        (*it)->visited=false;
+    }
+    for(it=vertexSet.begin(); it!=vertexSet.end(); it++){
+        if(!(*it)->visited){
+            dfsVisit(*it,res);
+        }
+    }
+    return res;
+}
+
+/*
+ * Auxiliary function that visits a vertex (v) and its adjacent not yet visited, recursively.
+ * Updates a parameter with the list of visited node contents.
+ */
+template <class T>
+void Graph<T>::dfsVisit(Vertex<T> *v, vector<T> & res) const {
+    v->visited=true;
+    res.push_back(v->info);
+    typename vector<Edge<T>>::iterator it;
+    for(it=v->adj.begin(); it!=v->adj.end(); it++){
+        if(!(it->dest)->visited){
+            dfsVisit((*it).dest,res);
+        }
+    }
+}
 #endif /* GRAPH_H_ */

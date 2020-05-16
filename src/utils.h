@@ -23,6 +23,9 @@ GraphViewer *gv;
 
 using namespace std;
 
+template <class T>
+void showConnection(vector<T> vector);
+
 void Logotipo() {
     cout << "        ______      _   ______" << endl;
     cout << "       |  ____|    | | |  ____|" << endl;
@@ -67,7 +70,7 @@ void readNodes(string file_directory) {
         graph.addVertex(vertex);
     }
     cout << "Vertex Lidos: " << graph.getNumVertex() << endl;
-    // graph.printVertexs();
+   // graph.printVertexs();
     ler.close();
 }
 
@@ -110,11 +113,30 @@ void readEdges(string file_directory) {
     //system("pause");
 }
 
+template <class T>
 void readMap(string directory) {
     string nodes_path = directory + "/nodes.txt";
     string edges_path = directory + "/edges.txt";
     readNodes<int>(nodes_path);
     readEdges<int>(edges_path);
+
+    cout<<"Testing Connectivity..."<<endl;
+
+    vector<T> vec= graph.dfs();
+    /*vector<T> vec;
+    for(Vertex<T>* vertex: graph.getVertexSet()){
+        vec.push_back(vertex->getInfo());
+    }*/
+    showConnection<T>(vec);
+    if(vec.size()==graph.getVertexSet().size()){
+        cout<<"Grafo fortemente conexo!"<<endl;
+    }
+    else{
+        for(Vertex<T>* vertex:graph.getVertexSet()){
+            //TODO
+        }
+    }
+    system("pause");
 }
 
 template <class T>
@@ -232,6 +254,40 @@ int getIndex(vector<Vertex<int>*>v, Vertex<int>* a){
         i++;
     }
     return -1;
+}
+
+template <class T>
+void showConnection(vector<T> vec){
+    gv = new GraphViewer(1000, 900, false);
+    gv->createWindow(1200, 900);
+    gv->defineEdgeColor("black");
+    vector<Vertex<T>*> vector_vertexs;
+    for(T t : vec){
+        Vertex<T>* vert=graph.findVertex(t);
+        for (Vertex<int>* vertex : graph.getVertexSet()) {
+            if (vert == vertex) {
+                gv->setVertexColor(vertex->getInfo(), "black");
+                gv->addNode(vertex->getInfo(), vertex->getLatitude(), vertex->getLongitude());
+                vector_vertexs.push_back(vert);
+            }
+        }
+    }
+    for (Vertex<int>* vertex : graph.getVertexSet()) {
+        for (Edge<int> edge : vertex->getAdj()) {
+            gv->addEdge(edge.getID(),vertex->getInfo(), edge.getDest()->getInfo(), EdgeType::DIRECTED);
+        }
+    }
+    for (unsigned int i = 0 ; i < vector_vertexs.size() ; i++) {
+        Sleep(250);
+        gv->setVertexColor(vector_vertexs[i]->getInfo(),"green");
+        for (Edge<int> edge : vector_vertexs[i]->getAdj()) {
+            if (edge.getDest() == vector_vertexs[i+1]) {
+                gv->setEdgeColor(edge.getID(), "green");
+                break;
+            }
+        }
+        gv->rearrange();
+    }
 }
 template <class T>
 void showPathGV(vector<Vertex<T>*> v, int restauranteIndex) {

@@ -176,18 +176,19 @@ int Menu_Mapas() {
     {
         case '1':
             bidirectional_edges = true;
-            readMap("../maps/GridGraphs/4x4");
+            readMap<T>("../maps/GridGraphs/4x4");
             break;
         case '2':
             bidirectional_edges = true;
-            readMap("../maps/GridGraphs/8x8");
+            readMap<T>("../maps/GridGraphs/8x8");
             break;
         case '3':
             bidirectional_edges = true;
-            readMap("../maps/GridGraphs/16x16");
+            readMap<T>("../maps/GridGraphs/16x16");
             break;
         case '4':
             bidirectional_edges = false;
+            readMap<T>("../maps/PortugalMaps/Aveiro");
             break;
         case '5':
             bidirectional_edges = false;
