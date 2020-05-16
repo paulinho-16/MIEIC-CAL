@@ -52,13 +52,15 @@ void Um_Estafeta_Um_Pedido() {
 
     // JA TEMOS O CLIENTE, RESTAURANTE E ESTAFETA, AGORA É IMPLEMENTAR O ALGORITMO - CHAMAR AQUI E FAZER EM FUNÇÃO DIFERENTE:
     Pedido<T> *pedido = new Pedido<T>(cliente,restaurante);
+    vector<Pedido<T>*> pedidos = {pedido};
+    eatExpress.setPedidos(pedidos);
 
     graph.dijkstraShortestPath(estafeta->getPos());
     vector<Vertex<T>*> estafeta_restaurante = graph.getPath(estafeta->getPos(), restaurante->getMorada());
     graph.dijkstraShortestPath(restaurante->getMorada());
     vector<Vertex<T>*> restaurante_cliente = graph.getPath(restaurante->getMorada(), cliente->getMorada());
 
-    int restauranteIndex = estafeta_restaurante.size() - 1;  // Para evitar pintar o vértice do Restaurante no showPathGV
+    //int restauranteIndex = estafeta_restaurante.size() - 1;  // Para evitar pintar o vértice do Restaurante no showPathGV
 
     restaurante_cliente.erase(restaurante_cliente.begin());
     estafeta_restaurante.insert(estafeta_restaurante.end(), restaurante_cliente.begin(), restaurante_cliente.end());
@@ -67,12 +69,23 @@ void Um_Estafeta_Um_Pedido() {
     for (Vertex<T>* vertex : estafeta_restaurante) {
         cout << "Vertex " << vertex->getInfo() << " com POS (" << vertex->getLatitude() << ", " << vertex->getLongitude() << ")"<<endl;
     }
-    showPathGV(estafeta_restaurante, restauranteIndex);
+
+    showPathGV(estafeta_restaurante);
 
     char sair = Sair_Programa();
     if (sair == 'N' || sair == 'n')
         Menu_Principal();
 }
+
+template <class T>
+struct Compare {
+    bool operator()(Vertex<T>* const& p1, Vertex<T>* const& p2)
+    {
+        // return "true" if "p1" is ordered
+        // before "p2", for example:
+        return graph.getDist(0, p1->getInfo()) > graph.getDist(0, p2->getInfo());       // MUDAR CONDIÇÕES
+    }
+};
 
 template <class T>
 void Um_Estafeta_Varios_Pedidos() {
@@ -137,8 +150,57 @@ void Um_Estafeta_Varios_Pedidos() {
 
     eatExpress.setPedidos(pedidos);
 
-    vector<Vertex<T>*> caminho= graph.NearestNeighborFloyd(estafeta->getPos());
-    showPathGV2(caminho);
+    //graph.floydWarshallShortestPath();
+
+    //vector<Vertex<T>*> vetor
+
+    priority_queue<Vertex<T>*, vector<Vertex<T>*>, Compare<T>> Q;
+
+    for (Pedido<T>* pedido : eatExpress.getPedidos()) {
+        Q.push(graph.findVertex(pedido->getRestaurante()->getMorada()));
+        Q.push(graph.findVertex(pedido->getCliente()->getMorada()));
+    }
+    // MOSTRAR Q
+    /*while (!Q.empty()) {
+        Vertex<T>* vert = Q.top();
+        cout << "VERTEX: " << vert->getLatitude() << ", " << vert->getLongitude() << endl;
+        Q.pop();
+    }*/
+
+    vector<Vertex<T>*> percurso;
+    Vertex<T>* vert = Q.top();
+    Q.pop();
+    T init = vert->getInfo();
+    T final;
+    graph.dijkstraShortestPath(estafeta->getPos());
+    vector<Vertex<T>*> vetor = graph.getPath(estafeta->getPos(), init);
+    percurso.insert(percurso.end(), vetor.begin(), vetor.end() - 1);
+    while (!Q.empty()) {
+        estafeta->setPos(init);
+        vert = Q.top();
+        Q.pop();
+        final = vert->getInfo();
+        graph.dijkstraShortestPath(init);
+        vetor = graph.getPath(init, final);
+        percurso.insert(percurso.end(), vetor.begin(), vetor.end() - 1);
+        init = final;
+    }
+
+    percurso.push_back(graph.findVertex(final));    // Coloca o vertex final
+
+    for (Vertex<T>* vertex : percurso) {
+        cout << "VERTEX: " << vertex->getLatitude() << ", " << vertex->getLongitude() << endl;
+    }
+
+    // MOSTRAR Q
+    /*while (!Q.empty()) {
+        Vertex<T>* vert = Q.top();
+        cout << "VERTEX: " << vert->getLatitude() << ", " << vert->getLongitude() << endl;
+        Q.pop();
+    }*/
+
+    //vector<Vertex<T>*> caminho= graph.NearestNeighborFloyd(estafeta->getPos());
+    showPathGV(percurso);
 
     char sair = Sair_Programa();
     if (sair == 'N' || sair == 'n')
