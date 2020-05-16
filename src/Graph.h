@@ -15,9 +15,12 @@
 #include <unordered_set>
 #include "MutablePriorityQueue.h"
 
+#include "EatExpress.h"
 #include "Pedido.h"
 
 using namespace std;
+
+extern EatExpress<int> eatExpress;
 
 template <class T> class Edge;
 template <class T> class Graph;
@@ -77,7 +80,15 @@ void Vertex<T>::addEdge(int id, Vertex<T> *d, double w) {
 
 template <class T>
 bool Vertex<T>::operator<(Vertex<T> & vertex) const {
-	return this->dist < vertex.dist;
+    Pedido<T>* pedido_respetivo = eatExpress.findPedido(this->info);
+    if (this->dist < vertex.dist) {
+        if (this->type == 1 && !pedido_respetivo->isRequisitado())     // Morada mais perto, mas pedido ainda não requisitado
+            return false;
+        else if (this->type == 2)
+            pedido_respetivo->setRequisitado(true);
+        return true;
+    }
+	return false;
 }
 
 template <class T>
@@ -222,7 +233,7 @@ public:
 	// Fp05 - all pairs
 	void floydWarshallShortestPath();
 	vector<T> getfloydWarshallPath(const T &origin, const T &dest) const;
-    vector<Vertex<T> *> NearestNeighborFloyd(const T &origin, vector<Pedido<T>*> pedidos, const T &dest);
+    vector<Vertex<T> *> NearestNeighborFloyd(const T &origin);
 
 };
 
@@ -623,26 +634,31 @@ vector<T> Graph<T>::getfloydWarshallPath(const T &orig, const T &dest) const{
 }
 
 template <class T>
-std::vector<Vertex<T> *> Graph<T>::NearestNeighborFloyd(const T &origin, vector<Pedido<T>*> pedidos, const T &dest){
+std::vector<Vertex<T> *> Graph<T>::NearestNeighborFloyd(const T &origin){
     floydWarshallShortestPath();
 
+    vector<Vertex<T> *> result;
+    int inicial = findVertexIdx(origin);
+    //MutablePriorityQueue<Vertex<T>> Qr;
+    //MutablePriorityQueue<Vertex<T>> Qc;
+    MutablePriorityQueue<Vertex<T>> Q;
 
-   vector<Vertex<T> *> result;
-   int inicial = findVertexIdx(origin);
-   //MutablePriorityQueue<Vertex<T>> Qr;
-   //MutablePriorityQueue<Vertex<T>> Qc;
-   MutablePriorityQueue<Vertex<T>> Q;
+    //VER RESTAURANTE/CLIENTE MAIS PERTO
+    for(Pedido<T>* pedido : eatExpress.getPedidos()) {
+        Vertex<T>* vertexRes = findVertex(pedido->getRestaurante()->getMorada());
+        Vertex<T>* vertexCli = findVertex(pedido->getCliente()->getMorada());
+        vertexRes->setDist(getW(inicial, findVertexIdx(pedido->getRestaurante()->getMorada())));
+        vertexCli->setDist(getW(inicial, findVertexIdx(pedido->getCliente()->getMorada())));
+        Q.insert(vertexRes);
+        Q.insert(vertexCli);
+    }
 
-   for(Pedido<T>* pedido: pedidos){
-       Vertex<T>* vertexRes = findVertex(pedido->getRestaurante()->getMorada());
-       Vertex<T>* vertexCli = findVertex(pedido->getCliente()->getMorada());
-       vertexRes->setDist(getW(inicial, findVertexIdx(pedido->getRestaurante()->getMorada())));
-       vertexCli->setDist(getW(inicial, findVertexIdx(pedido->getCliente()->getMorada())));
-       Q.insert(vertexRes);
-       Q.insert(vertexCli);
-   }
+    /*while (!Q.empty()) {
+        Vertex<T>* vert = Q.extractMin();
+        cout << "VERTEX " << vert->getInfo() << "   X = " << vert->getLatitude() << "   Y = " << vert->getLongitude() << "    DIST : " << vert->getDist() << endl;
+    }*/
 
-   result.push_back(findVertex(origin));
+    result.push_back(findVertex(origin));
 
     /*while(!Qr.empty()){
         Vertex<T>* vertex;
@@ -685,15 +701,15 @@ std::vector<Vertex<T> *> Graph<T>::NearestNeighborFloyd(const T &origin, vector<
         Vertex<T>* vertex = Q.extractMin();
         int vertexIndex =findVertexIdx(vertex->getInfo());
 
-        for(Pedido<T>* pedido : pedidos) {
+        for(Pedido<T>* pedido : eatExpress.getPedidos()) {
             if( vertex->getInfo()==pedido->getRestaurante()->getMorada()) {
                 //É restaurante;
-                pedido->setTemComida(true);
+                //pedido->setRequisitado(true);
                 break;
             }
             if( vertex->getInfo()==pedido->getCliente()->getMorada()) {
                 //É cliente;
-                if(!pedido->getTemComida()){
+                if(!pedido->isRequisitado()){
                     Vertex<T>* aux=findVertex((pedido->getRestaurante()->getMorada()));
                     double d=aux->getDist()+1;
                     vertex->setDist(d);
@@ -706,16 +722,16 @@ std::vector<Vertex<T> *> Graph<T>::NearestNeighborFloyd(const T &origin, vector<
         for(unsigned i = 1; i < path.size(); i++) {
             result.push_back(findVertex(path.at(i)));
         }
-        for(Pedido<T>* pedido : pedidos){
+        for(Pedido<T>* pedido : eatExpress.getPedidos()) {
             vertex->setDist(getW(vertexIndex, findVertexIdx(pedido->getRestaurante()->getMorada())));
         }
     }
 
     //termina
-    vector<T> path =getfloydWarshallPath((result.back()->getInfo()), dest);
+/*    vector<T> path =getfloydWarshallPath(result.back()->getInfo());
     for(unsigned i = 1; i < path.size(); i++ ){
         result.push_back(findVertex(path.at(i)));
-    }
+    }*/
 
     return result;
 }

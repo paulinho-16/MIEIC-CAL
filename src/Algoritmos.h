@@ -136,9 +136,14 @@ void Um_Estafeta_Varios_Pedidos() {
 
     // JA TEMOS A LISTA DE PEDIDOS E O ESTAFETA, AGORA É IMPLEMENTAR O ALGORITMO - CHAMAR AQUI E FAZER EM FUNÇÃO DIFERENTE
 
-    vector<Vertex<T>*> caminho= graph.NearestNeighborFloyd( estafeta->getPos(), pedidos, cliente->getMorada());
-    showPathGV2(caminho,pedidos);
+    eatExpress.setPedidos(pedidos);
 
+    vector<Vertex<T>*> caminho= graph.NearestNeighborFloyd(estafeta->getPos());
+    showPathGV2(caminho);
+
+    char sair = Sair_Programa();
+    if (sair == 'N' || sair == 'n')
+        Menu_Principal();
 }
 
 template <class T>

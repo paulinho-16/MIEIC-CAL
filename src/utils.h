@@ -281,12 +281,12 @@ void showPathGV(vector<Vertex<T>*> v, int restauranteIndex) {
 }
 
 template <class T>
-void showPathGV2(vector<Vertex<T>*> v,vector<Pedido<T>*> pedidos) {
+void showPathGV2(vector<Vertex<T>*> v) {
     gv = new GraphViewer(1000, 900, false);
     gv->createWindow(1200, 900);
     gv->defineEdgeColor("black");
     int i=0;
-    for(Pedido<int>*pedido:pedidos){
+    for(Pedido<int>*pedido : eatExpress.getPedidos()) {
         i++;
         for (Vertex<int>* vertex : graph.getVertexSet()) {
             if (vertex == v[0]) {
