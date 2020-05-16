@@ -80,15 +80,7 @@ void Vertex<T>::addEdge(int id, Vertex<T> *d, double w) {
 
 template <class T>
 bool Vertex<T>::operator<(Vertex<T> & vertex) const {
-    Pedido<T>* pedido_respetivo = eatExpress.findPedido(this->info);
-    if (this->dist < vertex.dist) {
-        if (this->type == 1 && !pedido_respetivo->isRequisitado())     // Morada mais perto, mas pedido ainda não requisitado
-            return false;
-        else if (this->type == 2)
-            pedido_respetivo->setRequisitado(true);
-        return true;
-    }
-	return false;
+    return this->dist < vertex.dist;
 }
 
 template <class T>
@@ -227,6 +219,7 @@ public:
     // std::vector<Vertex<T> *> dijkstraShortestPath2(Graph<T> * graph, const T &origin, const T &dest);
 	void bellmanFordShortestPath(const T &s);
 	vector<T> getPathTo(const T &dest) const;
+    double getDist(const T &src, const T &dest) const;
 
 	// Fp05 - all pairs
 	void floydWarshallShortestPath();
@@ -385,6 +378,13 @@ double Graph<T>::edgeWeight(int i, int j){
     }
 
     return INF;
+}
+
+template <class T>
+double Graph<T>::getDist(const T &src, const T &dest) const {
+    Vertex<T>* s = findVertex(src);
+    Vertex<T>* d = findVertex(dest);
+    return sqrt((s->getLatitude() - d->getLatitude())*(s->getLatitude() - d->getLatitude()) + (s->getLongitude() - d->getLongitude())*(s->getLongitude() - d->getLongitude()));
 }
 
 /**************** Single Source Shortest Path algorithms ************/

@@ -10,7 +10,7 @@ class Pedido {
     //int id;
     Cliente<T>* cliente;
     Restaurante<T>* restaurante;
-    //Estafeta<T>* estafeta;
+    Estafeta<T>* estafeta;
     bool requisitado;
 public:
     //int getId();
@@ -45,8 +45,13 @@ public:
         return requisitado;
     }
 
-    //Estafeta<T> getEstafeta();
-    //void setEstafeta(Estafeta<T> t);
+    Estafeta<T> getEstafeta() {
+        return estafeta;
+    }
+
+    void setEstafeta(Estafeta<T> e) {
+        estafeta = e;
+    }
 };
 
 #endif //CAL_FP05_PEDIDO_H
