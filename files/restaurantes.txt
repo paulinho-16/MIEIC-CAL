@@ -1,8 +1,12 @@
-BarDoRio
+Casa dos Frangos
 Frangos everywhere"
 24
 -----
 McDonalds
 Muitos Hamburgueres
 5
+-----
+Pizzaria Ramos
+Pizzas Italianas
+17
 -----
