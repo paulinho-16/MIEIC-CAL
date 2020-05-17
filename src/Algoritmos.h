@@ -164,6 +164,8 @@ void Um_Estafeta_Varios_Pedidos() {
 
     // JA TEMOS A LISTA DE PEDIDOS E O ESTAFETA, AGORA É IMPLEMENTAR O ALGORITMO - CHAMAR AQUI E FAZER EM FUNÇÃO DIFERENTE
 
+    //vector<Vertex<T>*> percurso = graph.NearestNeighborFloyd(estafeta->getPos());
+    //howPathGV(percurso);
     estafeta_ativo = estafeta;
     eatExpress.setPedidos(pedidos);
 
@@ -277,6 +279,8 @@ void Varios_Estafetas_Sem_Carga() {
     } while (n_cliente != 0 && n_restaurante != 0);
 
     // JA TEMOS A LISTA DE PEDIDOS, AGORA É IMPLEMENTAR O ALGORITMO, OS ESTAFETAS SÃO ESCOLHIDOS POR UM CRITERIO - CHAMAR AQUI E FAZER EM FUNÇÃO DIFERENTE
+
+    //atribuirEstafeta(pedidos);
 }
 
 template <class T>

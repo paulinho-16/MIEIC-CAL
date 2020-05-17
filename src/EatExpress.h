@@ -82,6 +82,7 @@ class EatExpress {
         }
         return nullptr;
     }
+
 };
 
 #endif //CAL_FP05_EATEXPRESS_H

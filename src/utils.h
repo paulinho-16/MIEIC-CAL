@@ -5,6 +5,7 @@
 #include <fstream>
 #include <sstream>
 #include <cstdio>
+#include <string>
 
 #include "../GraphViewerLib/graphviewer.h"
 
@@ -183,8 +184,9 @@ void recolher_info_casaEstafetas() {
 
 template<class T>
 void recolher_info_clientes(){
+
     vector<Cliente<T>*> v;
-    Cliente<T>* cliente1 = new Cliente<T>("Antonio", "123456789", 2);
+    /*Cliente<T>* cliente1 = new Cliente<T>("Antonio", "123456789", 2);
     Cliente<T>* cliente2 = new Cliente<T>("Joaquim", "987654321", 6);
     Cliente<T>* cliente3 = new Cliente<T>("Manuel",  "999999999", 12);
     v.push_back(cliente1);
@@ -196,19 +198,60 @@ void recolher_info_clientes(){
         if (vertex->getType() == 0) {
             vertex->setType(1);
         }
+    }*/
+    ifstream ler;
+    string line;
+    ler.open("../files/clientes.txt");
+    while(!ler.eof()){
+        string nome,nif,morada;
+        char c;
+        ler>>nome>>c>>nif>>c>>morada;
+        //int a=stoi(morada);
+        Cliente<int>* cliente = new Cliente<int>(nome, nif, 3);
+        v.push_back(cliente);
+    }
+    eatExpress.setClientes(v);
+    ler.close();
+
+    for (Cliente<T>* cliente : eatExpress.getClientes()) {
+        Vertex<T>* vertex = graph.findVertex(cliente->getMorada());
+        if (vertex->getType() == 0) {
+            vertex->setType(1);
+        }
     }
 }
 
 template <class T>
 void recolher_info_restaurantes(){
     vector<Restaurante<T>*> v;
-    Restaurante<T>* restaurante1 = new Restaurante<T>("Casa dos Frangos", "Frangos everywhere", 24);
+    /*Restaurante<T>* restaurante1 = new Restaurante<T>("Casa dos Frangos", "Frangos everywhere", 24);
     Restaurante<T>* restaurante2 = new Restaurante<T>("McDonalds", "Muitos Hamburgueres", 15);
     Restaurante<T>* restaurante3 = new Restaurante<T>("Pizza Hut",  "Pizzas italianas", 9);
     v.push_back(restaurante1);
     v.push_back(restaurante2);
     v.push_back(restaurante3);
     eatExpress.setRestaurantes(v);
+    for (Restaurante<T>* restaurante : eatExpress.getRestaurantes()) {
+        Vertex<T>* vertex = graph.findVertex(restaurante->getMorada());
+        if (vertex->getType() == 0) {
+            vertex->setType(2);
+        }
+    }*/
+
+    ifstream ler;
+    string line;
+    ler.open("../files/clientes.txt");
+    while(!ler.eof()){
+        string nome,morada,desc;
+        char c;
+        ler>>nome>>c>>desc>>c>>morada;
+        //int a= stoi(morada);
+        Restaurante<T>* restaurante = new Restaurante<T>(nome,desc, 3);
+        v.push_back(restaurante);
+    }
+    eatExpress.setRestaurantes(v);
+    ler.close();
+
     for (Restaurante<T>* restaurante : eatExpress.getRestaurantes()) {
         Vertex<T>* vertex = graph.findVertex(restaurante->getMorada());
         if (vertex->getType() == 0) {
@@ -269,6 +312,17 @@ int getIndex(vector<Vertex<int>*>v, Vertex<int>* a){
     return -1;
 }
 
+/*template <class T>
+void atribuirEstafeta(vector<Pedido<T>> pedido){
+    graph.floydWarshallShortestPath();
+    MutablePriorityQueue<Vertex<T>> Q;
+    for(Pedido<T>* pedido : eatExpress.getPedidos()) {
+        Vertex<T>* vertexRes = findVertex(pedido->getRestaurante()->getMorada());
+        vertexRes->setDist(getW(inicial, findVertexIdx(pedido->getRestaurante()->getMorada())));
+        Q.insert(vertexRes);
+        Q.insert(vertexCli);
+    }
+}*/
 
 template <class T>
 void showConnection(vector<T> vec){

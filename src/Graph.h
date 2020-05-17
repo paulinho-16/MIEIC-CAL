@@ -643,6 +643,7 @@ std::vector<Vertex<T> *> Graph<T>::NearestNeighborFloyd(const T &origin){
     vector<Vertex<T> *> result;
     int inicial = findVertexIdx(origin);
     MutablePriorityQueue<Vertex<T>> Q;
+    result.push_back(findVertex(origin));
 
     for(Pedido<T>* pedido : eatExpress.getPedidos()) {
         Vertex<T>* vertexRes = findVertex(pedido->getRestaurante()->getMorada());
@@ -652,50 +653,6 @@ std::vector<Vertex<T> *> Graph<T>::NearestNeighborFloyd(const T &origin){
         Q.insert(vertexRes);
         Q.insert(vertexCli);
     }
-
-    /*while (!Q.empty()) {
-        Vertex<T>* vert = Q.extractMin();
-        cout << "VERTEX " << vert->getInfo() << "   X = " << vert->getLatitude() << "   Y = " << vert->getLongitude() << "    DIST : " << vert->getDist() << endl;
-    }*/
-
-    result.push_back(findVertex(origin));
-
-    /*while(!Qr.empty()){
-        Vertex<T>* vertex;
-        int vertexIndex;
-
-        Vertex<T>* vertexResPerto= Qr.extractMin();
-        Pedido<T> *ped;
-        for(Pedido<T>* pedido : pedidos) {
-            if (vertexResPerto->getInfo() == pedido->getRestaurante()->getMorada()) {
-                ped = pedido;
-            }
-        }
-        Vertex<T>* vertexClientePerto;
-        do{
-            vertexClientePerto=Qc.extractMin();
-        }while(!ped->getCliente()->getMorada()!=vertexClientePerto->getInfo());
-
-        result.push_back(findVertex(origin));
-
-        if(vertexResPerto->getDist()<vertexClientePerto->getDist()) {
-            vertex = vertexResPerto;
-            vertexIndex = findVertexIdx(vertex->getInfo());
-        }
-        else{
-            vertex=vertexClientePerto;
-            vertexIndex = findVertexIdx(vertex->getInfo());
-        }
-
-        vector<T> path = getfloydWarshallPath((result.back()->getInfo()), vertex->getInfo());
-        for(unsigned i = 1; i < path.size(); i++) {
-            result.push_back(findVertex(path.at(i)));
-        }
-        for(Pedido<T>* pedido : pedidos){
-            vertex->setDist(getW(vertexIndex, findVertexIdx(pedido->getRestaurante()->getMorada())));
-        }
-    }*/
-
 
     while(!Q.empty()) {
         Vertex<T>* vertex = Q.extractMin();

@@ -1,2 +1,2 @@
-BarDoRio,0
-PizzaHut,16
+BarDoRio,Frangos everywhere,0
+McDonalds,Muitos Hamburgueres,5

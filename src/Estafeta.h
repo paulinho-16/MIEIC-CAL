@@ -49,6 +49,7 @@ public:
     void setTransporte(MeioTransporte t) {
         transporte = t;
     }
+
 };
 
 #endif //CAL_FP05_ESTAFETA_H
