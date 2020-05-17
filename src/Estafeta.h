@@ -12,10 +12,11 @@ class Estafeta {
     T pos;
     MeioTransporte transporte;
 public:
-    Estafeta(string n, string ni, T id) {
+    Estafeta(string n, string ni, T id, MeioTransporte t) {
         nome = n;
         nif = ni;
         pos = id;
+        transporte = t;
     }
 
     string getNome() {

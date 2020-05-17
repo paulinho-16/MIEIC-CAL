@@ -45,11 +45,11 @@ public:
         return requisitado;
     }
 
-    Estafeta<T> getEstafeta() {
+    Estafeta<T>* getEstafeta() {
         return estafeta;
     }
 
-    void setEstafeta(Estafeta<T> e) {
+    void setEstafeta(Estafeta<T>* e) {
         estafeta = e;
     }
 };

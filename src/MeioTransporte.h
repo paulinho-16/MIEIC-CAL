@@ -10,6 +10,8 @@ class MeioTransporte {
     int velocidade;
     int capacidade;
 public:
+    MeioTransporte();
+    MeioTransporte(string n, int v, int c);
     string getNome();
     void setNome(string n);
     int getVelocidade();

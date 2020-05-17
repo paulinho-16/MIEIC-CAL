@@ -1,2 +1,8 @@
-BarDoRio,Frangos everywhere,0
-McDonalds,Muitos Hamburgueres,5
+BarDoRio
+Frangos everywhere"
+24
+-----
+McDonalds
+Muitos Hamburgueres
+5
+-----

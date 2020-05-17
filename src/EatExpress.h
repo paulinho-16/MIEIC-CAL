@@ -16,6 +16,7 @@ class EatExpress {
         vector<Restaurante<T>*> restaurantes;
         vector<Estafeta<T>*> estafetas;
         vector<Pedido<T>*> pedidos;
+        vector<MeioTransporte> transportes;
         T casaEstafetas;
 
     public:
@@ -33,6 +34,14 @@ class EatExpress {
 
     void setRestaurantes(vector<Restaurante<T>*> r) {
         restaurantes = r;
+    }
+
+    vector<MeioTransporte> getTransportes() {
+        return transportes;
+    }
+
+    void setTransportes(vector<MeioTransporte> t) {
+        transportes = t;
     }
 
     vector<Estafeta<T>*> getEstafetas() {
@@ -83,6 +92,13 @@ class EatExpress {
         return nullptr;
     }
 
+    MeioTransporte findMeioTransporte(string nome) {
+        for (MeioTransporte transporte : transportes) {
+            if(transporte.getNome() == nome)
+                return transporte;
+        }
+        return MeioTransporte();
+    }
 };
 
 #endif //CAL_FP05_EATEXPRESS_H

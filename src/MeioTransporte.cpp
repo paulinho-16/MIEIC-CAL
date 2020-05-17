@@ -2,6 +2,18 @@
 
 using namespace std;
 
+MeioTransporte::MeioTransporte() {
+    nome = "Default";
+    velocidade = 50;
+    capacidade = 1;
+}
+
+MeioTransporte::MeioTransporte(string n, int v, int c) {
+    nome = n;
+    velocidade = v;
+    capacidade = c;
+}
+
 void MeioTransporte::setNome(string n) {
     this->nome=n;
 }

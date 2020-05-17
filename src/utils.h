@@ -177,7 +177,7 @@ void Visualizar_Mapa() {
 
 template<class T>
 void recolher_info_casaEstafetas() {
-    eatExpress.setCasaEstafetas(0);
+    eatExpress.setCasaEstafetas(graph.getVertexSet()[0]->getInfo());
     Vertex<T>* vertex = graph.findVertex(eatExpress.getCasaEstafetas());
     vertex->setType(4);
 }
@@ -186,28 +186,15 @@ template<class T>
 void recolher_info_clientes(){
 
     vector<Cliente<T>*> v;
-    /*Cliente<T>* cliente1 = new Cliente<T>("Antonio", "123456789", 2);
-    Cliente<T>* cliente2 = new Cliente<T>("Joaquim", "987654321", 6);
-    Cliente<T>* cliente3 = new Cliente<T>("Manuel",  "999999999", 12);
-    v.push_back(cliente1);
-    v.push_back(cliente2);
-    v.push_back(cliente3);
-    eatExpress.setClientes(v);
-    for (Cliente<T>* cliente : eatExpress.getClientes()) {
-        Vertex<T>* vertex = graph.findVertex(cliente->getMorada());
-        if (vertex->getType() == 0) {
-            vertex->setType(1);
-        }
-    }*/
     ifstream ler;
-    string line;
     ler.open("../files/clientes.txt");
     while(!ler.eof()){
-        string nome,nif,morada;
-        char c;
-        ler>>nome>>c>>nif>>c>>morada;
-        //int a=stoi(morada);
-        Cliente<int>* cliente = new Cliente<int>(nome, nif, 3);
+        string nome, nif, morada, separacao;
+        getline(ler, nome);
+        getline(ler, nif);
+        getline(ler, morada);
+        getline(ler, separacao);
+        Cliente<int>* cliente = new Cliente<int>(nome, nif, stoi(morada));
         v.push_back(cliente);
     }
     eatExpress.setClientes(v);
@@ -224,29 +211,15 @@ void recolher_info_clientes(){
 template <class T>
 void recolher_info_restaurantes(){
     vector<Restaurante<T>*> v;
-    /*Restaurante<T>* restaurante1 = new Restaurante<T>("Casa dos Frangos", "Frangos everywhere", 24);
-    Restaurante<T>* restaurante2 = new Restaurante<T>("McDonalds", "Muitos Hamburgueres", 15);
-    Restaurante<T>* restaurante3 = new Restaurante<T>("Pizza Hut",  "Pizzas italianas", 9);
-    v.push_back(restaurante1);
-    v.push_back(restaurante2);
-    v.push_back(restaurante3);
-    eatExpress.setRestaurantes(v);
-    for (Restaurante<T>* restaurante : eatExpress.getRestaurantes()) {
-        Vertex<T>* vertex = graph.findVertex(restaurante->getMorada());
-        if (vertex->getType() == 0) {
-            vertex->setType(2);
-        }
-    }*/
-
     ifstream ler;
-    string line;
-    ler.open("../files/clientes.txt");
+    ler.open("../files/restaurantes.txt");
     while(!ler.eof()){
-        string nome,morada,desc;
-        char c;
-        ler>>nome>>c>>desc>>c>>morada;
-        //int a= stoi(morada);
-        Restaurante<T>* restaurante = new Restaurante<T>(nome,desc, 3);
+        string nome, morada, desc, separacao;
+        getline(ler, nome);
+        getline(ler, desc);
+        getline(ler, morada);
+        getline(ler, separacao);
+        Restaurante<T>* restaurante = new Restaurante<T>(nome, desc, stoi(morada));
         v.push_back(restaurante);
     }
     eatExpress.setRestaurantes(v);
@@ -260,12 +233,41 @@ void recolher_info_restaurantes(){
     }
 }
 
+void recolher_info_transportes() {
+    vector<MeioTransporte> t;
+    ifstream ler;
+    ler.open("../files/transportes.txt");
+    while(!ler.eof()) {
+        string nome, velocidade, capacidade, separacao;
+        getline(ler, nome);
+        getline(ler, velocidade);
+        getline(ler, capacidade);
+        getline(ler, separacao);
+        MeioTransporte transporte = MeioTransporte(nome, stoi(velocidade), stoi(capacidade));
+        t.push_back(transporte);
+    }
+    eatExpress.setTransportes(t);
+    ler.close();
+}
+
 template <class T>
 void recolher_info_estafetas(){
     vector<Estafeta<T>*> v;
-    Estafeta<T>* estafeta1 = new Estafeta<T>("Toni", "Primeiro Estafeta", 0);
-    v.push_back(estafeta1);
+    ifstream ler;
+    ler.open("../files/estafetas.txt");
+    while(!ler.eof()){
+        string nome, nif, pos, transporte, separacao;
+        getline(ler, nome);
+        getline(ler, nif);
+        getline(ler, pos);
+        getline(ler, transporte);
+        getline(ler, separacao);
+        Estafeta<T>* estafeta = new Estafeta<T>(nome, nif, stoi(pos), eatExpress.findMeioTransporte(nome));
+        v.push_back(estafeta);
+    }
     eatExpress.setEstafetas(v);
+    ler.close();
+
     for (Estafeta<T>* estafeta : eatExpress.getEstafetas()) {
         Vertex<T>* vertex = graph.findVertex(estafeta->getPos());
         if (vertex->getType() == 0) {
@@ -278,6 +280,7 @@ void Recolher_Info() {
     recolher_info_casaEstafetas<int>();
     recolher_info_clientes<int>();
     recolher_info_restaurantes<int>();
+    recolher_info_transportes();
     recolher_info_estafetas<int>();
 }
 
@@ -297,7 +300,8 @@ int isInPedidos(Vertex<T>* vertex) {
         numero_pedido++;
         Vertex<T>* rest = graph.findVertex(pedido->getRestaurante()->getMorada());
         Vertex<T>* cl = graph.findVertex(pedido->getCliente()->getMorada());
-        if (rest->getInfo() == vertex->getInfo() || cl->getInfo() == vertex->getInfo())
+        //Vertex<T>* est = graph.findVertex(pedido->getEstafeta()->getPos());
+        if (rest->getInfo() == vertex->getInfo() || cl->getInfo() == vertex->getInfo()) // || est->getInfo() == vertex->getInfo())
             return numero_pedido;
     }
     return 0;
@@ -365,10 +369,14 @@ void showPathGV(vector<Vertex<T>*> v) {
     gv->defineEdgeColor("black");
     int n_pedido;
     for (Vertex<int>* vertex : graph.getVertexSet()) {
-        if (vertex == v[0]) {
+        if (vertex->getType() == 4) {
             gv->setVertexColor(vertex->getInfo(), "yellow");
-            gv->setVertexLabel(vertex->getInfo(), "Estafeta");
+            gv->setVertexLabel(vertex->getInfo(), "Casa dos Estafetas");
         }
+        /*else if (vertex->getType() == 3 && (n_pedido = isInPedidos(vertex))) {
+            gv->setVertexColor(vertex->getInfo(), "yellow");
+            gv->setVertexLabel(vertex->getInfo(), "Estafeta " + to_string(n_pedido));
+        }*/
         else if (vertex->getType() == 1 && (n_pedido = isInPedidos(vertex))) {
             gv->setVertexColor(vertex->getInfo(), "orange");
             gv->setVertexLabel(vertex->getInfo(), "Cliente " + to_string(n_pedido));
