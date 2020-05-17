@@ -56,28 +56,114 @@ void Menu_Visualizacao() {
         Menu_Principal();
 }
 
-void Menu_Gestao_Restaurantes() {
+template <class T>
+void Visualizar_Clientes() {
     system("CLS");
     Logotipo();
-    cout << "\n\n\t\t     Menu de Gestao de Restaurantes \n\n";
+    cout << "\n\n\t\t     Menu de Visualizacao de Clientes \n\n";
+    int i = 0;
+    for (Cliente<T>* cliente : eatExpress.getClientes()) {
+        cout << "Nome: " << cliente->getNome() << endl;
+        cout << "Nif: " << cliente->getNif() << endl;
+        cout << "Morada: " << cliente->getMorada() << endl;
+        if (i != eatExpress.getNumClientes() - 1)
+            cout << "----------" << endl;
+        i++;
+    }
     char sair = Sair_Programa();
     if (sair == 'N' || sair == 'n')
         Menu_Principal();
 }
 
-void Menu_Gestao_Estafetas() {
+template <class T>
+void Visualizar_Restaurantes() {
     system("CLS");
     Logotipo();
-    cout << "\n\n\t\t     Menu de Gestao de Estafetas \n\n";
+    cout << "\n\n\t\t     Menu de Visualizacao de Restaurantes \n\n";
+    int i = 0;
+    for (Restaurante<T>* restaurante : eatExpress.getRestaurantes()) {
+        cout << "Nome: " << restaurante->getNome() << endl;
+        cout << "Descricao: " << restaurante->getDescricao() << endl;
+        cout << "Morada: " << restaurante->getMorada() << endl;
+        if (i != eatExpress.getNumRestaurantes() - 1)
+            cout << "----------" << endl;
+        i++;
+    }
     char sair = Sair_Programa();
     if (sair == 'N' || sair == 'n')
         Menu_Principal();
 }
 
-void Menu_Gestao_Clientes() {
+template <class T>
+void Visualizar_Estafetas() {
     system("CLS");
     Logotipo();
-    cout << "\n\n\t\t     Menu de Gestao de Clientes \n\n";
+    cout << "\n\n\t\t     Menu de Visualizacao de Estafetas \n\n";
+    int i = 0;
+    for (Estafeta<T>* estafeta : eatExpress.getEstafetas()) {
+        cout << "Nome: " << estafeta->getNome() << endl;
+        cout << "Nif: " << estafeta->getNif() << endl;
+        cout << "Morada: " << estafeta->getPos() << endl;
+        cout << "Transporte: " << estafeta->getTransporte().getNome() << endl;
+        if (i != eatExpress.getNumEstafetas() - 1)
+            cout << "----------" << endl;
+        i++;
+    }
+    char sair = Sair_Programa();
+    if (sair == 'N' || sair == 'n')
+        Menu_Principal();
+}
+
+void Visualizar_Transportes() {
+    system("CLS");
+    Logotipo();
+    cout << "\n\n\t\t     Menu de Visualizacao de Transportes \n\n";
+    int i = 0;
+    for (MeioTransporte transporte : eatExpress.getTransportes()) {
+        cout << "Nome: " << transporte.getNome() << endl;
+        cout << "Velocidade: " << transporte.getVelocidade() << endl;
+        cout << "Capacidade: " << transporte.getCapacidade() << endl;
+        if (i != eatExpress.getNumTransportes() - 1)
+            cout << "----------" << endl;
+        i++;
+    }
+    char sair = Sair_Programa();
+    if (sair == 'N' || sair == 'n')
+        Menu_Principal();
+}
+
+void Menu_Visualizar_Dados() {
+    system("CLS");
+    Logotipo();
+    cout << "\n\n\t\t     Menu de Visualizacao de Dados \n\n";
+    cout << "[1] Visualizar Clientes\n";
+    cout << "[2] Visualizar Restaurantes\n";
+    cout << "[3] Visualizar Estafetas\n";
+    cout << "[4] Visualizar Meios de Transporte\n";
+    cout << "[5] Voltar ao Menu Principal \n";
+    cout << "\nOpcao: ";
+
+    string name;
+    cin >> name;
+    char opcao;
+    if(name.size() == 1) opcao = name[0];
+    else opcao = '9';
+
+    switch(opcao)
+    {
+        case '1':
+            Visualizar_Clientes<int>(); break;
+        case '2':
+            Visualizar_Restaurantes<int>(); break;
+        case '3':
+            Visualizar_Estafetas<int>(); break;
+        case '4':
+            Visualizar_Transportes(); break;
+        case '5':
+            Menu_Principal(); break;
+        default:
+            Menu_Visualizar_Dados(); break;
+    }
     char sair = Sair_Programa();
     if (sair == 'N' || sair == 'n')
         Menu_Principal();
@@ -128,11 +214,11 @@ void Menu_Principal()
    Logotipo();
     cout << "\n\n\t\t     Menu Principal \n\n";
     cout << "[1] Avaliar Conetividade do grafo \n";
+    cout << "\n\t Visualizacao: \n\n";
     cout << "[2] Visualizar o mapa recorrendo ao GraphViewer \n";
-    cout << "[2] Gestao de Restaurantes \n";
-    cout << "[3] Gestao de Estafetas \n";
-    cout << "[4] Gestao de Clientes \n";
-    cout << "[5] Atendimento de Pedidos \n";
+    cout << "[3] Visualizar Dados \n";
+    cout << "\n\t Pedidos: \n\n";
+    cout << "[4] Atendimento de Pedidos \n";
     cout << "[0] Sair do Programa \n";
     cout << "\nOpcao: ";
 
@@ -145,15 +231,12 @@ void Menu_Principal()
     switch(opcao)
     {
         case '1':
-            Menu_Visualizacao(); break;
+            Menu_Conetividade(); break;
         case '2':
             Menu_Visualizacao(); break;
-            Menu_Gestao_Restaurantes(); break;
         case '3':
-            Menu_Gestao_Estafetas(); break;
+            Menu_Visualizar_Dados(); break;
         case '4':
-            Menu_Gestao_Clientes(); break;
-        case '5':
             Menu_Efetuar_Pedidos(); break;
         case '0':
             break;

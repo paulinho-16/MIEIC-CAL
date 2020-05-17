@@ -265,7 +265,7 @@ void recolher_info_estafetas() {
         getline(ler, pos);
         getline(ler, transporte);
         getline(ler, separacao);
-        Estafeta<T>* estafeta = new Estafeta<T>(nome, nif, stoi(pos), eatExpress.findMeioTransporte(nome));
+        Estafeta<T>* estafeta = new Estafeta<T>(nome, nif, stoi(pos), eatExpress.findMeioTransporte(transporte));
         v.push_back(estafeta);
     }
     eatExpress.setEstafetas(v);
@@ -414,6 +414,5 @@ void showPathGV(vector<Vertex<T>*> v) {
         gv->rearrange();
     }
 }
-
 
 #endif //CAL_FP05_UTILS_H

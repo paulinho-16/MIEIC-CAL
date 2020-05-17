@@ -80,6 +80,10 @@ class EatExpress {
         return estafetas.size();
     }
 
+    int getNumTransportes() {
+        return transportes.size();
+    }
+
     int getNumPedidos() {
         return pedidos.size();
     }
