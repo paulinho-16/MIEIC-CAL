@@ -303,8 +303,8 @@ int isInPedidos(Vertex<T>* vertex) {
         numero_pedido++;
         Vertex<T>* rest = graph.findVertex(pedido->getRestaurante()->getMorada());
         Vertex<T>* cl = graph.findVertex(pedido->getCliente()->getMorada());
-        //Vertex<T>* est = graph.findVertex(pedido->getEstafeta()->getPos());
-        if (rest->getInfo() == vertex->getInfo() || cl->getInfo() == vertex->getInfo()) // || est->getInfo() == vertex->getInfo())
+        Vertex<T>* est = graph.findVertex(pedido->getEstafeta()->getPos());
+        if (rest->getInfo() == vertex->getInfo() || cl->getInfo() == vertex->getInfo() || est->getInfo() == vertex->getInfo())
             return numero_pedido;
     }
     return 0;
@@ -376,10 +376,6 @@ void showPathGV(vector<Vertex<T>*> v) {
             gv->setVertexColor(vertex->getInfo(), "yellow");
             gv->setVertexLabel(vertex->getInfo(), "Casa dos Estafetas");
         }
-        /*else if (vertex->getType() == 3 && (n_pedido = isInPedidos(vertex))) {
-            gv->setVertexColor(vertex->getInfo(), "yellow");
-            gv->setVertexLabel(vertex->getInfo(), "Estafeta " + to_string(n_pedido));
-        }*/
         else if (vertex->getType() == 1 && (n_pedido = isInPedidos(vertex))) {
             gv->setVertexColor(vertex->getInfo(), "orange");
             gv->setVertexLabel(vertex->getInfo(), "Cliente " + to_string(n_pedido));
@@ -387,6 +383,10 @@ void showPathGV(vector<Vertex<T>*> v) {
         else if (vertex->getType() == 2 && (n_pedido = isInPedidos(vertex))) {
             gv->setVertexColor(vertex->getInfo(), "green");
             gv->setVertexLabel(vertex->getInfo(), "Restaurante " + to_string(n_pedido));
+        }
+        else if (vertex->getType() == 3 && (n_pedido = isInPedidos(vertex))) {
+            gv->setVertexColor(vertex->getInfo(), "yellow");
+            gv->setVertexLabel(vertex->getInfo(), "Estafeta " + to_string(n_pedido));
         }
         else {
             gv->setVertexColor(vertex->getInfo(), "blue");

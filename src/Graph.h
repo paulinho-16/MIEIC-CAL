@@ -306,7 +306,7 @@ bool Graph<T>::addEdge(int id, T source, T dest) {
 }
 
 template<class T>
-vector<Vertex<T> *> Graph<T>::getPath(const T &origin, const T &dest) const{
+vector<Vertex<T> *> Graph<T>::getPath(const T &origin, const T &dest) const {
     vector<Vertex<T> *> res;
     auto o = findVertex(origin);
     auto v = findVertex(dest);

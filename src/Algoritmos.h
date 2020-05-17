@@ -53,7 +53,8 @@ void Um_Estafeta_Um_Pedido() {
     Estafeta<T>* estafeta = eatExpress.getEstafetas().at(n_estafeta-1);
 
     // JA TEMOS O CLIENTE, RESTAURANTE E ESTAFETA, AGORA É IMPLEMENTAR O ALGORITMO - CHAMAR AQUI E FAZER EM FUNÇÃO DIFERENTE:
-    Pedido<T> *pedido = new Pedido<T>(cliente,restaurante);
+    Pedido<T> *pedido = new Pedido<T>(cliente, restaurante);
+    pedido->setEstafeta(estafeta);
     vector<Pedido<T>*> pedidos = {pedido};
     eatExpress.setPedidos(pedidos);
 
@@ -146,8 +147,6 @@ void Um_Estafeta_Varios_Pedidos() {
         }
     } while (n_cliente != 0 && n_restaurante != 0);
 
-    eatExpress.setPedidos(pedidos);
-
     cout << endl;
     for (Estafeta<T>* estafeta : eatExpress.getEstafetas()) {
         cout << " [" << ne << "]" << estafeta->getNome() << " - " << estafeta->getNif() << endl;
@@ -155,7 +154,7 @@ void Um_Estafeta_Varios_Pedidos() {
     }
     int n_estafeta;
     do {
-        cout << "\nEstafeta que vai atender o pedido: ";
+        cout << "\nEstafeta que vai atender os pedidos: ";
         cin.clear();
         cin >> n_estafeta;
         cin.ignore(1000, '\n');
@@ -201,7 +200,7 @@ void Um_Estafeta_Varios_Pedidos() {
     vector<Vertex<T>*> vetor = graph.getPath(estafeta->getPos(), init);
     percurso.insert(percurso.end(), vetor.begin(), vetor.end() - 1);
     while (!Q.empty()) {
-        estafeta->setPos(init);
+        //estafeta->setPos(init);
         vert = Q.top();
         Q.pop();
         final = vert->getInfo();
@@ -225,9 +224,13 @@ void Um_Estafeta_Varios_Pedidos() {
     }*/
 
     //vector<Vertex<T>*> caminho= graph.NearestNeighborFloyd(estafeta->getPos());
+    for (Pedido<T>* pedido : eatExpress.getPedidos()) {
+        pedido->setEstafeta(estafeta);
+    }
+
     showPathGV(percurso);
 
-    estafeta->setPos(eatExpress.getCasaEstafetas());
+    //estafeta->setPos(eatExpress.getCasaEstafetas());
 
     char sair = Sair_Programa();
     if (sair == 'N' || sair == 'n')
