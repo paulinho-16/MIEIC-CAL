@@ -35,6 +35,16 @@ char Sair_Programa()
     return sair;
 }
 
+void Menu_Conetividade() {
+    system("CLS");
+    Logotipo();
+    cout << "\n\n\t\t     Menu da Conetividade do Grafo \n\n";
+    Avaliar_Conetividade<int>();
+    char sair = Sair_Programa();
+    if (sair == 'N' || sair == 'n')
+        Menu_Principal();
+}
+
 void Menu_Visualizacao() {
     system("CLS");
     Logotipo();
@@ -117,7 +127,8 @@ void Menu_Principal()
     system("CLS");
    Logotipo();
     cout << "\n\n\t\t     Menu Principal \n\n";
-    cout << "[1] Visualizar o mapa recorrendo ao GraphViewer \n";
+    cout << "[1] Avaliar Conetividade do grafo \n";
+    cout << "[2] Visualizar o mapa recorrendo ao GraphViewer \n";
     cout << "[2] Gestao de Restaurantes \n";
     cout << "[3] Gestao de Estafetas \n";
     cout << "[4] Gestao de Clientes \n";
@@ -136,6 +147,7 @@ void Menu_Principal()
         case '1':
             Menu_Visualizacao(); break;
         case '2':
+            Menu_Visualizacao(); break;
             Menu_Gestao_Restaurantes(); break;
         case '3':
             Menu_Gestao_Estafetas(); break;

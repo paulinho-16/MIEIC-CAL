@@ -120,8 +120,17 @@ void readMap(string directory) {
     string edges_path = directory + "/edges.txt";
     readNodes<int>(nodes_path);
     readEdges<int>(edges_path);
+    system("pause");
+}
 
-    cout<<"Testing Connectivity..."<<endl;
+template <class T>
+void readTags(string file_directory) {
+
+}
+
+template <class T>
+void Avaliar_Conetividade() {
+    cout<<"\nTesting Connectivity..."<<endl;
 
     vector<T> vec= graph.dfs();
     /*vector<T> vec;
@@ -137,12 +146,6 @@ void readMap(string directory) {
             //TODO
         }
     }
-    system("pause");
-}
-
-template <class T>
-void readTags(string file_directory) {
-
 }
 
 void Visualizar_Mapa() {
@@ -251,7 +254,7 @@ void recolher_info_transportes() {
 }
 
 template <class T>
-void recolher_info_estafetas(){
+void recolher_info_estafetas() {
     vector<Estafeta<T>*> v;
     ifstream ler;
     ler.open("../files/estafetas.txt");
