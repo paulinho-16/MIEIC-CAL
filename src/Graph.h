@@ -42,7 +42,7 @@ class Vertex {
 	bool visited = false;		// auxiliary field
 	bool processing = false;	// auxiliary field
 
-	int type = 0;   // 0 se não for ponto de interesse, 1 se for uma morada, 2 se for um restaurante, 3 se estiver ocupado por um estafeta e 4 unicamente para a Casa dos Estafetas
+	int type = 0;   // 0 se não for ponto de interesse, 1 se for uma morada cliente, 2 se for um restaurante, 3 se estiver ocupado por um estafeta e 4 unicamente para a Casa dos Estafetas
 
 	void addEdge(int id, Vertex<T> *dest, double w);
 
@@ -80,6 +80,22 @@ void Vertex<T>::addEdge(int id, Vertex<T> *d, double w) {
 
 template <class T>
 bool Vertex<T>::operator<(Vertex<T> & vertex) const {
+    /*Pedido<T>* pedido_respetivo = eatExpress.findPedido(this->info);
+    if (this->type == 1 && !pedido_respetivo->isRequisitado())
+        return false;
+    if (this->dist < vertex.dist) {
+        if (this->type == 1 && !pedido_respetivo->isRequisitado())
+            return false;
+        if(this->type == 1 && pedido_respetivo->isRequisitado())
+            return true;
+        else if (this->type == 2){
+            pedido_respetivo->setRequisitado(true);
+            return true;
+        }
+        return false;
+    }
+    return false;*/
+
     return this->dist < vertex.dist;
 }
 
@@ -127,6 +143,7 @@ template <class T>
 void Vertex<T>::setType(int type) {
     this->type = type;
 }
+
 template <class T>
 void Vertex<T>::setDist(double d){
     this->dist=d;
@@ -436,48 +453,6 @@ void Graph<T>::dijkstraShortestPath(const T &origin) {
 	    }
 	}
 }
-/*
-template <class T>
-bool Graph<T>::dijkstraRelax(Vertex<T> *v, Vertex<T> *w, double weight) {
-    if (v->getDist() + weight < w->getDist()) {
-        w->setDist(v->getDist() + weight);
-        w->setPath(v);
-        return true;
-    }
-    else
-        return false;
-}
-
-template <class T>
-std::vector<Vertex<T> *> Graph<T>::dijkstraShortestPath2(Graph<T> * graph, const T &origin, const T &dest)
-{
-    std::vector<Vertex<T> *> result;
-    auto s = graph->findVertex(origin);
-    Vertex<T>* d = graph->findVertex(dest);
-    MutablePriorityQueue<Vertex<T>> q;
-    q.insert(s);
-
-    while( ! q.empty() ) {
-        auto v = q.extractMin();
-
-        if(v == d)
-            return graph->getPath(origin, dest);
-
-        for(unsigned int i = 0; i < v->getAdj().size(); i++) {
-            auto e = v->getAdj().at(i);
-            auto oldDist = e.getDest()->getDist();
-            if (this->dijkstraRelax(v, e.getDest(),  e.getWeight())) {
-                if (oldDist == INF)
-                    q.insert(e.getDest());
-                else
-                    q.decreaseKey(e.getDest());
-            }
-        }
-    }
-
-    return result;
-}
-*/
 
 template<class T>
 void Graph<T>::bellmanFordShortestPath(const T &orig) {
@@ -643,7 +618,6 @@ std::vector<Vertex<T> *> Graph<T>::NearestNeighborFloyd(const T &origin){
     vector<Vertex<T> *> result;
     int inicial = findVertexIdx(origin);
     MutablePriorityQueue<Vertex<T>> Q;
-    result.push_back(findVertex(origin));
 
     for(Pedido<T>* pedido : eatExpress.getPedidos()) {
         Vertex<T>* vertexRes = findVertex(pedido->getRestaurante()->getMorada());
@@ -653,25 +627,39 @@ std::vector<Vertex<T> *> Graph<T>::NearestNeighborFloyd(const T &origin){
         Q.insert(vertexRes);
         Q.insert(vertexCli);
     }
-
+    result.push_back(findVertex(origin));
     while(!Q.empty()) {
-        Vertex<T>* vertex = Q.extractMin();
-        int vertexIndex =findVertexIdx(vertex->getInfo());
-
-        vector<T> path = getfloydWarshallPath((result.back()->getInfo()), vertex->getInfo());
-        for(unsigned i = 1; i < path.size(); i++) {
+        Vertex<T> *vertex = Q.extractMin();
+        int vertexIndex = findVertexIdx((vertex->getInfo()));
+        for(Pedido<T>* pedido : eatExpress.getPedidos()){
+            if(vertex->getInfo()==pedido->getRestaurante()->getMorada()){
+                cout<<pedido->getRestaurante()->getNome()<<endl;
+            }
+            if(vertex->getInfo()==pedido->getCliente()->getMorada()){
+                cout<<pedido->getCliente()->getNome();
+                if(pedido->isRequisitado()){
+                    cout << " Requisitado"<<endl;
+                }
+                else{
+                    cout << " NAO requisitado"<<endl;
+                }
+            }
+        }
+        vector<T> path = getfloydWarshallPath((result.back()->getInfo()), (vertex->getInfo()));
+        for(unsigned i = 1; i < path.size(); i++){
             result.push_back(findVertex(path.at(i)));
         }
-        for(Pedido<T>* pedido : eatExpress.getPedidos()) {
-            vertex->setDist(getW(vertexIndex, findVertexIdx(pedido->getRestaurante()->getMorada())));
+        for(Pedido<T>* pedido : eatExpress.getPedidos()){
+            int a=getW(vertexIndex, findVertexIdx(pedido->getCliente()->getMorada()));
+            int b=getW(vertexIndex, findVertexIdx(pedido->getRestaurante()->getMorada()));
+            if(a>b){
+                vertex->setDist(getW(vertexIndex, findVertexIdx(pedido->getCliente()->getMorada())));
+            }
+            else{
+                vertex->setDist(getW(vertexIndex, findVertexIdx(pedido->getRestaurante()->getMorada())));
+            }
         }
     }
-
-    //termina
-/*    vector<T> path =getfloydWarshallPath(result.back()->getInfo());
-    for(unsigned i = 1; i < path.size(); i++ ){
-        result.push_back(findVertex(path.at(i)));
-    }*/
 
     return result;
 }

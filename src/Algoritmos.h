@@ -86,18 +86,59 @@ struct Compare {
     {
         // return "true" if "p1" is ordered
         // before "p2", for example:
-        if (p1->getType() == 2 && p2->getType() == 2) {
-            return graph.getDist(estafeta_ativo->getPos(), p1->getInfo()) > graph.getDist(estafeta_ativo->getPos(), p2->getInfo());
+        if (p1->getType() == 2 && p2->getType() == 2) { //2 restaurantes
+            if( graph.getDist(estafeta_ativo->getPos(), p1->getInfo()) > graph.getDist(estafeta_ativo->getPos(), p2->getInfo())){
+                eatExpress.findPedido(p1->getInfo())->setRequisitado(true);
+                return true;
+            }
+            else{
+                return false;
+            }
         }
-        else if (p1->getType() == 1 && p2->getType() == 2) {
+        else if (p1->getType() == 1 && p2->getType() == 2) { //1 cliente - 1 restaurante
             if (graph.getDist(estafeta_ativo->getPos(), p1->getInfo()) > graph.getDist(estafeta_ativo->getPos(), p2->getInfo())) {
-                if (eatExpress.findPedido(p1->getInfo()) != eatExpress.findPedido(p2->getInfo())) {
+                if (eatExpress.findPedido(p1->getInfo()) != eatExpress.findPedido(p2->getInfo())) { //se nao forem do mesmo pedido
+                    if(eatExpress.findPedido(p1->getInfo())->isRequisitado()){
+                        return false;
+                    }
+                    else{
+                        return true;
+                    }
+                }
+                else{
+                    if(eatExpress.findPedido(p1->getInfo())->isRequisitado()){
+                        return false;
+                    }
+                    else{
+                        return true;
+                    }
+                }
+            }
+            else{
+                return false;
+            }
+        }
+        else if (p1->getType() == 2 && p2->getType() == 1) { //1 restauante - 1 cliente
+            if (graph.getDist(estafeta_ativo->getPos(), p2->getInfo()) > graph.getDist(estafeta_ativo->getPos(), p1->getInfo())) {
+                eatExpress.findPedido(p1->getInfo())->setRequisitado(true);
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        else if (p1->getType() == 1 && p2->getType() == 1) { //2 clientes
+            if(graph.getDist(estafeta_ativo->getPos(), p1->getInfo()) > graph.getDist(estafeta_ativo->getPos(), p2->getInfo())){
+                if(eatExpress.findPedido(p1->getInfo())->isRequisitado()){
+                    return false;
+                }
+                else{
                     return true;
                 }
             }
-        }
-        else if (p1->getType() == 1 && p2->getType() == 1) {
-            return graph.getDist(estafeta_ativo->getPos(), p1->getInfo()) > graph.getDist(estafeta_ativo->getPos(), p2->getInfo());
+            else{
+                return false;
+            }
         }
         return false;
     }
@@ -163,14 +204,23 @@ void Um_Estafeta_Varios_Pedidos() {
 
     // JA TEMOS A LISTA DE PEDIDOS E O ESTAFETA, AGORA É IMPLEMENTAR O ALGORITMO - CHAMAR AQUI E FAZER EM FUNÇÃO DIFERENTE
 
-    //vector<Vertex<T>*> percurso = graph.NearestNeighborFloyd(estafeta->getPos());
-    //howPathGV(percurso);
+    /*eatExpress.setPedidos(pedidos); //USING NEARESTNEIGHBOR
+    for (Pedido<T>* pedido : eatExpress.getPedidos()) {
+        pedido->setEstafeta(estafeta);
+        pedido->setRequisitado(false);
+        cout<<pedido->getCliente()->getNome()<<" - "<<pedido->getRestaurante()->getNome()<<endl;
+    }
+    vector<Vertex<T>*> percurso = graph.NearestNeighborFloyd(estafeta->getPos());
+    showPathGV(percurso);*/
+
     estafeta_ativo = estafeta;
+    for (Pedido<T>* pedido : eatExpress.getPedidos()) {
+        pedido->setEstafeta(estafeta);
+        pedido->setRequisitado(false);
+    }
     eatExpress.setPedidos(pedidos);
 
     //graph.floydWarshallShortestPath();
-
-    //vector<Vertex<T>*> vetor
 
     priority_queue<Vertex<T>*, vector<Vertex<T>*>, Compare<T>> Q;
 
@@ -202,6 +252,7 @@ void Um_Estafeta_Varios_Pedidos() {
     while (!Q.empty()) {
         //estafeta->setPos(init);
         vert = Q.top();
+        cout << "VERTEX: " << vert->getLatitude() << ", " << vert->getLongitude() << endl;
         Q.pop();
         final = vert->getInfo();
         graph.dijkstraShortestPath(init);
@@ -212,9 +263,9 @@ void Um_Estafeta_Varios_Pedidos() {
 
     percurso.push_back(graph.findVertex(final));    // Coloca o vertex final
 
-    for (Vertex<T>* vertex : percurso) {
+    /*for (Vertex<T>* vertex : percurso) {
         cout << "VERTEX: " << vertex->getLatitude() << ", " << vertex->getLongitude() << endl;
-    }
+    }*/
 
     // MOSTRAR Q
     /*while (!Q.empty()) {

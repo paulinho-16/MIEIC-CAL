@@ -90,7 +90,9 @@ class EatExpress {
 
     Pedido<T>* findPedido(T info) {
         for (Pedido<T>* pedido : pedidos) {
-            if(pedido->getCliente()->getMorada() == info || pedido->getRestaurante()->getMorada() == info)
+            if(pedido->getCliente()->getMorada() == info)
+                return pedido;
+            else if(pedido->getRestaurante()->getMorada()==info)
                 return pedido;
         }
         return nullptr;

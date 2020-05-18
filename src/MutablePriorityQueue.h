@@ -21,16 +21,17 @@ using namespace std;
 template <class T>
 class MutablePriorityQueue {
 	vector<T *> H;
-	//void heapifyUp(unsigned i);
-	//void heapifyDown(unsigned i);
+	void heapifyUp(unsigned i);
+	void heapifyDown(unsigned i);
 	inline void set(unsigned i, T * x);
 public:
-    void heapifyUp(unsigned i);
-    void heapifyDown(unsigned i);
+    //void heapifyUp(unsigned i);
+    //void heapifyDown(unsigned i);
 	MutablePriorityQueue();
 	void insert(T * x);
 	T * extractMin();
 	void decreaseKey(T * x);
+    void increaseKey(T * x);
 	bool empty();
 	bool inQueue(T* elemento);
 };
@@ -70,6 +71,10 @@ void MutablePriorityQueue<T>::insert(T *x) {
 template <class T>
 void MutablePriorityQueue<T>::decreaseKey(T *x) {
 	heapifyUp(x->queueIndex);
+}
+template <class T>
+void MutablePriorityQueue<T>::increaseKey(T *x) {
+    heapifyDown(x->queueIndex);
 }
 
 template <class T>
