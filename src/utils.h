@@ -20,6 +20,7 @@
 extern Graph<int> graph;
 extern EatExpress<int> eatExpress;
 extern bool bidirectional_edges;
+extern Estafeta<int>* estafeta_ativo;
 GraphViewer *gv;
 
 using namespace std;
@@ -412,6 +413,32 @@ void showPathGV(vector<Vertex<T>*> v) {
             }
         }
         gv->rearrange();
+    }
+}
+
+template <class T>
+T getRestauranteProximo(vector<T> vetor) {
+    int i = 0;
+    T proximo;
+    for (T rest : vetor) {
+        if (i == 0)
+            proximo = vetor[0];
+        else {
+            if (graph.getDist(estafeta_ativo->getPos(), rest) < graph.getDist(estafeta_ativo->getPos(), proximo))
+                proximo = rest;
+        }
+        i++;
+    }
+    return proximo;
+}
+
+template <class T>
+void apagar(T inf, vector<T> &vetor) {
+    for (typename vector<T>::iterator it = vetor.begin() ; it != vetor.end() ; it++) {
+        if ((*it) == inf) {
+            vetor.erase(it);
+            break;
+        }
     }
 }
 
