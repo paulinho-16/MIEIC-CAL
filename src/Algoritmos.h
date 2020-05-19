@@ -174,12 +174,12 @@ struct Compare {
 };
 
 template<class T>
-vector<Vertex<T>*> algFase2(Estafeta<T> *estafeta){
+vector<Vertex<T>*> algFase2(Estafeta<T> *estafeta, vector<Pedido<T>*> pedidos){
     vector<T> restaurantes;
     vector<T> clientes;
     vector<Vertex<T>*> result;
 
-    for (Pedido<T>* pedido : eatExpress.getPedidos()) {
+    for (Pedido<T>* pedido : pedidos) {
         restaurantes.push_back(pedido->getRestaurante()->getMorada());
     }
 
@@ -224,14 +224,14 @@ vector<Vertex<T>*> algFase2(Estafeta<T> *estafeta){
     graph.dijkstraShortestPath(estafeta->getPos());
     vector<Vertex<T>*> vetor = graph.getPath(estafeta->getPos(), init);
     percurso.insert(percurso.end(), vetor.begin(), vetor.end() - 1);
-    cout << "\n Percurso: \n\nVERTEX: " << result[0]->getLatitude() << ", " << result[0]->getLongitude() << endl;
+    cout << "\n Percurso: \n\n"<< "Vertex " << result[0]->getInfo() << " com POS (" << result[0]->getLatitude() << ", " << result[0]->getLongitude() << ")"<<endl;
     bool inicio = true;
     for (Vertex<T>* vertex : result) {
         if (inicio) {
             inicio = false;
             continue;
         }
-        cout << "VERTEX: " << vertex->getLatitude() << ", " << vertex->getLongitude() << endl;
+        cout << "Vertex " << vertex->getInfo() << " com POS (" << vertex->getLatitude() << ", " << vertex->getLongitude() << ")"<<endl;
         final = vertex->getInfo();
         graph.dijkstraShortestPath(init);
         vetor = graph.getPath(init, final);
@@ -323,7 +323,7 @@ void Um_Estafeta_Varios_Pedidos() {
 
     // DE OUTRA MANEIRA __________________________________________________________________________________________________
 
-    vector<Vertex<T>*> percurso=algFase2(estafeta);
+    vector<Vertex<T>*> percurso=algFase2(estafeta,pedidos);
 
     // ________________________________________________________________________________________________________________________
 
@@ -463,8 +463,14 @@ void Varios_Estafetas_Sem_Carga() {
         cout<<endl<<estafeta->getNome()<<" tem "<<num_pedidos<<" pedidos"<<endl; //para ver quantos pedidos vai atender cada estafeta
 
         if(num_pedidos>1){ //se tiver mais do que um pedido:
+            vector<Pedido<T>*> pedidos;
+            for(Pedido<T>* ped:eatExpress.getPedidos()){
+                if(ped->getEstafeta()==estafeta){
+                    pedidos.push_back(ped);
+                }
+            }
             estafeta_ativo=estafeta;
-            percurso1= algFase2(estafeta);
+            percurso1= algFase2(estafeta,pedidos);
             percursos.push_back(percurso1);
         }
         else if(num_pedidos==1){ //se apenas tiver apenas um pedido:
