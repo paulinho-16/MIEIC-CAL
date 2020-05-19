@@ -25,7 +25,7 @@ vector<Vertex<T>*> algFase1(Pedido<T>* pedido){
     restaurante_cliente.erase(restaurante_cliente.begin());
     estafeta_restaurante.insert(estafeta_restaurante.end(), restaurante_cliente.begin(), restaurante_cliente.end());
 
-    cout << endl;
+    cout << "\n Percurso: " << endl << endl;
     for (Vertex<T>* vertex : estafeta_restaurante) {
         cout << "Vertex " << vertex->getInfo() << " com POS (" << vertex->getLatitude() << ", " << vertex->getLongitude() << ")"<<endl;
     }
@@ -224,7 +224,7 @@ vector<Vertex<T>*> algFase2(Estafeta<T> *estafeta){
     graph.dijkstraShortestPath(estafeta->getPos());
     vector<Vertex<T>*> vetor = graph.getPath(estafeta->getPos(), init);
     percurso.insert(percurso.end(), vetor.begin(), vetor.end() - 1);
-    cout << "\nVERTEX: " << result[0]->getLatitude() << ", " << result[0]->getLongitude() << endl;
+    cout << "\n Percurso: \n\nVERTEX: " << result[0]->getLatitude() << ", " << result[0]->getLongitude() << endl;
     bool inicio = true;
     for (Vertex<T>* vertex : result) {
         if (inicio) {

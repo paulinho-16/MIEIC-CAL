@@ -11,6 +11,7 @@ class Estafeta {
     string nif;
     T pos;
     MeioTransporte transporte;
+    bool repetido = false;
 public:
     Estafeta(string n, string ni, T id, MeioTransporte t) {
         nome = n;
@@ -51,6 +52,13 @@ public:
         transporte = t;
     }
 
+    bool getRepetido() {
+        return repetido;
+    }
+
+    void setRepetido(bool b) {
+        repetido = b;
+    }
 };
 
 #endif //CAL_FP05_ESTAFETA_H

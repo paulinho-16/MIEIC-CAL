@@ -50,6 +50,11 @@ void Menu_Visualizacao() {
     Logotipo();
     cout << "\n\n\t\t     Menu de Visualizacao do Mapa \n\n";
     cout << "Abrindo Mapa..." << endl;
+    cout << "\n Cores: " << endl << endl;
+    cout << "Laranja - Casa dos Estafetas" << endl;
+    cout << "Amarelo - Estafetas" << endl;
+    cout << "Verde - Clientes" << endl;
+    cout << "Vermelho - Restaurantes" << endl;
     Visualizar_Mapa();
     char sair = Sair_Programa();
     if (sair == 'N' || sair == 'n')

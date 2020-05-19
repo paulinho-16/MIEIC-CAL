@@ -11,6 +11,7 @@ class Cliente {
     T morada;
     string nome;
     string nif;
+    bool repetido = false;
 public:
     Cliente(string n, string ni, T id) {
         nome = n;
@@ -23,7 +24,7 @@ public:
     }
 
     void setNome(string n) {
-        this->nome=n;
+        this->nome = n;
     }
 
     T getMorada() {
@@ -31,7 +32,7 @@ public:
     }
 
     void setMorada(T morada) {
-        this->morada=morada;
+        this->morada = morada;
     }
 
     string getNif() {
@@ -39,7 +40,15 @@ public:
     }
 
     void setNif(string n) {
-        this->nif=n;
+        this->nif = n;
+    }
+
+    bool getRepetido() {
+        return repetido;
+    }
+
+    void setRepetido(bool b) {
+        this->repetido = b;
     }
 };
 

@@ -121,7 +121,6 @@ void readMap(string directory) {
     string edges_path = directory + "/edges.txt";
     readNodes<int>(nodes_path);
     readEdges<int>(edges_path);
-    system("pause");
 }
 
 template <class T>
@@ -163,9 +162,9 @@ void Visualizar_Mapa() {
             case 2:     // Restaurante
                 gv->setVertexColor(vertex->getInfo(), "red"); break;
             case 3:     // Posição de Estafeta
-                gv->setVertexColor(vertex->getInfo(), "purple"); break;
-            case 4:     // Casa dos Estafetas
                 gv->setVertexColor(vertex->getInfo(), "yellow"); break;
+            case 4:     // Casa dos Estafetas
+                gv->setVertexColor(vertex->getInfo(), "orange"); break;
         }
         gv->addNode(vertex->getInfo(), vertex->getLatitude(), vertex->getLongitude());
     }
@@ -403,6 +402,41 @@ void showPathGV(vector<Vertex<T>*> v) {
         for (Edge<int> edge : vertex->getAdj()) {
             gv->addEdge(edge.getID(),vertex->getInfo(), edge.getDest()->getInfo(), EdgeType::DIRECTED);
         }
+    }
+
+    cout << "\n Dados: " << endl << endl;
+
+    n_pedido = 0;
+    for (Pedido<T>* pedido : eatExpress.getPedidos()) {
+        n_pedido++;
+        if (!pedido->getCliente()->getRepetido()) {
+            cout << "Cliente " + to_string(n_pedido) << " - " << pedido->getCliente()->getNome() << " (" << pedido->getCliente()->getNif() << ")\n";
+            pedido->getCliente()->setRepetido(true);
+        }
+    }
+
+    n_pedido = 0;
+    for (Pedido<T>* pedido : eatExpress.getPedidos()) {
+        n_pedido++;
+        if (!pedido->getRestaurante()->getRepetido()) {
+            cout << "Restaurante " + to_string(n_pedido) << " - " << pedido->getRestaurante()->getNome() << " (" << pedido->getRestaurante()->getDescricao() << ")\n";
+            pedido->getRestaurante()->setRepetido(true);
+        }
+    }
+
+    n_pedido = 0;
+    for (Pedido<T>* pedido : eatExpress.getPedidos()) {
+        n_pedido++;
+        if (!pedido->getEstafeta()->getRepetido()) {
+            cout << "Estafeta " + to_string(n_pedido) << " - " << pedido->getEstafeta()->getNome() << " (" << pedido->getEstafeta()->getNif() << ")\n";
+            pedido->getEstafeta()->setRepetido(true);
+        }
+    }
+
+    for (Pedido<T>* pedido : eatExpress.getPedidos()) {
+        pedido->getCliente()->setRepetido(false);
+        pedido->getRestaurante()->setRepetido(false);
+        pedido->getEstafeta()->setRepetido(false);
     }
 
     Sleep(2000);

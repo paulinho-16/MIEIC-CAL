@@ -10,6 +10,7 @@ class Restaurante {
     string descricao;
     T morada;
     bool ja_pedido;
+    bool repetido = false;
 public:
     Restaurante(string n, string desc, T id) {
         nome = n;
@@ -48,6 +49,14 @@ public:
 
     void setJaPedido(bool b) {
         ja_pedido = b;
+    }
+
+    bool getRepetido() {
+        return repetido;
+    }
+
+    void setRepetido(bool b) {
+        repetido = b;
     }
 };
 
