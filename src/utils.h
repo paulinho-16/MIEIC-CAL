@@ -320,17 +320,22 @@ int getIndex(vector<Vertex<int>*>v, Vertex<int>* a){
     return -1;
 }
 
-/*template <class T>
-void atribuirEstafeta(vector<Pedido<T>> pedido){
-    graph.floydWarshallShortestPath();
-    MutablePriorityQueue<Vertex<T>> Q;
-    for(Pedido<T>* pedido : eatExpress.getPedidos()) {
-        Vertex<T>* vertexRes = findVertex(pedido->getRestaurante()->getMorada());
-        vertexRes->setDist(getW(inicial, findVertexIdx(pedido->getRestaurante()->getMorada())));
-        Q.insert(vertexRes);
-        Q.insert(vertexCli);
+template <class T>
+void atribuirEstafeta(Pedido<T> *pedido){
+    double minDist=10000;
+    for(Estafeta<T>* estafeta : eatExpress.getEstafetas()) {
+        double d=graph.getDist(pedido->getRestaurante()->getMorada(),estafeta->getPos());
+        if(d<minDist){
+            minDist=d;
+        }
     }
-}*/
+    for(Estafeta<T>* estafeta : eatExpress.getEstafetas()) {
+        double d=graph.getDist(pedido->getRestaurante()->getMorada(),estafeta->getPos());
+        if(d==minDist){
+            pedido->setEstafeta(estafeta);
+        }
+    }
+}
 
 template <class T>
 void showConnection(vector<T> vec){
@@ -414,6 +419,66 @@ void showPathGV(vector<Vertex<T>*> v) {
         }
         gv->rearrange();
     }
+}
+
+template <class T>
+void showMultiplePathsGV(vector<vector<Vertex<T>*>> percursos) {
+    gv = new GraphViewer(1000, 900, false);
+    gv->createWindow(1200, 900);
+    gv->defineEdgeColor("black");
+    int n_pedido;
+    for (Vertex<int>* vertex : graph.getVertexSet()) {
+        if (vertex->getType() == 4) {
+            gv->setVertexColor(vertex->getInfo(), "yellow");
+            gv->setVertexLabel(vertex->getInfo(), "Casa dos Estafetas");
+        }
+        else if (vertex->getType() == 1 && (n_pedido = isInPedidos(vertex))) {
+            gv->setVertexColor(vertex->getInfo(), "orange");
+            gv->setVertexLabel(vertex->getInfo(), "Cliente " + to_string(n_pedido));
+        }
+        else if (vertex->getType() == 2 && (n_pedido = isInPedidos(vertex))) {
+            gv->setVertexColor(vertex->getInfo(), "green");
+            gv->setVertexLabel(vertex->getInfo(), "Restaurante " + to_string(n_pedido));
+        }
+        else if (vertex->getType() == 3 && (n_pedido = isInPedidos(vertex))) {
+            gv->setVertexColor(vertex->getInfo(), "yellow");
+            gv->setVertexLabel(vertex->getInfo(), "Estafeta " + to_string(n_pedido));
+        }
+        else {
+            gv->setVertexColor(vertex->getInfo(), "black");
+        }
+        gv->addNode(vertex->getInfo(), vertex->getLatitude(), vertex->getLongitude());
+    }
+    for (Vertex<int>* vertex : graph.getVertexSet()) {
+        for (Edge<int> edge : vertex->getAdj()) {
+            gv->addEdge(edge.getID(),vertex->getInfo(), edge.getDest()->getInfo(), EdgeType::DIRECTED);
+        }
+    }
+
+    Sleep(2000);
+
+    string color;
+    int num_percurso=1;
+    for(vector<Vertex<T>*> v: percursos){
+        for (unsigned int i = 0 ; i < v.size() - 1 ; i++) {
+            if(num_percurso==1){color="red";}
+            if(num_percurso==2){color="blue";}
+            if(num_percurso==3){color="green";}
+            if(num_percurso==4){color="orange";}
+            Sleep(1000);
+            if (!isInPedidos(v[i+1]))
+                gv->setVertexColor(v[i+1]->getInfo(), color);
+            for (Edge<int> edge : v[i]->getAdj()) {
+                if (edge.getDest() == v[i+1]) {
+                    gv->setEdgeColor(edge.getID(), color);
+                    break;
+                }
+            }
+            gv->rearrange();
+        }
+        num_percurso++;
+    }
+
 }
 
 template <class T>

@@ -401,7 +401,9 @@ template <class T>
 double Graph<T>::getDist(const T &src, const T &dest) const {
     Vertex<T>* s = findVertex(src);
     Vertex<T>* d = findVertex(dest);
-    return sqrt((s->getLatitude() - d->getLatitude())*(s->getLatitude() - d->getLatitude()) + (s->getLongitude() - d->getLongitude())*(s->getLongitude() - d->getLongitude()));
+    double i=sqrt((s->getLatitude() - d->getLatitude())*(s->getLatitude() - d->getLatitude()) + (s->getLongitude() - d->getLongitude())*(s->getLongitude() - d->getLongitude()));
+    //cout<<(int)src<<"-"<<(int)dest<<"   "<<i<<endl;
+    return i;
 }
 
 /**************** Single Source Shortest Path algorithms ************/
@@ -505,12 +507,9 @@ vector<T> Graph<T>::getPathTo(const T &dest) const{
 template<class T>
 void Graph<T>::floydWarshallShortestPath() {
     bool undirected = true;
-
     unsigned n = getVertexSet().size();
-
     resetMatrixW(n);
     resetMatrixP(n);
-
     for (unsigned i = 0; i < n; i++) {
         for (unsigned j = i; j < n; j++) {
             setW(i, j,edgeWeight(i, j));
@@ -519,7 +518,6 @@ void Graph<T>::floydWarshallShortestPath() {
             setP(j, i, nextVertex(j, i));
         }
     }
-
     for(unsigned k = 0; k < n; k++)
         for(unsigned j = 0; j < n; j++)
             for(unsigned i = undirected ? j + 1 : 0; i < n; i++) {
@@ -581,10 +579,8 @@ vector<T> Graph<T>::getfloydWarshallPath(const T &orig, const T &dest) const{
 
     while(i != j){
         i = getP(i, j);
-
         if(i < 0)
             break;
-
         res.push_back(vertexSet[i]->info);
     }
 
