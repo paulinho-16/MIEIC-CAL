@@ -262,6 +262,8 @@ int Menu_Mapas() {
     cout << "\t PortugalMaps \n";
     cout << "[4] Aveiro \n";
     cout << "[5] Braga \n";
+    cout <<"[6] Espinho \n";
+    cout << "[7] Fafe \n";
     // METER AS OUTRAS OPÇÕES
     cout << "\n[0] Sair do Programa \n";
     cout << "\nOpcao: ";
@@ -292,6 +294,14 @@ int Menu_Mapas() {
             break;
         case '5':
             bidirectional_edges = false;
+            break;
+        case '6':
+            bidirectional_edges = false;
+            readMap<T>("../maps/MapaEspinho");
+            break;
+        case '7':
+            bidirectional_edges = false;
+            readMap<T>("../maps/PortugalMaps/Fafe");
             break;
         case '0':
             return 1;

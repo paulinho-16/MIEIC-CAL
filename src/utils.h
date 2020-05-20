@@ -133,23 +133,20 @@ void Avaliar_Conetividade() {
     cout<<"\nTesting Connectivity..."<<endl;
 
     vector<T> vec= graph.dfs();
-    /*vector<T> vec;
-    for(Vertex<T>* vertex: graph.getVertexSet()){
-        vec.push_back(vertex->getInfo());
-    }*/
+
     showConnection<T>(vec);
     if(vec.size()==graph.getVertexSet().size()){
         cout<<"Grafo fortemente conexo!"<<endl;
     }
     else{
         for(Vertex<T>* vertex:graph.getVertexSet()){
-            //TODO
+            cout<<"Grafo não é fortemente conexo!"<<endl;
         }
     }
 }
 
 void Visualizar_Mapa() {
-    gv = new GraphViewer(1200, 900, false);
+    gv = new GraphViewer(300, 300, false);
     gv->createWindow(1200, 900);
     //gv->defineVertexColor("blue");
     gv->defineEdgeColor("black");
@@ -205,6 +202,7 @@ void recolher_info_clientes(){
 
     for (Cliente<T>* cliente : eatExpress.getClientes()) {
         Vertex<T>* vertex = graph.findVertex(cliente->getMorada());
+        if(vertex==NULL){continue;}
         if (vertex->getType() == 0) {
             vertex->setType(1);
         }
@@ -230,6 +228,7 @@ void recolher_info_restaurantes(){
 
     for (Restaurante<T>* restaurante : eatExpress.getRestaurantes()) {
         Vertex<T>* vertex = graph.findVertex(restaurante->getMorada());
+        if(vertex==NULL){continue;}
         if (vertex->getType() == 0) {
             vertex->setType(2);
         }
@@ -273,6 +272,7 @@ void recolher_info_estafetas() {
 
     for (Estafeta<T>* estafeta : eatExpress.getEstafetas()) {
         Vertex<T>* vertex = graph.findVertex(estafeta->getPos());
+        if(vertex==NULL){continue;}
         if (vertex->getType() == 0) {
             vertex->setType(3);
         }
@@ -358,7 +358,7 @@ void showConnection(vector<T> vec){
         }
     }
     for (unsigned int i = 0 ; i < vector_vertexs.size() ; i++) {
-        Sleep(250);
+        //Sleep(50);
         gv->setVertexColor(vector_vertexs[i]->getInfo(),"green");
         for (Edge<int> edge : vector_vertexs[i]->getAdj()) {
             if (edge.getDest() == vector_vertexs[i+1]) {
