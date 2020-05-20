@@ -40,18 +40,6 @@ void Logotipo() {
     cout << "                                   |_|" << endl;
 }
 
-/*template <class T>
-Vertex<T>* readNode(string tuple) {
-    tuple = tuple.substr(1, tuple.size() - 2);
-    stringstream ss(tuple);
-    string id, latitude, longitude;
-    getline(ss, id, ',');
-    getline(ss, latitude, ',');
-    getline(ss, longitude, ',');
-    auto* vertex = new Vertex<T>(stoi(id), stof(latitude), stof(longitude));
-    return vertex;
-}*/
-
 template <class T>
 void readNodes(string file_directory) {     // Lê os vértices do ficheiro enviado como parâmetro
     ifstream ler;
@@ -190,14 +178,15 @@ void recolher_info_clientes() {       // Lê as informações relativas aos clie
         getline(ler, morada);
         getline(ler, separacao);
         Cliente<int>* cliente = new Cliente<int>(nome, nif, stoi(morada));
-        v.push_back(cliente);
+        Vertex<T>* vertex = graph.findVertex(cliente->getMorada());
+        if(vertex==nullptr){continue;}
+        else{v.push_back(cliente);}
     }
     eatExpress.setClientes(v);
     ler.close();
 
     for (Cliente<T>* cliente : eatExpress.getClientes()) {
         Vertex<T>* vertex = graph.findVertex(cliente->getMorada());
-        if(vertex==NULL){continue;}
         if (vertex->getType() == 0) {
             vertex->setType(1);
         }
@@ -216,14 +205,15 @@ void recolher_info_restaurantes() {       // Lê as informações relativas aos 
         getline(ler, morada);
         getline(ler, separacao);
         Restaurante<T>* restaurante = new Restaurante<T>(nome, desc, stoi(morada));
-        v.push_back(restaurante);
+        Vertex<T>* vertex = graph.findVertex(restaurante->getMorada());
+        if(vertex==nullptr){continue;}
+        else{v.push_back(restaurante);}
     }
     eatExpress.setRestaurantes(v);
     ler.close();
 
     for (Restaurante<T>* restaurante : eatExpress.getRestaurantes()) {
         Vertex<T>* vertex = graph.findVertex(restaurante->getMorada());
-        if(vertex==NULL){continue;}
         if (vertex->getType() == 0) {
             vertex->setType(2);
         }
@@ -260,14 +250,15 @@ void recolher_info_estafetas() {       // Lê as informações relativas aos est
         getline(ler, transporte);
         getline(ler, separacao);
         Estafeta<T>* estafeta = new Estafeta<T>(nome, nif, stoi(pos), eatExpress.findMeioTransporte(transporte));
-        v.push_back(estafeta);
+        Vertex<T>* vertex = graph.findVertex(estafeta->getPos());
+        if(vertex==nullptr){continue;}
+        else{v.push_back(estafeta);}
     }
     eatExpress.setEstafetas(v);
     ler.close();
 
     for (Estafeta<T>* estafeta : eatExpress.getEstafetas()) {
         Vertex<T>* vertex = graph.findVertex(estafeta->getPos());
-        if(vertex==NULL){continue;}
         if (vertex->getType() == 0) {
             vertex->setType(3);
         }
@@ -436,7 +427,7 @@ void showPathGV(vector<Vertex<T>*> v) {     // Apresenta o grafo e o percurso in
 
     // Desenha o percurso enviado como parâmetro
     for (unsigned int i = 0 ; i < v.size() - 1 ; i++) {
-        Sleep(1000);
+        Sleep(200);
         if (!isInPedidos(v[i+1]))     // Para evitar pintar os restaurante e as moradas dos Clientes.
             gv->setVertexColor(v[i+1]->getInfo(), "red");
         for (Edge<int> edge : v[i]->getAdj()) {
@@ -510,7 +501,7 @@ void showMultiplePathsGV(vector<vector<Vertex<T>*>> percursos) {        // Apres
     for (Pedido<T>* pedido : eatExpress.getPedidos()) {
         n_pedido++;
         if (!pedido->getEstafeta()->getRepetido()) {
-            cout << "Estafeta " + to_string(n_pedido) << " - " << pedido->getEstafeta()->getNome() << " (" << pedido->getEstafeta()->getNif() << ")\n";
+            cout << "Estafeta " + to_string(n_pedido) << " - " << pedido->getEstafeta()->getNome() << " (" << pedido->getEstafeta()->getNif() << ") - "<<pedido->getEstafeta()->getTransporte().getNome()<<" de capacidade: "<<pedido->getEstafeta()->getTransporte().getCapacidade()<<" pedidos\n";
             pedido->getEstafeta()->setRepetido(true);
         }
     }
@@ -533,7 +524,7 @@ void showMultiplePathsGV(vector<vector<Vertex<T>*>> percursos) {        // Apres
             if(num_percurso % 4 == 2) {color = "blue";}
             if(num_percurso % 4 == 3) {color = "green";}
             if(num_percurso % 4 == 0) {color = "orange";}
-            Sleep(1000);
+            Sleep(200);
             if (!isInPedidos(v[i+1]))
                 gv->setVertexColor(v[i+1]->getInfo(), color);
             for (Edge<int> edge : v[i]->getAdj()) {

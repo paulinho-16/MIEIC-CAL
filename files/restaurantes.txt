@@ -14,7 +14,95 @@ Ancora Mar
 Peixe fresco todo o ano
 6
 -----
-Tertulia
+BomApetite
+Coma até rebentar
+67
+-----
+Fortaleza
+Comida é o nosso forte
+93
+-----
+McDonalds Centro
+Muitos Hamburgueres
+256
+-----
+Pizzaria Viana
+Pizzas Boas
+55
+-----
+Scala
+Peixinhos bons sempre
+197
+-----
+Bar do Rio
 As melhores francesinhas
-20
+120
+-----
+Restaurante Portugues
+Comida Tipica Americana
+143
+-----
+McDonalds Litoral
+Muitos Hamburgueres
+259
+-----
+Oceano
+Os Melhores Cachorros
+40
+-----
+PizzaHut
+Pizzas Deliciosas!
+184
+-----
+Sandes e Baguetes
+(sem descrição)
+9151
+-----
+Chicken House
+Frango vai bem com tudo
+253
+-----
+McDonalds Baixa
+Muitos Hamburgueres
+16361
+-----
+Restaurante Piolho
+Francesinhas
+4724
+-----
+Restaurante Sem Nome
+Peixaria
+9267
+-----
+Bar da Praia
+Bebidas Frescas
+543
+-----
+Pizzaria Da Foz
+Melhores Pizzas
+5017
+-----
+McDonalds Continental
+Muitos Hamburgueres
+618
+-----
+Pizzaria Fernando
+Pizzas Italianas
+642
+-----
+Ancora Fiesta
+Peixe fresco todo o ano
+673
+-----
+Restaurante Foz
+Francesinhas
+5133
+-----
+Alvin e os Esquilos
+Comidas Vegetarianas
+732
+-----
+McDonalds Special
+Muitos Muitos Hamburgueres
+103
 -----
