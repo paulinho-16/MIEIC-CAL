@@ -249,6 +249,82 @@ vector<Vertex<T>*> algFase2(Estafeta<T> *estafeta, vector<Pedido<T>*> pedidos) {
     return percurso;
 }
 
+template<class T>       // Algoritmo utilizado na Fase 4 - Vários estafetas atendem vários pedidos, considerando carga (limite de pedidos)
+vector<Vertex<T>*> algFase4(Estafeta<T> *estafeta, vector<Pedido<T>*> pedidos) {
+    vector<T> restaurantes;
+    vector<T> clientes;
+    vector<Vertex<T> *> result;
+
+    for (Pedido<T> *pedido : pedidos) {
+        restaurantes.push_back(pedido->getRestaurante()->getMorada());
+    }
+
+    T restaurante_mais_proximo, menor;
+
+    // Organiza um vetor, de modo a tornar-se o percurso mais curto, e a garantir que o estafeta passa primeiro pelo restaurante X antes de entregar o pedido ao Cliente X
+    while (!restaurantes.empty() || !clientes.empty()) {
+        if (!restaurantes.empty()) {
+            restaurante_mais_proximo = getRestauranteProximo<T>(restaurantes);
+        }
+        if (result.empty()) {
+            result.push_back(graph.findVertex(restaurante_mais_proximo));
+            apagar(restaurante_mais_proximo, restaurantes);
+            T cliente_do_restaurante = eatExpress.findPedido(restaurante_mais_proximo)->getCliente()->getMorada();
+            clientes.push_back(cliente_do_restaurante);
+        } else {
+            if (!restaurantes.empty())
+                menor = restaurante_mais_proximo;
+            else
+                menor = clientes[0];
+            for (T client : clientes) {
+                if (graph.getDist(/*estafeta_ativo->getPos()*/result.back()->getInfo(), client) <
+                    graph.getDist(/*estafeta_ativo->getPos()*/result.back()->getInfo(), menor)) {
+                    menor = client;
+                }
+            }
+            if (menor == restaurante_mais_proximo) {
+                apagar(menor, restaurantes);
+                T cliente_do_restaurante = eatExpress.findPedido(restaurante_mais_proximo)->getCliente()->getMorada();
+                clientes.push_back(cliente_do_restaurante);
+            } else {
+                apagar(menor, clientes);
+            }
+            result.push_back(graph.findVertex(menor));
+        }
+    }
+
+    vector<Vertex<T> *> percurso;        // Vai conter o percurso completo do estafeta
+
+    T init = result[0]->getInfo();
+    T final;
+    graph.dijkstraShortestPath(estafeta->getPos());
+    vector<Vertex<T> *> vetor = graph.getPath(estafeta->getPos(), init);
+    percurso.insert(percurso.end(), vetor.begin(), vetor.end() - 1);
+    bool inicio = true;
+    for (Vertex<T> *vertex : result) {
+        if (inicio) {
+            inicio = false;
+            continue;
+        }
+        final = vertex->getInfo();
+        graph.dijkstraShortestPath(init);
+        vetor = graph.getPath(init, final);
+        percurso.insert(percurso.end(), vetor.begin(), vetor.end() - 1);
+        init = final;
+    }
+
+    percurso.push_back(graph.findVertex(final));
+
+    // Apresenta na consola o percurso efetuado
+    cout << "\n Percurso: \n\n";
+    for (Vertex<T> *vertex : percurso) {
+        cout << "Vertex " << vertex->getInfo() << " com POS (" << vertex->getLatitude() << ", "
+             << vertex->getLongitude() << ")" << endl;
+    }
+
+    return percurso;
+}
+
 template <class T>      // Fase 2 - Um único estafeta atende vários pedidos
 void Um_Estafeta_Varios_Pedidos() {
     system("CLS");
@@ -549,6 +625,63 @@ void Varios_Estafetas_Com_Carga() {
     } while (n_cliente != 0 && n_restaurante != 0);
 
     // JA TEMOS A LISTA DE PEDIDOS, AGORA É IMPLEMENTAR O ALGORITMO, OS ESTAFETAS SÃO ESCOLHIDOS POR UM CRITERIO - CHAMAR AQUI E FAZER EM FUNÇÃO DIFERENTE
+
+    vector<Vertex<T>*> percurso;        // Armazena o percurso de cada estafeta
+    vector<vector<Vertex<T>*>> percursos;       // Lista dos percursos dos vários estafetas
+
+    // Atribuição dos estafetas aos pedidos - Critério de Seleção: Estafeta que estiver mais perto do restaurante do pedido
+    for(Pedido<T>* pedido : pedidos) {
+        atribuirEstafeta(pedido);
+        pedido->setRequisitado(false);
+    }
+
+    eatExpress.setPedidos(pedidos);
+
+    // Calcular o percurso de cada estafeta
+    for(Estafeta<T>* estafeta: eatExpress.getEstafetas()) {
+        int num_pedidos = 0;
+
+        // Calcula o número de pedidos do estafeta
+        for(Pedido<T>* pedido:eatExpress.getPedidos()){
+            if(pedido->getEstafeta()==estafeta){
+                num_pedidos+=1;
+            }
+        }
+
+        cout<<endl<<estafeta->getNome()<<" tem "<<num_pedidos<<" pedidos"<<endl;    //para ver quantos pedidos vai atender cada estafeta
+
+        // No caso de ter mais do que um só pedido
+        if (num_pedidos > 1) {
+            vector<Pedido<T>*> pedidos;
+            for(Pedido<T>* ped : eatExpress.getPedidos()) {
+                if(ped->getEstafeta()==estafeta){
+                    pedidos.push_back(ped);
+                }
+            }
+            estafeta_ativo = estafeta;
+            // MODIFICAR algFase4!! Para considerar carga ex: se limite for 2 (podemos criar atributo caraga_maxima nos estafetas), nao pode ser R1R2R3C1C2C3, tinha de ser R1R2C1C2R3C3 ou R1R2C1R3C2C3 por ex
+            percurso = algFase4(estafeta,pedidos);
+            percursos.push_back(percurso);
+        }
+            // No caso de ter um único pedido
+        else if(num_pedidos == 1) {
+            Pedido<T>* pedido;
+            for(Pedido<T>* ped:eatExpress.getPedidos()){
+                if(ped->getEstafeta()==estafeta){
+                    pedido=ped;
+                }
+            }
+            estafeta_ativo2=estafeta;
+            percurso = algFase1(pedido);
+            percursos.push_back(percurso);
+        }
+    }
+
+    showMultiplePathsGV(percursos);
+
+    char sair = Sair_Programa();
+    if (sair == 'N' || sair == 'n')
+        Menu_Principal();
 }
 
 #endif //CAL_FP05_ALGORITMOS_H

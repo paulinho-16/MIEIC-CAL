@@ -485,6 +485,43 @@ void showMultiplePathsGV(vector<vector<Vertex<T>*>> percursos) {        // Apres
         }
     }
 
+    // Mostra na consola a conexão entre os dados apresentados no ecrã e os dados dos clientes, restaurantes e estafetas da empresa
+    cout << "\n Dados: " << endl << endl;
+
+    n_pedido = 0;
+    for (Pedido<T>* pedido : eatExpress.getPedidos()) {
+        n_pedido++;
+        if (!pedido->getCliente()->getRepetido()) {
+            cout << "Cliente " + to_string(n_pedido) << " - " << pedido->getCliente()->getNome() << " (" << pedido->getCliente()->getNif() << ")\n";
+            pedido->getCliente()->setRepetido(true);
+        }
+    }
+
+    n_pedido = 0;
+    for (Pedido<T>* pedido : eatExpress.getPedidos()) {
+        n_pedido++;
+        if (!pedido->getRestaurante()->getRepetido()) {
+            cout << "Restaurante " + to_string(n_pedido) << " - " << pedido->getRestaurante()->getNome() << " (" << pedido->getRestaurante()->getDescricao() << ")\n";
+            pedido->getRestaurante()->setRepetido(true);
+        }
+    }
+
+    n_pedido = 0;
+    for (Pedido<T>* pedido : eatExpress.getPedidos()) {
+        n_pedido++;
+        if (!pedido->getEstafeta()->getRepetido()) {
+            cout << "Estafeta " + to_string(n_pedido) << " - " << pedido->getEstafeta()->getNome() << " (" << pedido->getEstafeta()->getNif() << ")\n";
+            pedido->getEstafeta()->setRepetido(true);
+        }
+    }
+
+    // Limpeza dos boleanos que permitiram a organização do output da consola
+    for (Pedido<T>* pedido : eatExpress.getPedidos()) {
+        pedido->getCliente()->setRepetido(false);
+        pedido->getRestaurante()->setRepetido(false);
+        pedido->getEstafeta()->setRepetido(false);
+    }
+
     Sleep(2000);
 
     string color;
