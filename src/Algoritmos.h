@@ -6,10 +6,6 @@ extern EatExpress<int> eatExpress;
 extern Graph<int> graph;
 
 Estafeta<int>* estafeta_ativo;
-//Para o terceiro algoritmo
-Estafeta<int>* estafeta_ativo1;
-Estafeta<int>* estafeta_ativo2;
-Estafeta<int>* estafeta_ativo3;
 
 void Menu_Principal();
 char Sair_Programa();
@@ -18,14 +14,14 @@ char Sair_Programa();
 template <class T>
 vector<Vertex<T>*> algFase1(Pedido<T>* pedido) {        // Algoritmo usado na fase 1 - Um único pedido para um único estafeta
     graph.dijkstraShortestPath(pedido->getEstafeta()->getPos());
-    vector<Vertex<T>*> estafeta_restaurante = graph.getPath(pedido->getEstafeta()->getPos(), pedido->getRestaurante()->getMorada());
+    vector<Vertex<T>*> estafeta_restaurante = graph.getPath(pedido->getEstafeta()->getPos(), pedido->getRestaurante()->getMorada());    // Contém o caminho mais curto entre a posição do estafeta e o restaurante
     graph.dijkstraShortestPath(pedido->getRestaurante()->getMorada());
-    vector<Vertex<T>*> restaurante_cliente = graph.getPath(pedido->getRestaurante()->getMorada(), pedido->getCliente()->getMorada());
+    vector<Vertex<T>*> restaurante_cliente = graph.getPath(pedido->getRestaurante()->getMorada(), pedido->getCliente()->getMorada());   // Contém o caminho mais curto entre o restaurante e o cliente
 
-    restaurante_cliente.erase(restaurante_cliente.begin());
-    estafeta_restaurante.insert(estafeta_restaurante.end(), restaurante_cliente.begin(), restaurante_cliente.end());
+    restaurante_cliente.erase(restaurante_cliente.begin());     // Remove um vertex repetido (o restaurante)
+    estafeta_restaurante.insert(estafeta_restaurante.end(), restaurante_cliente.begin(), restaurante_cliente.end());    // Une os dois vetores, pelo que estafeta_restaurante conterá o percurso mais curto
 
-    cout << "\n Percurso: " << endl << endl;
+    cout << "\n Percurso Completo: " << endl << endl;
     for (Vertex<T>* vertex : estafeta_restaurante) {
         cout << "Vertex " << vertex->getInfo() << " com POS (" << vertex->getLatitude() << ", " << vertex->getLongitude() << ")"<<endl;
     }
@@ -80,9 +76,9 @@ void Um_Estafeta_Um_Pedido() {      // Fase 1 - Um único pedido para um único 
     vector<Pedido<T>*> pedidos = {pedido};
     eatExpress.setPedidos(pedidos);
 
-    vector<Vertex<T>*> percurso=algFase1(pedido);
+    vector<Vertex<T>*> percurso = algFase1(pedido);     // Obtém o percurso completo do estafeta
 
-    showPathGV(percurso);
+    showPathGV(percurso);       // Mostra o percurso do estafeta no grafo
 
     char sair = Sair_Programa();
     if (sair == 'N' || sair == 'n')
@@ -175,51 +171,58 @@ struct Compare {        // Struct utilizada na organização da fila de priorida
 
 template<class T>       // Algoritmo utilizado na Fase 2 - Um único estafeta atende vários pedidos
 vector<Vertex<T>*> algFase2(Estafeta<T> *estafeta, vector<Pedido<T>*> pedidos) {
-    vector<T> restaurantes;
-    vector<T> clientes;
-    vector<Vertex<T>*> result;
+    vector<T> restaurantes;     // Este vetor vai conter os restaurantes para os quais o estafeta se pode dirigir (é inicializado com todos os restaurantes que estão nos pedidos)
+    vector<T> clientes;         // Este vetor vai conter os clientes para os quais o estafeta se pode dirigir, isto é, aqueles que o estafeta já requisitou o pedido no restaurante que eles pediram (é vazio inicialmente)
+    vector<Vertex<T>*> result;  // Este vetor vai conter os pontos de interesse pela ordem em que o estafeta os vai percorrer (restaurantes e clientes)
 
+    // -------------------------------------------- Algoritmo de cálculo do vetor ordenado dos pontos de interesse percorridos pelo estafeta --------------------------------------------
+
+    // Inicializa o vetor restaurantes com todos os restaurantes que estão presentes nos pedidos
     for (Pedido<T>* pedido : pedidos) {
         restaurantes.push_back(pedido->getRestaurante()->getMorada());
     }
 
-    T restaurante_mais_proximo, menor;
+    T restaurante_mais_proximo, menor;      // restaurante_mais_proximo contém o restaurante mais próximo do estafeta a cada momento, e menor contém o ponto mais próximo do estafeta a qualquer momento, podendo ser um restaurante ou um cliente
 
     // Organiza um vetor, de modo a tornar-se o percurso mais curto, e a garantir que o estafeta passa primeiro pelo restaurante X antes de entregar o pedido ao Cliente X
     while (!restaurantes.empty() || !clientes.empty()) {
-        if (!restaurantes.empty()) {
+        if (!restaurantes.empty()) {    // Enquanto o vetor restaurantes não estiver vazio, vamos buscar o restaurante mais próximo do estafeta
             restaurante_mais_proximo = getRestauranteProximo<T>(restaurantes);
         }
-        if (result.empty()) {
+        if (result.empty()) {       // Na primeira iteração (result não tem nenhum vertex ainda), adicionamos ao result o restaurante mais próximo do estafeta - é o primeiro ponto por onde vai passar
             result.push_back(graph.findVertex(restaurante_mais_proximo));
-            apagar(restaurante_mais_proximo, restaurantes);
+            apagar(restaurante_mais_proximo, restaurantes);     // Após adicioná-lo ao result, podemos removê-lo do vetor restaurantes
             T cliente_do_restaurante = eatExpress.findPedido(restaurante_mais_proximo)->getCliente()->getMorada();
-            clientes.push_back(cliente_do_restaurante);
+            clientes.push_back(cliente_do_restaurante);     // Uma vez que já requisitamos o pedido desse restaurante, podemos adicionar ao vetor clientes o cliente que efetuou esse pedido (o estafeta já pode passar por ele, pois já requisitou o seu pedido)
         }
-        else {
-            if (!restaurantes.empty())
+        else {      // Nas restantes iterações
+            if (!restaurantes.empty())      // Enquanto houver restaurantes no vetor, menor ficará com o valor inicial do restaurante que se encontra mais próximo do estafeta
                 menor = restaurante_mais_proximo;
             else
-                menor = clientes[0];
+                menor = clientes[0];        // Se o estafeta já tiver passado por todos os restaurantes, menor fica com o valor inicial do primeiro elemento da lista dos clientes
             for (T client : clientes) {
                 if (graph.getDist(/*estafeta_ativo->getPos()*/result.back()->getInfo(), client) < graph.getDist(/*estafeta_ativo->getPos()*/result.back()->getInfo(), menor)) {
-                    menor = client;
+                    menor = client;                 // O valor de menor é alterado sempre que é encontrado um cliente mais próximo do estafeta
                 }
             }
-            if (menor == restaurante_mais_proximo) {
+            // Neste ponto, menor tem o ponto de interesse mais próximo do estafeta, pode corresponder a um restaurante ou cliente
+            if (menor == restaurante_mais_proximo) {    // No caso de menor corresponder a um restaurante, eliminamos o restaurante da lista de restaurantes, e adicionamos o cliente que pediu esse restaurante à lista de clientes
                 apagar(menor, restaurantes);
                 T cliente_do_restaurante = eatExpress.findPedido(restaurante_mais_proximo)->getCliente()->getMorada();
                 clientes.push_back(cliente_do_restaurante);
             }
-            else {
+            else {      // No caso de menor corresponder a um cliente, retiramos esse cliente da lista de clientes
                 apagar(menor, clientes);
             }
-            result.push_back(graph.findVertex(menor));
+            result.push_back(graph.findVertex(menor));      // Por fim, adicionamos ao result o valor de menor
         }
     }
 
+    // -------------------------------------------- Fim do Algoritmo --------------------------------------------
+
     vector<Vertex<T>*> percurso;        // Vai conter o percurso completo do estafeta
 
+    // Após termos o vetor ordenado de pontos de interesse por onde o estafeta vai ter de passar (result), resta encontrar os menores percursos entre cada par desses pontos
     T init = result[0]->getInfo();
     T final;
     graph.dijkstraShortestPath(estafeta->getPos());
@@ -241,7 +244,7 @@ vector<Vertex<T>*> algFase2(Estafeta<T> *estafeta, vector<Pedido<T>*> pedidos) {
     percurso.push_back(graph.findVertex(final));
 
     // Apresenta na consola o percurso efetuado
-    cout << "\n Percurso: \n\n";
+    cout << "\n Percurso Completo: \n\n";
     for (Vertex<T>* vertex : percurso) {
         cout << "Vertex " << vertex->getInfo() << " com POS (" << vertex->getLatitude() << ", " << vertex->getLongitude() << ")"<<endl;
     }
@@ -251,47 +254,57 @@ vector<Vertex<T>*> algFase2(Estafeta<T> *estafeta, vector<Pedido<T>*> pedidos) {
 
 template<class T>       // Algoritmo utilizado na Fase 4 - Vários estafetas atendem vários pedidos, considerando carga (limite de pedidos)
 vector<Vertex<T>*> algFase4(Estafeta<T> *estafeta, vector<Pedido<T>*> pedidos) {
-    vector<T> restaurantes;
-    vector<T> clientes;
-    vector<Vertex<T> *> result;
+    vector<T> restaurantes;       // Este vetor vai conter os restaurantes para os quais o estafeta se pode dirigir (é inicializado com todos os restaurantes que estão nos pedidos)
+    vector<T> clientes;           // Este vetor vai conter os clientes para os quais o estafeta se pode dirigir, isto é, aqueles que o estafeta já requisitou o pedido no restaurante que eles pediram (é vazio inicialmente)
+    vector<Vertex<T> *> result;  // Este vetor vai conter os pontos de interesse pela ordem em que o estafeta os vai percorrer (restaurantes e clientes)
 
+    // -------------------------------------------- Algoritmo de cálculo do vetor ordenado dos pontos de interesse percorridos pelo estafeta --------------------------------------------
+
+    // Inicializa o vetor restaurantes com todos os restaurantes que estão presentes nos pedidos
     for (Pedido<T> *pedido : pedidos) {
         restaurantes.push_back(pedido->getRestaurante()->getMorada());
     }
 
-    T restaurante_mais_proximo, menor;
+    T restaurante_mais_proximo, menor;      // restaurante_mais_proximo contém o restaurante mais próximo do estafeta a cada momento, e menor contém o ponto mais próximo do estafeta a qualquer momento, podendo ser um restaurante ou um cliente
 
     // Organiza um vetor, de modo a tornar-se o percurso mais curto, e a garantir que o estafeta passa primeiro pelo restaurante X antes de entregar o pedido ao Cliente X
+    int capacidade_atual_estafeta = estafeta->getTransporte().getCapacidade();      // Vai conter a capacidade restante do estafeta em cada momento
     while (!restaurantes.empty() || !clientes.empty()) {
-        if (!restaurantes.empty()) {
+        if (!restaurantes.empty()) {    // Enquanto o vetor restaurantes não estiver vazio, vamos buscar o restaurante mais próximo do estafeta
             restaurante_mais_proximo = getRestauranteProximo<T>(restaurantes);
         }
-        if (result.empty()) {
+        if (result.empty()) {       // Na primeira iteração (result não tem nenhum vertex ainda), adicionamos ao result o restaurante mais próximo do estafeta - é o primeiro ponto por onde vai passar
             result.push_back(graph.findVertex(restaurante_mais_proximo));
-            apagar(restaurante_mais_proximo, restaurantes);
+            apagar(restaurante_mais_proximo, restaurantes);     // Após adicioná-lo ao result, podemos removê-lo do vetor restaurantes
+            capacidade_atual_estafeta--;    // Como o estafeta possui agora um pedido requisitado mas não entregue, substraímos 1 à sua capacidade atual
             T cliente_do_restaurante = eatExpress.findPedido(restaurante_mais_proximo)->getCliente()->getMorada();
-            clientes.push_back(cliente_do_restaurante);
-        } else {
-            if (!restaurantes.empty())
-                menor = restaurante_mais_proximo;
+            clientes.push_back(cliente_do_restaurante);     // Uma vez que já requisitamos o pedido desse restaurante, podemos adicionar ao vetor clientes o cliente que efetuou esse pedido (o estafeta já pode passar por ele, pois já requisitou o seu pedido)
+        } else {      // Nas restantes iterações
+            if (!restaurantes.empty() && capacidade_atual_estafeta > 0)      // Enquanto houver restaurantes no vetor, menor ficará com o valor inicial do restaurante que se encontra mais próximo do estafeta
+                menor = restaurante_mais_proximo;       // Só poderá ter o valor do seguinte restaurante mais próximo se ainda tiver capacidade para o pedido
             else
-                menor = clientes[0];
+                menor = clientes[0];        // Se o estafeta já tiver passado por todos os restaurantes, ou se não tiver mais capacidade para se dirigir a outro restaurante, menor fica com o valor inicial do primeiro elemento da lista dos clientes
             for (T client : clientes) {
                 if (graph.getDist(/*estafeta_ativo->getPos()*/result.back()->getInfo(), client) <
                     graph.getDist(/*estafeta_ativo->getPos()*/result.back()->getInfo(), menor)) {
-                    menor = client;
+                    menor = client;                 // O valor de menor é alterado sempre que é encontrado um cliente mais próximo do estafeta
                 }
             }
-            if (menor == restaurante_mais_proximo) {
+            // Neste ponto, menor tem o ponto de interesse mais próximo do estafeta, pode corresponder a um restaurante ou cliente
+            if (menor == restaurante_mais_proximo) {    // No caso de menor corresponder a um restaurante, eliminamos o restaurante da lista de restaurantes, e adicionamos o cliente que pediu esse restaurante à lista de clientes
                 apagar(menor, restaurantes);
+                capacidade_atual_estafeta--;
                 T cliente_do_restaurante = eatExpress.findPedido(restaurante_mais_proximo)->getCliente()->getMorada();
                 clientes.push_back(cliente_do_restaurante);
-            } else {
+            } else {      // No caso de menor corresponder a um cliente, retiramos esse cliente da lista de clientes
                 apagar(menor, clientes);
+                capacidade_atual_estafeta++;
             }
-            result.push_back(graph.findVertex(menor));
+            result.push_back(graph.findVertex(menor));      // Por fim, adicionamos ao result o valor de menor
         }
     }
+
+    // -------------------------------------------- Fim do Algoritmo --------------------------------------------
 
     vector<Vertex<T> *> percurso;        // Vai conter o percurso completo do estafeta
 
@@ -316,7 +329,7 @@ vector<Vertex<T>*> algFase4(Estafeta<T> *estafeta, vector<Pedido<T>*> pedidos) {
     percurso.push_back(graph.findVertex(final));
 
     // Apresenta na consola o percurso efetuado
-    cout << "\n Percurso: \n\n";
+    cout << "\n Percurso Completo: \n\n";
     for (Vertex<T> *vertex : percurso) {
         cout << "Vertex " << vertex->getInfo() << " com POS (" << vertex->getLatitude() << ", "
              << vertex->getLongitude() << ")" << endl;
@@ -567,7 +580,7 @@ void Varios_Estafetas_Sem_Carga() {
                     pedido=ped;
                 }
             }
-            estafeta_ativo2=estafeta;
+            estafeta_ativo = estafeta;
             percurso = algFase1(pedido);
             percursos.push_back(percurso);
         }
@@ -659,7 +672,6 @@ void Varios_Estafetas_Com_Carga() {
                 }
             }
             estafeta_ativo = estafeta;
-            // MODIFICAR algFase4!! Para considerar carga ex: se limite for 2 (podemos criar atributo caraga_maxima nos estafetas), nao pode ser R1R2R3C1C2C3, tinha de ser R1R2C1C2R3C3 ou R1R2C1R3C2C3 por ex
             percurso = algFase4(estafeta,pedidos);
             percursos.push_back(percurso);
         }
@@ -671,7 +683,7 @@ void Varios_Estafetas_Com_Carga() {
                     pedido=ped;
                 }
             }
-            estafeta_ativo2=estafeta;
+            estafeta_ativo = estafeta;
             percurso = algFase1(pedido);
             percursos.push_back(percurso);
         }

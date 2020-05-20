@@ -1,16 +1,20 @@
 Casa dos Frangos
-Frangos everywhere"
-85
+Frangos everywhere
+24
 -----
 McDonalds
 Muitos Hamburgueres
-13426
+5
 -----
 Pizzaria Ramos
 Pizzas Italianas
-103
+17
 -----
 Ancora Mar
 Peixe fresco todo o ano
-115
+6
+-----
+Tertulia
+As melhores francesinhas
+20
 -----
