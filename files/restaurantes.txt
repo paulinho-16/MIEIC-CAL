@@ -55,7 +55,7 @@ Pizzas Deliciosas!
 184
 -----
 Sandes e Baguetes
-(sem descrição)
+Diversos Tipos de Sandes
 9151
 -----
 Chicken House
@@ -67,11 +67,11 @@ Muitos Hamburgueres
 16361
 -----
 Restaurante Piolho
-Francesinhas
+A comida mais limpa!
 4724
 -----
-Restaurante Sem Nome
-Peixaria
+Mercado da Povoa
+Peixes de todos os tipos
 9267
 -----
 Bar da Praia
