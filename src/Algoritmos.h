@@ -1,6 +1,7 @@
 #ifndef CAL_FP05_ALGORITMOS_H
 #define CAL_FP05_ALGORITMOS_H
 
+#include "Conetividade.h"
 
 extern EatExpress<int> eatExpress;
 extern Graph<int> graph;
@@ -76,9 +77,20 @@ void Um_Estafeta_Um_Pedido() {      // Fase 1 - Um único pedido para um único 
     vector<Pedido<T>*> pedidos = {pedido};
     eatExpress.setPedidos(pedidos);
 
-    vector<Vertex<T>*> percurso = algFase1(pedido);     // Obtém o percurso completo do estafeta
+    //VERIFICAR SE HÁ CAMINHO:
+    Vertex<T>* v_estafeta=graph.findVertex(estafeta->getPos());
+    Vertex<T>* v_restaurante=graph.findVertex(restaurante->getMorada());
+    Vertex<T>* v_cliente=graph.findVertex(cliente->getMorada());
 
-    showPathGV(percurso);       // Mostra o percurso do estafeta no grafo
+    vector<Vertex<T>*> fortemente_conexa = Avaliar_Conetividade(v_estafeta);
+
+    if(!isIn(v_restaurante,fortemente_conexa) || !isIn(v_cliente,fortemente_conexa)){
+        cout<<"Lamentamos, nao há caminho para efetuar esse pedido."<<endl;
+    }
+    else{
+        vector<Vertex<T>*> percurso = algFase1(pedido);     // Obtém o percurso completo do estafeta
+        showPathGV(percurso);       // Mostra o percurso do estafeta no grafo
+    }
 
     char sair = Sair_Programa();
     if (sair == 'N' || sair == 'n')

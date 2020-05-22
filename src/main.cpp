@@ -4,6 +4,7 @@
 #include "utils.h"
 #include "EatExpress.h"
 #include "Algoritmos.h"
+#include "Conetividade.h"
 
 using namespace std;
 
@@ -35,11 +36,12 @@ char Sair_Programa()
     return sair;
 }
 
+template <class T>
 void Menu_Conetividade() {
     system("CLS");
     Logotipo();
     cout << "\n\n\t\t     Menu da Conetividade do Grafo \n\n";
-    Avaliar_Conetividade<int>();
+    vector<Vertex<T>*> vec = Avaliar_Conetividade<int>(graph.getVertexSet()[0]); //devolve parte fortemente conexa do grafo a partir da casa dos estafetas
     char sair = Sair_Programa();
     if (sair == 'N' || sair == 'n')
         Menu_Principal();
@@ -236,7 +238,7 @@ void Menu_Principal()
     switch(opcao)
     {
         case '1':
-            Menu_Conetividade(); break;
+            Menu_Conetividade<int>(); break;
         case '2':
             Menu_Visualizacao(); break;
         case '3':
@@ -263,7 +265,7 @@ int Menu_Mapas() {
     cout << "[4] Aveiro \n";
     cout << "[5] Braga \n";
     cout <<"[6] Espinho \n";
-    cout << "[7] Fafe \n";
+    cout << "[7] Personalizado \n";
     // METER AS OUTRAS OPÇÕES
     cout << "\n[0] Sair do Programa \n";
     cout << "\nOpcao: ";
@@ -301,7 +303,7 @@ int Menu_Mapas() {
             break;
         case '7':
             bidirectional_edges = false;
-            readMap<T>("../maps/PortugalMaps/Fafe");
+            readMap<T>("../maps/Personalizado");
             break;
         case '0':
             return 1;

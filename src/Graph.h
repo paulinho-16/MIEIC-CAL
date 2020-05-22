@@ -39,7 +39,6 @@ class Vertex {
 	double dist = 0;
 	Vertex<T> *path = NULL;
 	int queueIndex = 0; 		// required by MutablePriorityQueue
-	bool visited = false;		// auxiliary field
 	bool processing = false;	// auxiliary field
 
 	int type = 0;   // 0 se não for ponto de interesse, 1 se for uma morada cliente, 2 se for um restaurante, 3 se estiver ocupado por um estafeta e 4 unicamente para a Casa dos Estafetas
@@ -47,6 +46,7 @@ class Vertex {
 	void addEdge(int id, Vertex<T> *dest, double w);
 
 public:
+    bool visited = false;		// auxiliary field
 	Vertex(T in, double lat, double longt);
 	T getInfo() const;
     double getLatitude() const;
@@ -208,6 +208,7 @@ class Graph {
 
 
 public:
+    bool conexo;
     Vertex<T> * findVertex(T in) const;
 	//bool addVertex(const T &in);
 	bool addVertex(Vertex<T>* vertex);
@@ -242,9 +243,7 @@ public:
 	void floydWarshallShortestPath();
 	vector<T> getfloydWarshallPath(const T &origin, const T &dest) const;
     vector<Vertex<T> *> NearestNeighborFloyd(const T &origin);
-
-    vector<T> dfs() const;
-    void dfsVisit(Vertex<T> *v, vector<T> & res) const;
+    Graph<T> invert();
 
 };
 
@@ -662,39 +661,17 @@ std::vector<Vertex<T> *> Graph<T>::NearestNeighborFloyd(const T &origin){
 
 
 /**************************************************************************************************************************/
-/*
- * Performs a depth-first search (dfs) in a graph (this).
- * Returns a vector with the contents of the vertices by dfs order.
- * Follows the algorithm described in theoretical classes.
- */
+
 template <class T>
-vector<T> Graph<T>::dfs() const {
-    vector<T> res;
-    typename vector<Vertex<T>*>::const_iterator it;
-    for(it=vertexSet.begin(); it!=vertexSet.end(); it++){
-        (*it)->visited=false;
-    }
-    for(it=vertexSet.begin(); it!=vertexSet.end(); it++){
-        if(!(*it)->visited){
-            dfsVisit(*it,res);
-        }
-    }
-    return res;
+Graph<T> Graph<T>::invert(){
+    Graph<T> newGraph = Graph();
+    for(auto v: this->vertexSet)
+        newGraph.addVertex( v);
+
+    for(auto v: this->vertexSet)
+        for(size_t j = 0; j < v->getAdj().size(); j++)
+            newGraph.addEdge( (v->getAdj().at(j).getDest()->getInfo()), (v->getInfo()), v->getAdj().at(j).getWeight());
+    return newGraph;
 }
 
-/*
- * Auxiliary function that visits a vertex (v) and its adjacent not yet visited, recursively.
- * Updates a parameter with the list of visited node contents.
- */
-template <class T>
-void Graph<T>::dfsVisit(Vertex<T> *v, vector<T> & res) const {
-    v->visited=true;
-    res.push_back(v->info);
-    typename vector<Edge<T>>::iterator it;
-    for(it=v->adj.begin(); it!=v->adj.end(); it++){
-        if(!(it->dest)->visited){
-            dfsVisit((*it).dest,res);
-        }
-    }
-}
 #endif /* GRAPH_H_ */

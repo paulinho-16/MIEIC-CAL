@@ -25,8 +25,6 @@ GraphViewer *gv;
 
 using namespace std;
 
-template <class T>
-void showConnection(vector<T> vector);
 
 // Apresenta o Logotipo da Empresa
 void Logotipo() {
@@ -111,22 +109,6 @@ void readMap(string directory) {             // Constrói os paths dos ficheiros
     readEdges<int>(edges_path);
 }
 
-template <class T>
-void Avaliar_Conetividade() {               // Avalia a Conetividade do Grafo
-    cout<<"\nTesting Connectivity..."<<endl;
-
-    vector<T> vec= graph.dfs();
-
-    showConnection<T>(vec);
-    if(vec.size()==graph.getVertexSet().size()){
-        cout<<"Grafo fortemente conexo!"<<endl;
-    }
-    else{
-        for(Vertex<T>* vertex:graph.getVertexSet()){
-            cout<<"Grafo não é fortemente conexo!"<<endl;
-        }
-    }
-}
 
 void Visualizar_Mapa() {        // Apresenta o grafo completo, mostrando todos os clientes, restaurantes, e estafetas que estão presentes na empresa
     gv = new GraphViewer(1200, 900, false);
@@ -273,14 +255,6 @@ void Recolher_Info() {       // Lê as informações dos clientes, restaurantes 
     recolher_info_estafetas<int>();
 }
 
-/*template <class T>
-bool isIn(const vector<Vertex<T>*> &v, Vertex<T>* vertex) {
-    for (Vertex<T>* vert : v) {
-        if (vert->getInfo() == vertex->getInfo())
-            return true;
-    }
-    return false;
-}*/
 
 template <class T>
 int isInPedidos(Vertex<T>* vertex) {        // Verifica se um dado vertex é um dos vertices envolvidos nos pedidos
@@ -296,14 +270,14 @@ int isInPedidos(Vertex<T>* vertex) {        // Verifica se um dado vertex é um 
     return 0;
 }
 
-/*int getIndex(vector<Vertex<int>*>v, Vertex<int>* a){
-    int i=0;
-    for (Vertex<int>* vert : v) {
-        if (vert==a) return i;
-        i++;
+template <class T>
+bool isIn( Vertex<T>* vertex,vector<Vertex<T>*> v) {
+    for (Vertex<T>* vert : v) {
+        if (vert->getInfo() == vertex->getInfo())
+            return true;
     }
-    return -1;
-}*/
+    return false;
+}
 
 template <class T>
 void atribuirEstafeta(Pedido<T> *pedido) {      // Atribui o estafeta que estiver mais perto do restaurante indicado no pedido a esse pedido
@@ -314,40 +288,6 @@ void atribuirEstafeta(Pedido<T> *pedido) {      // Atribui o estafeta que estive
             minDist = d;
             pedido->setEstafeta(estafeta);
         }
-    }
-}
-
-template <class T>
-void showConnection(vector<T> vec) {        // Apresenta no ecrã a conetividade do grafo
-    gv = new GraphViewer(1000, 900, false);
-    gv->createWindow(1200, 900);
-    gv->defineEdgeColor("black");
-    vector<Vertex<T>*> vector_vertexs;
-    for(T t : vec){
-        Vertex<T>* vert=graph.findVertex(t);
-        for (Vertex<int>* vertex : graph.getVertexSet()) {
-            if (vert == vertex) {
-                gv->setVertexColor(vertex->getInfo(), "black");
-                gv->addNode(vertex->getInfo(), vertex->getLatitude(), vertex->getLongitude());
-                vector_vertexs.push_back(vert);
-            }
-        }
-    }
-    for (Vertex<int>* vertex : graph.getVertexSet()) {
-        for (Edge<int> edge : vertex->getAdj()) {
-            gv->addEdge(edge.getID(),vertex->getInfo(), edge.getDest()->getInfo(), EdgeType::DIRECTED);
-        }
-    }
-    for (unsigned int i = 0 ; i < vector_vertexs.size() ; i++) {
-        //Sleep(50);
-        gv->setVertexColor(vector_vertexs[i]->getInfo(),"green");
-        for (Edge<int> edge : vector_vertexs[i]->getAdj()) {
-            if (edge.getDest() == vector_vertexs[i+1]) {
-                gv->setEdgeColor(edge.getID(), "green");
-                break;
-            }
-        }
-        gv->rearrange();
     }
 }
 
