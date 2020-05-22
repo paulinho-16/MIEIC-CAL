@@ -5,6 +5,7 @@
 #include "EatExpress.h"
 #include "Algoritmos.h"
 #include "Conetividade.h"
+#include "AnaliseTempo.h"
 
 using namespace std;
 
@@ -271,6 +272,8 @@ int Menu_Mapas() {
     cout << "[5] Braga \n";
     cout <<"[6] Espinho \n";
     cout << "[7] Personalizado \n";
+
+    cout << "\n\n[9] Analise Temporal\n";
     // METER AS OUTRAS OPÇÕES
     cout << "\n[0] Sair do Programa \n";
     cout << "\nOpcao: ";
@@ -310,6 +313,8 @@ int Menu_Mapas() {
             bidirectional_edges = false;
             readMap<T>("../maps/Personalizado");
             break;
+        case '9':
+            Analise_Temporal();
         case '0':
             return 1;
         default:
