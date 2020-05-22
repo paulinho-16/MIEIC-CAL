@@ -56,11 +56,10 @@ void showConnection(vector<T> vec) {        // Apresenta no ecrã a conetividade
         Vertex<int>* vertex = graph.findVertex(vec[i]);
         gv->setVertexColor(vertex->getInfo(),"green");
         for (Edge<int> edge : vertex->getAdj()) {
-            Vertex<int>* vertex2 = graph.findVertex(vec[i+1]);
-            if (edge.getDest() == vertex2) {
+            //Vertex<int>* vertex2 = graph.findVertex(vec[i+1]);
+            //if (edge.getDest() == vertex2) {
                 gv->setEdgeColor(edge.getID(), "green");
-                break;
-            }
+            //}
         }
     }
     gv->rearrange();
@@ -82,13 +81,6 @@ vector<Vertex<T>*> Avaliar_Conetividade(Vertex<T> *v) {               // Avalia 
         if(containsVertex(res_invert, v))
             res.push_back(v);
     }
-
-    vector<T> vec_aux;
-    for(Vertex<T>* v: res){
-        vec_aux.push_back(v->getInfo());
-    }
-
-    showConnection<T>(vec_aux);
 
     if(res.size()==graph.getVertexSet().size()){
         cout<<"Grafo fortemente conexo!"<<endl;

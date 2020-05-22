@@ -42,6 +42,11 @@ void Menu_Conetividade() {
     Logotipo();
     cout << "\n\n\t\t     Menu da Conetividade do Grafo \n\n";
     vector<Vertex<T>*> vec = Avaliar_Conetividade<int>(graph.getVertexSet()[0]); //devolve parte fortemente conexa do grafo a partir da casa dos estafetas
+    vector<T> vec_aux;
+    for(Vertex<T>* v: vec){
+        vec_aux.push_back(v->getInfo());
+    }
+    showConnection<T>(vec_aux);
     char sair = Sair_Programa();
     if (sair == 'N' || sair == 'n')
         Menu_Principal();

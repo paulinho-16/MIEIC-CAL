@@ -12,8 +12,8 @@ void Menu_Principal();
 char Sair_Programa();
 
 
-template <class T>
-vector<Vertex<T>*> algFase1(Pedido<T>* pedido) {        // Algoritmo usado na fase 1 - Um único pedido para um único estafeta
+template <class T>       // Algoritmo usado na fase 1 - Um único pedido para um único estafeta
+vector<Vertex<T>*> algFase1(Pedido<T>* pedido) {
     graph.dijkstraShortestPath(pedido->getEstafeta()->getPos());
     vector<Vertex<T>*> estafeta_restaurante = graph.getPath(pedido->getEstafeta()->getPos(), pedido->getRestaurante()->getMorada());    // Contém o caminho mais curto entre a posição do estafeta e o restaurante
     graph.dijkstraShortestPath(pedido->getRestaurante()->getMorada());
@@ -28,158 +28,6 @@ vector<Vertex<T>*> algFase1(Pedido<T>* pedido) {        // Algoritmo usado na fa
     }
     return estafeta_restaurante;
 }
-
-template <class T>
-void Um_Estafeta_Um_Pedido() {      // Fase 1 - Um único pedido para um único estafeta
-    system("CLS");
-    Logotipo();
-    cout << "\n\n\t\t     Atendimento de um unico Pedido por um unico Estafeta \n\n";
-    int nc = 1, nr = 1, ne = 1, n_cliente, n_restaurante, n_estafeta;
-    for (Cliente<T>* cliente : eatExpress.getClientes()) {
-        cout << " [" << nc << "]" << cliente->getNome() << " - " << cliente->getNif() << endl;
-        nc++;
-    }
-    do {
-        cout << "\nCliente que deseja efetuar o pedido: ";
-        cin.clear();
-        cin >> n_cliente;
-        cin.ignore(1000, '\n');
-    } while(n_cliente < 1 || n_cliente > eatExpress.getNumClientes());
-    Cliente<T>* cliente = eatExpress.getClientes().at(n_cliente-1);
-    cout << endl;
-    for (Restaurante<T>* restaurante : eatExpress.getRestaurantes()) {
-        cout << " [" << nr << "]" << restaurante->getNome() << " - " << restaurante->getDescricao() << endl;
-        nr++;
-    }
-    do {
-        cout << "\nRestaurante desejado: ";
-        cin.clear();
-        cin >> n_restaurante;
-        cin.ignore(1000, '\n');
-    } while(n_restaurante < 1 || n_restaurante > eatExpress.getNumRestaurantes());
-    Restaurante<T>* restaurante = eatExpress.getRestaurantes().at(n_restaurante-1);
-    cout << endl;
-    for (Estafeta<T>* estafeta : eatExpress.getEstafetas()) {
-        cout << " [" << ne << "]" << estafeta->getNome() << " - " << estafeta->getNif() << endl;
-        ne++;
-    }
-    do {
-        cout << "\nEstafeta que vai atender o pedido: ";
-        cin.clear();
-        cin >> n_estafeta;
-        cin.ignore(1000, '\n');
-    } while(n_estafeta < 1 || n_estafeta > eatExpress.getNumEstafetas());
-    Estafeta<T>* estafeta = eatExpress.getEstafetas().at(n_estafeta-1);
-
-    // JA TEMOS O CLIENTE, RESTAURANTE E ESTAFETA, AGORA É IMPLEMENTAR O ALGORITMO - CHAMAR AQUI E FAZER EM FUNÇÃO DIFERENTE:
-    Pedido<T> *pedido = new Pedido<T>(cliente, restaurante);
-    pedido->setEstafeta(estafeta);
-    vector<Pedido<T>*> pedidos = {pedido};
-    eatExpress.setPedidos(pedidos);
-
-    //VERIFICAR SE HÁ CAMINHO:
-    Vertex<T>* v_estafeta=graph.findVertex(estafeta->getPos());
-    Vertex<T>* v_restaurante=graph.findVertex(restaurante->getMorada());
-    Vertex<T>* v_cliente=graph.findVertex(cliente->getMorada());
-
-    vector<Vertex<T>*> fortemente_conexa = Avaliar_Conetividade(v_estafeta);
-
-    if(!isIn(v_restaurante,fortemente_conexa) || !isIn(v_cliente,fortemente_conexa)){
-        cout<<"Lamentamos, nao há caminho para efetuar esse pedido."<<endl;
-    }
-    else{
-        vector<Vertex<T>*> percurso = algFase1(pedido);     // Obtém o percurso completo do estafeta
-        showPathGV(percurso);       // Mostra o percurso do estafeta no grafo
-    }
-
-    char sair = Sair_Programa();
-    if (sair == 'N' || sair == 'n')
-        Menu_Principal();
-}
-
-template <class T>
-struct Compare {        // Struct utilizada na organização da fila de prioridade
-    bool operator()(Vertex<T>* const& p1, Vertex<T>* const& p2) {
-        // return "true" if "p1" is ordered
-        // before "p2", for example:
-        cout << "COMPARANDO VERTEX P2 - (" << p2->getLatitude() << ", " << p2->getLongitude() << ") com VERTEX P1 - (" <<p1->getLatitude() << ", " << p1->getLongitude() << ") :  ";
-
-        if (p1->getType() == 2 && p2->getType() == 2) {     //2 restaurantes
-            if (graph.getDist(estafeta_ativo->getPos(), p1->getInfo()) > graph.getDist(estafeta_ativo->getPos(), p2->getInfo())) {
-                cout << "TRUE" << endl;
-                return true;
-            } else {
-                cout << "FALSE" << endl;
-                return false;
-            }
-        }
-        else if (p1->getType() == 1 && p2->getType() == 1) {    //2 clientes
-            if (eatExpress.findPedido(p1->getInfo())->isRequisitado() && eatExpress.findPedido(p2->getInfo())->isRequisitado()) {   // ambos requisitados
-                if (graph.getDist(estafeta_ativo->getPos(), p1->getInfo()) > graph.getDist(estafeta_ativo->getPos(), p2->getInfo())) {
-                    cout << "TRUE" << endl;
-                    return true;
-                }
-                else {
-                    cout << "FALSE" << endl;
-                    return false;
-                }
-            }
-            else if (eatExpress.findPedido(p1->getInfo())->isRequisitado() && !eatExpress.findPedido(p2->getInfo())->isRequisitado()) {
-                cout << "FALSE" << endl;
-                return false;
-            }
-            else if (!eatExpress.findPedido(p1->getInfo())->isRequisitado() && eatExpress.findPedido(p2->getInfo())->isRequisitado()) {
-                cout << "TRUE" << endl;
-                return true;
-            }
-            else {
-                if (graph.getDist(estafeta_ativo->getPos(), p1->getInfo()) > graph.getDist(estafeta_ativo->getPos(), p2->getInfo())) {
-                    cout << "TRUE" << endl;
-                    return true;
-                }
-                else {
-                    cout << "FALSE" << endl;
-                    return false;
-                }
-            }
-        }
-        else if (p1->getType() == 2 && p2->getType() == 1) {    //1 restaurante - 1 cliente
-            if (eatExpress.findPedido(p1->getInfo()) == eatExpress.findPedido(p2->getInfo())) {
-                cout << "FALSE" << endl;
-                //eatExpress.findPedido(p1->getInfo())->setRequisitado(true);
-                return false;
-            }
-            else {
-                if (graph.getDist(estafeta_ativo->getPos(), p1->getInfo()) > graph.getDist(estafeta_ativo->getPos(), p2->getInfo())) {
-                    cout << "TRUE" << endl;
-                    return true;
-                }
-                else {
-                    cout << "FALSE" << endl;
-                    return false;
-                }
-            }
-        }
-        else if (p1->getType() == 1 && p2->getType() == 2) {    //1 cliente - 1 restaurante
-            if (eatExpress.findPedido(p1->getInfo()) == eatExpress.findPedido(p2->getInfo())) {
-                cout << "TRUE" << endl;
-                return true;
-            }
-            else {
-                if (graph.getDist(estafeta_ativo->getPos(), p1->getInfo()) > graph.getDist(estafeta_ativo->getPos(), p2->getInfo())) {
-                    cout << "TRUE" << endl;
-                    return true;
-                }
-                else {
-                    cout << "FALSE" << endl;            // MUDAR ESTE TALVEZ
-                    return false;
-                }
-            }
-        }
-        cout << "FALSE" << endl;
-        return false;
-    }
-};
 
 template<class T>       // Algoritmo utilizado na Fase 2 - Um único estafeta atende vários pedidos
 vector<Vertex<T>*> algFase2(Estafeta<T> *estafeta, vector<Pedido<T>*> pedidos) {
@@ -350,6 +198,79 @@ vector<Vertex<T>*> algFase4(Estafeta<T> *estafeta, vector<Pedido<T>*> pedidos) {
     return percurso;
 }
 
+
+
+template <class T>      // Fase 1 - Um único estafeta um único pedido
+void Um_Estafeta_Um_Pedido() {      // Fase 1 - Um único pedido para um único estafeta
+    system("CLS");
+    Logotipo();
+    cout << "\n\n\t\t     Atendimento de um unico Pedido por um unico Estafeta \n\n";
+    int nc = 1, nr = 1, ne = 1, n_cliente, n_restaurante, n_estafeta;
+    for (Cliente<T>* cliente : eatExpress.getClientes()) {
+        cout << " [" << nc << "]" << cliente->getNome() << " - " << cliente->getNif() << endl;
+        nc++;
+    }
+    do {
+        cout << "\nCliente que deseja efetuar o pedido: ";
+        cin.clear();
+        cin >> n_cliente;
+        cin.ignore(1000, '\n');
+    } while(n_cliente < 1 || n_cliente > eatExpress.getNumClientes());
+    Cliente<T>* cliente = eatExpress.getClientes().at(n_cliente-1);
+    cout << endl;
+    for (Restaurante<T>* restaurante : eatExpress.getRestaurantes()) {
+        cout << " [" << nr << "]" << restaurante->getNome() << " - " << restaurante->getDescricao() << endl;
+        nr++;
+    }
+    do {
+        cout << "\nRestaurante desejado: ";
+        cin.clear();
+        cin >> n_restaurante;
+        cin.ignore(1000, '\n');
+    } while(n_restaurante < 1 || n_restaurante > eatExpress.getNumRestaurantes());
+    Restaurante<T>* restaurante = eatExpress.getRestaurantes().at(n_restaurante-1);
+    cout << endl;
+    for (Estafeta<T>* estafeta : eatExpress.getEstafetas()) {
+        cout << " [" << ne << "]" << estafeta->getNome() << " - " << estafeta->getNif() << endl;
+        ne++;
+    }
+    do {
+        cout << "\nEstafeta que vai atender o pedido: ";
+        cin.clear();
+        cin >> n_estafeta;
+        cin.ignore(1000, '\n');
+    } while(n_estafeta < 1 || n_estafeta > eatExpress.getNumEstafetas());
+    Estafeta<T>* estafeta = eatExpress.getEstafetas().at(n_estafeta-1);
+
+    // JA TEMOS O CLIENTE, RESTAURANTE E ESTAFETA, AGORA É IMPLEMENTAR O ALGORITMO - CHAMAR AQUI E FAZER EM FUNÇÃO DIFERENTE:
+
+    Pedido<T> *pedido = new Pedido<T>(cliente, restaurante);
+    pedido->setEstafeta(estafeta);
+    vector<Pedido<T>*> pedidos = {pedido};
+    eatExpress.setPedidos(pedidos);
+
+    //VERIFICAR SE HÁ CAMINHO:
+
+    Vertex<T>* v_estafeta=graph.findVertex(estafeta->getPos());
+    Vertex<T>* v_restaurante=graph.findVertex(restaurante->getMorada());
+    Vertex<T>* v_cliente=graph.findVertex(cliente->getMorada());
+
+    vector<Vertex<T>*> fortemente_conexa = Avaliar_Conetividade(v_estafeta);
+
+    if(!isIn(v_restaurante,fortemente_conexa) || !isIn(v_cliente,fortemente_conexa)){
+        cout<<"Lamentamos, nao ha caminho para efetuar esse pedido."<<endl;
+    }
+    else{
+        cout<<"Encontramos um caminho!"<<endl;
+        vector<Vertex<T>*> percurso = algFase1(pedido);     // Obtém o percurso completo do estafeta
+        showPathGV(percurso);       // Mostra o percurso do estafeta no grafo
+    }
+
+    char sair = Sair_Programa();
+    if (sair == 'N' || sair == 'n')
+        Menu_Principal();
+}
+
 template <class T>      // Fase 2 - Um único estafeta atende vários pedidos
 void Um_Estafeta_Varios_Pedidos() {
     system("CLS");
@@ -410,19 +331,22 @@ void Um_Estafeta_Varios_Pedidos() {
 
     // JA TEMOS A LISTA DE PEDIDOS E O ESTAFETA, AGORA É IMPLEMENTAR O ALGORITMO - CHAMAR AQUI E FAZER EM FUNÇÃO DIFERENTE
 
-    /*eatExpress.setPedidos(pedidos); //USING NEARESTNEIGHBOR
-    for (Pedido<T>* pedido : eatExpress.getPedidos()) {
-        pedido->setEstafeta(estafeta);
-        pedido->setRequisitado(false);
-        cout<<pedido->getCliente()->getNome()<<" - "<<pedido->getRestaurante()->getNome()<<endl;
-    }
-    vector<Vertex<T>*> percurso = graph.NearestNeighborFloyd(estafeta->getPos());
-    showPathGV(percurso);*/
 
     estafeta_ativo = estafeta;
     for (Pedido<T>* pedido : eatExpress.getPedidos()) {
         pedido->setEstafeta(estafeta);
         pedido->setRequisitado(false);
+
+        Vertex<T>* v_estafeta=graph.findVertex(pedido->getEstafeta()->getPos());
+        Vertex<T>* v_restaurante=graph.findVertex(pedido->getRestaurante()->getMorada());
+        Vertex<T>* v_cliente=graph.findVertex(pedido->getCliente()->getMorada());
+
+        vector<Vertex<T>*> fortemente_conexa = Avaliar_Conetividade(v_estafeta);
+
+        if(!isIn(v_restaurante,fortemente_conexa) || !isIn(v_cliente,fortemente_conexa)){
+            cout<<"Lamentamos, nao há caminho para efetuar estes pedidos!"<<endl;
+            return;
+        }
     }
     eatExpress.setPedidos(pedidos);
 
@@ -707,5 +631,7 @@ void Varios_Estafetas_Com_Carga() {
     if (sair == 'N' || sair == 'n')
         Menu_Principal();
 }
+
+
 
 #endif //CAL_FP05_ALGORITMOS_H
