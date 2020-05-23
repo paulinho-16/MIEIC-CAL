@@ -145,12 +145,14 @@ class Edge {
     int edgeID;
 	Vertex<T> * dest;      // destination vertex
 	double weight;         // edge weight
+	double dist;            //edge euclidian distance
 public:
 	Edge(int id, Vertex<T> *d, double w);
 	Vertex<T>* getDest() const;
 	double getWeight();
     int getID();
     void setID(int id);
+    void setWeight(double d);
 	friend class Graph<T>;
 	friend class Vertex<T>;
 };
@@ -177,6 +179,9 @@ template <class T>
 void Edge<T>::setID(int id) {
     this->edgeID = id;
 }
+
+template <class T>
+void Edge<T>::setWeight(double d){this->weight=d;}
 
 /********************************************************* Graph  **********************************************************************/
 
@@ -392,7 +397,6 @@ double Graph<T>::getDist(const T &src, const T &dest) const {
     Vertex<T>* s = findVertex(src);
     Vertex<T>* d = findVertex(dest);
     double i=sqrt((s->getLatitude() - d->getLatitude())*(s->getLatitude() - d->getLatitude()) + (s->getLongitude() - d->getLongitude())*(s->getLongitude() - d->getLongitude()));
-    //cout<<(int)src<<"-"<<(int)dest<<"   "<<i<<endl;
     return i;
 }
 

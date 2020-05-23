@@ -111,6 +111,13 @@ void readMap(string directory) {
     graph.reset();
     readNodes<int>(nodes_path);
     readEdges<int>(edges_path);
+
+    for(Vertex<T>* v: graph.getVertexSet()){
+        for(Edge<T> e: v->getAdj()){
+            double i=graph.getDist(v->getInfo(),e.getDest()->getInfo());
+            e.setWeight(i);
+        }
+    }
 }
 
 
@@ -345,6 +352,7 @@ void showPathGV(vector<Vertex<T>*> v) {
     // Mostra na consola a conexão entre os dados apresentados no ecrã e os dados dos clientes, restaurantes e estafetas da empresa
     cout << "\n Dados: " << endl << endl;
 
+
     n_pedido = 0;
     for (Pedido<T>* pedido : eatExpress.getPedidos()) {
         n_pedido++;
@@ -366,8 +374,20 @@ void showPathGV(vector<Vertex<T>*> v) {
     n_pedido = 0;
     for (Pedido<T>* pedido : eatExpress.getPedidos()) {
         n_pedido++;
+        //calculo do tempo demorado consoante a velocidade do estafeta:
+        double distancia_total_pedido=0;
+        double tempo_total_pedido=0;
+        for (unsigned int i = 0 ; i < v.size() - 1 ; i++) {
+            for (Edge<int> edge : v[i]->getAdj()) {
+                if (edge.getDest() == v[i+1]) {
+                    distancia_total_pedido+=edge.getWeight();
+                    break;
+                }
+            }
+        }
+        tempo_total_pedido=distancia_total_pedido/pedido->getEstafeta()->getTransporte().getVelocidade();
         if (!pedido->getEstafeta()->getRepetido()) {
-            cout << "Estafeta " + to_string(n_pedido) << " - " << pedido->getEstafeta()->getNome() << " (" << pedido->getEstafeta()->getNif() << ")\n";
+            cout << "Estafeta " + to_string(n_pedido) << " - " << pedido->getEstafeta()->getNome() << " (" << pedido->getEstafeta()->getNif() << ") - Duracao da entrega: "<<tempo_total_pedido<<endl;
             pedido->getEstafeta()->setRepetido(true);
         }
     }
@@ -458,7 +478,21 @@ void showMultiplePathsGV(vector<vector<Vertex<T>*>> percursos) {
     for (Pedido<T>* pedido : eatExpress.getPedidos()) {
         n_pedido++;
         if (!pedido->getEstafeta()->getRepetido()) {
-            cout << "Estafeta " + to_string(n_pedido) << " - " << pedido->getEstafeta()->getNome() << " (" << pedido->getEstafeta()->getNif() << ") - "<<pedido->getEstafeta()->getTransporte().getNome()<<" de capacidade: "<<pedido->getEstafeta()->getTransporte().getCapacidade()<<" pedidos\n";
+            n_pedido++;
+            double distancia_total_pedido = 0;
+            double tempo_total_pedido = 0;
+            for(vector<Vertex<T>*> v: percursos) {
+                for (unsigned int i = 0; i < v.size() - 1; i++) {
+                    for (Edge<int> edge : v[i]->getAdj()) {
+                        if (edge.getDest() == v[i + 1]) {
+                            distancia_total_pedido += edge.getWeight();
+                            break;
+                        }
+                    }
+                }
+            }
+            tempo_total_pedido=distancia_total_pedido/pedido->getEstafeta()->getTransporte().getVelocidade();
+            cout << "Estafeta " + to_string(n_pedido) << " - " << pedido->getEstafeta()->getNome() << " (" << pedido->getEstafeta()->getNif() << ") - "<<pedido->getEstafeta()->getTransporte().getNome()<<" de capacidade: "<<pedido->getEstafeta()->getTransporte().getCapacidade()<<" pedidos - Duracao da entrega: "<<tempo_total_pedido<<endl;
             pedido->getEstafeta()->setRepetido(true);
         }
     }
