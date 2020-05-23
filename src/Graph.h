@@ -80,22 +80,6 @@ void Vertex<T>::addEdge(int id, Vertex<T> *d, double w) {
 
 template <class T>
 bool Vertex<T>::operator<(Vertex<T> & vertex) const {
-    /*Pedido<T>* pedido_respetivo = eatExpress.findPedido(this->info);
-    if (this->type == 1 && !pedido_respetivo->isRequisitado())
-        return false;
-    if (this->dist < vertex.dist) {
-        if (this->type == 1 && !pedido_respetivo->isRequisitado())
-            return false;
-        if(this->type == 1 && pedido_respetivo->isRequisitado())
-            return true;
-        else if (this->type == 2){
-            pedido_respetivo->setRequisitado(true);
-            return true;
-        }
-        return false;
-    }
-    return false;*/
-
     return this->dist < vertex.dist;
 }
 
@@ -327,7 +311,6 @@ vector<Vertex<T> *> Graph<T>::getPath(const T &origin, const T &dest) const {
     auto o = findVertex(origin);
     auto v = findVertex(dest);
     if (v == nullptr || v->dist == INF) {// missing or disconnected
-        cout<<"ola"<<endl;
         return res;
     }
     for ( ; v != o && v != nullptr; v = v->path)
@@ -668,11 +651,11 @@ template <class T>
 Graph<T> Graph<T>::invert(){
     Graph<T> newGraph = Graph();
     for(auto v: this->vertexSet)
-        newGraph.addVertex( v);
-
-    for(auto v: this->vertexSet)
-        for(size_t j = 0; j < v->getAdj().size(); j++)
-            newGraph.addEdge( (v->getAdj().at(j).getDest()->getInfo()), (v->getInfo()), v->getAdj().at(j).getWeight());
+        newGraph.addVertex(v);
+    /*for(auto v: this->vertexSet)
+        for(Edge<T> e: v->getAdj()) {
+            newGraph.addEdge(e.getDest()->getInfo(), v->getInfo(),e.getWeight());
+        }*/
     return newGraph;
 }
 

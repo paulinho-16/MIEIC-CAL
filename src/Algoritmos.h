@@ -259,6 +259,7 @@ void Um_Estafeta_Um_Pedido() {      // Fase 1 - Um único pedido para um único 
 
     if(!isIn(v_restaurante,fortemente_conexa) || !isIn(v_cliente,fortemente_conexa)){
         cout<<"Lamentamos, nao ha caminho para efetuar esse pedido."<<endl;
+        return;
     }
     else{
         cout<<"Encontramos um caminho!"<<endl;
