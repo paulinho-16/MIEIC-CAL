@@ -274,14 +274,18 @@ int Menu_Mapas() {
     cout << "[1] 4x4 \n";
     cout << "[2] 8x8 \n";
     cout << "[3] 16x16 \n";
-    cout << "\t PortugalMaps \n";
-    cout << "[4] Aveiro \n";
-    cout << "[5] Braga \n";
-    cout <<"[6] Espinho \n";
-    cout << "[7] Personalizado \n";
+    cout << "[4] Personalizado \n";
+    cout << "\n\t Mapas de Portugal \n";
+    cout << "\n Mapas Fortemente Conexos \n\n";
+    cout << "[5] Penafiel \n";
+    cout << "[6] Espinho \n";
+    cout << "[7] Porto \n";
+    cout << "\n Mapas Nao Conexos \n\n";
+    cout << "[8] Penafiel \n";
+    cout << "[9] Espinho \n";
+    cout << "[10] Porto \n";
 
-    cout << "\n\n[9] Analise Temporal\n";
-    // METER AS OUTRAS OPÇÕES
+    cout << "\n\n[11] Analise Temporal\n";
     cout << "\n[0] Sair do Programa \n";
     cout << "\nOpcao: ";
 
@@ -289,7 +293,11 @@ int Menu_Mapas() {
     cin >> name;
     char opcao;
     if(name.size() == 1) opcao = name[0];
-    else opcao = '9';
+    else {
+        if (name == "10") opcao = 'p';
+        else if (name == "11") opcao = 'a';
+        else opcao = 'r';
+    }
 
     switch(opcao)
     {
@@ -307,20 +315,33 @@ int Menu_Mapas() {
             break;
         case '4':
             bidirectional_edges = false;
-            readMap<T>("../maps/PortugalMaps/Aveiro");
+            readMap<T>("../maps/Personalizado");
             break;
         case '5':
             bidirectional_edges = false;
+            readMap<T>("../maps/MapasConexos/Penafiel");
             break;
         case '6':
             bidirectional_edges = false;
-            readMap<T>("../maps/MapaEspinho");
+            readMap<T>("../maps/MapasConexos/Espinho");
             break;
         case '7':
             bidirectional_edges = false;
-            readMap<T>("../maps/Personalizado");
+            readMap<T>("../maps/MapasConexos/Porto");
+            break;
+        case '8':
+            bidirectional_edges = false;
+            readMap<T>("../maps/MapasNaoConexos/Penafiel");
             break;
         case '9':
+            bidirectional_edges = false;
+            readMap<T>("../maps/MapasNaoConexos/Espinho");
+            break;
+        case 'p':
+            bidirectional_edges = false;
+            readMap<T>("../maps/MapasNaoConexos/Porto");
+            break;
+        case 'a':
             Analise_Temporal();
         case '0':
             return 1;
