@@ -329,6 +329,7 @@ void Um_Estafeta_Varios_Pedidos() {
     } while(n_estafeta < 1 || n_estafeta > eatExpress.getNumEstafetas());
     Estafeta<T>* estafeta = eatExpress.getEstafetas().at(n_estafeta-1);
 
+
     // JA TEMOS A LISTA DE PEDIDOS E O ESTAFETA, AGORA É IMPLEMENTAR O ALGORITMO - CHAMAR AQUI E FAZER EM FUNÇÃO DIFERENTE
 
 
@@ -479,7 +480,21 @@ void Varios_Estafetas_Sem_Carga() {
     for(Pedido<T>* pedido : pedidos) {
         atribuirEstafeta(pedido);
         pedido->setRequisitado(false);
+
+        /*Vertex<T>* v_estafeta=graph.findVertex(pedido->getEstafeta()->getPos());
+        Vertex<T>* v_restaurante=graph.findVertex(pedido->getRestaurante()->getMorada());
+        Vertex<T>* v_cliente=graph.findVertex(pedido->getCliente()->getMorada());
+        vector<Vertex<T>*> fortemente_conexa = Avaliar_Conetividade(v_estafeta);
+        if(!isIn(v_restaurante,fortemente_conexa) || !isIn(v_cliente,fortemente_conexa)){
+            pedidos_impossiveis.push_back(pedido);
+        }*/
     }
+
+    /*if(pedidos_impossiveis.size()!=0)
+        cout<<"\nLamentamos, existem "<<pedidos_impossiveis.size()<<" pedidos que nao podem ser efetuados"<<endl;
+    for(Pedido<T>* ped : pedidos_impossiveis){
+        apagarPedido(ped,pedidos);
+    }*/
 
     eatExpress.setPedidos(pedidos);
 

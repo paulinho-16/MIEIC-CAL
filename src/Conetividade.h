@@ -68,7 +68,6 @@ void showConnection(vector<T> vec) {        // Apresenta no ecrã a conetividade
 
 template <class T>
 vector<Vertex<T>*> Avaliar_Conetividade(Vertex<T> *v) {               // Avalia a Conetividade do Grafo a partir de V
-    cout<<"\nTesting Connectivity..."<<endl;
 
     vector<Vertex<T>*> res_normal= dfs(&graph,v); // Pesquisa em profundidade no grafo normal
 
@@ -80,13 +79,6 @@ vector<Vertex<T>*> Avaliar_Conetividade(Vertex<T> *v) {               // Avalia 
     for(auto v: res_normal){
         if(containsVertex(res_invert, v))
             res.push_back(v);
-    }
-
-    if(res.size()==graph.getVertexSet().size()){
-        cout<<"Grafo fortemente conexo!"<<endl;
-    }
-    else{
-        cout<<"Grafo nao e fortemente conexo!"<<endl;
     }
 
     return res;

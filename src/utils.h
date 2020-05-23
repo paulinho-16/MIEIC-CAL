@@ -26,7 +26,7 @@ GraphViewer *gv;
 using namespace std;
 
 
-// Apresenta o Logotipo da Empresa
+        // Apresenta o Logotipo da Empresa
 void Logotipo() {
     cout << "        ______      _   ______" << endl;
     cout << "       |  ____|    | | |  ____|" << endl;
@@ -38,8 +38,9 @@ void Logotipo() {
     cout << "                                   |_|" << endl;
 }
 
-template <class T>
-void readNodes(string file_directory) {     // Lê os vértices do ficheiro enviado como parâmetro
+
+template <class T>      // Lê os vértices do ficheiro enviado como parâmetro
+void readNodes(string file_directory) {
     ifstream ler;
     string number;
     string tuple;
@@ -63,8 +64,9 @@ void readNodes(string file_directory) {     // Lê os vértices do ficheiro envi
     ler.close();
 }
 
-template <class T>
-void readEdges(string file_directory) {          // Lê as arestas do ficheiro enviado como parâmetro
+
+template <class T>      // Lê as arestas do ficheiro enviado como parâmetro
+void readEdges(string file_directory) {
     ifstream ler;
     string number;
     string tuple;
@@ -101,8 +103,9 @@ void readEdges(string file_directory) {          // Lê as arestas do ficheiro e
     //graph.printEdges();
 }
 
-template <class T>
-void readMap(string directory) {             // Constrói os paths dos ficheiros e lê os vértices e as arestas destes
+
+template <class T>       // Constrói os paths dos ficheiros e lê os vértices e as arestas destes
+void readMap(string directory) {
     string nodes_path = directory + "/nodes.txt";
     string edges_path = directory + "/edges.txt";
     readNodes<int>(nodes_path);
@@ -110,7 +113,8 @@ void readMap(string directory) {             // Constrói os paths dos ficheiros
 }
 
 
-void Visualizar_Mapa() {        // Apresenta o grafo completo, mostrando todos os clientes, restaurantes, e estafetas que estão presentes na empresa
+        // Apresenta o grafo completo, mostrando todos os clientes, restaurantes, e estafetas que estão presentes na empresa
+void Visualizar_Mapa() {
     gv = new GraphViewer(1200, 900, false);
     gv->createWindow(1200, 900);
     //gv->defineVertexColor("blue");
@@ -140,6 +144,7 @@ void Visualizar_Mapa() {        // Apresenta o grafo completo, mostrando todos o
     gv->rearrange();
 }
 
+
 template<class T>       // Trata da informação da Casa dos Estafetas
 void recolher_info_casaEstafetas() {
     eatExpress.setCasaEstafetas(graph.getVertexSet()[0]->getInfo());
@@ -147,8 +152,9 @@ void recolher_info_casaEstafetas() {
     vertex->setType(4);
 }
 
-template<class T>
-void recolher_info_clientes() {       // Lê as informações relativas aos clientes do ficheiro
+
+template<class T>       // Lê as informações relativas aos clientes do ficheiro
+void recolher_info_clientes() {
 
     vector<Cliente<T>*> v;
     ifstream ler;
@@ -175,8 +181,9 @@ void recolher_info_clientes() {       // Lê as informações relativas aos clie
     }
 }
 
-template <class T>
-void recolher_info_restaurantes() {       // Lê as informações relativas aos restaurantes do ficheiro
+
+template <class T>      // Lê as informações relativas aos restaurantes do ficheiro
+void recolher_info_restaurantes() {
     vector<Restaurante<T>*> v;
     ifstream ler;
     ler.open("../files/restaurantes.txt");
@@ -202,7 +209,9 @@ void recolher_info_restaurantes() {       // Lê as informações relativas aos 
     }
 }
 
-void recolher_info_transportes() {       // Lê as informações relativas aos transportes do ficheiro
+
+        // Lê as informações relativas aos transportes do ficheiro
+void recolher_info_transportes() {
     vector<MeioTransporte> t;
     ifstream ler;
     ler.open("../files/transportes.txt");
@@ -219,8 +228,9 @@ void recolher_info_transportes() {       // Lê as informações relativas aos t
     ler.close();
 }
 
-template <class T>
-void recolher_info_estafetas() {       // Lê as informações relativas aos estafetas do ficheiro
+
+template <class T>      // Lê as informações relativas aos estafetas do ficheiro
+void recolher_info_estafetas() {
     vector<Estafeta<T>*> v;
     ifstream ler;
     ler.open("../files/estafetas.txt");
@@ -247,7 +257,9 @@ void recolher_info_estafetas() {       // Lê as informações relativas aos est
     }
 }
 
-void Recolher_Info() {       // Lê as informações dos clientes, restaurantes e estafetas presentes na empresa
+
+        // Lê as informações dos clientes, restaurantes e estafetas presentes na empresa
+void Recolher_Info() {
     recolher_info_casaEstafetas<int>();
     recolher_info_clientes<int>();
     recolher_info_restaurantes<int>();
@@ -256,8 +268,8 @@ void Recolher_Info() {       // Lê as informações dos clientes, restaurantes 
 }
 
 
-template <class T>
-int isInPedidos(Vertex<T>* vertex) {        // Verifica se um dado vertex é um dos vertices envolvidos nos pedidos
+template <class T>      // Verifica se um dado vertex é um dos vertices envolvidos nos pedidos
+int isInPedidos(Vertex<T>* vertex) {
     int numero_pedido = 0;
     for (Pedido<T>* pedido : eatExpress.getPedidos()) {
         numero_pedido++;
@@ -270,6 +282,7 @@ int isInPedidos(Vertex<T>* vertex) {        // Verifica se um dado vertex é um 
     return 0;
 }
 
+
 template <class T>
 bool isIn( Vertex<T>* vertex,vector<Vertex<T>*> v) {
     for (Vertex<T>* vert : v) {
@@ -279,8 +292,9 @@ bool isIn( Vertex<T>* vertex,vector<Vertex<T>*> v) {
     return false;
 }
 
-template <class T>
-void atribuirEstafeta(Pedido<T> *pedido) {      // Atribui o estafeta que estiver mais perto do restaurante indicado no pedido a esse pedido
+
+template <class T>      // Atribui o estafeta que estiver mais perto do restaurante indicado no pedido a esse pedido
+void atribuirEstafeta(Pedido<T> *pedido) {
     double minDist = 10000;
     for(Estafeta<T>* estafeta : eatExpress.getEstafetas()) {
         double d=graph.getDist(pedido->getRestaurante()->getMorada(),estafeta->getPos());
@@ -291,8 +305,9 @@ void atribuirEstafeta(Pedido<T> *pedido) {      // Atribui o estafeta que estive
     }
 }
 
-template <class T>
-void showPathGV(vector<Vertex<T>*> v) {     // Apresenta o grafo e o percurso indicado no parâmetro
+
+template <class T>      // Apresenta o grafo e o percurso indicado no parâmetro
+void showPathGV(vector<Vertex<T>*> v) {
     gv = new GraphViewer(1000, 900, false);
     gv->createWindow(1200, 900);
     gv->defineEdgeColor("black");
@@ -380,8 +395,9 @@ void showPathGV(vector<Vertex<T>*> v) {     // Apresenta o grafo e o percurso in
     }
 }
 
-template <class T>
-void showMultiplePathsGV(vector<vector<Vertex<T>*>> percursos) {        // Apresenta o grafo e os vários percursos dos vários estafetas
+
+template <class T>       // Apresenta o grafo e os vários percursos dos vários estafetas
+void showMultiplePathsGV(vector<vector<Vertex<T>*>> percursos) {
     gv = new GraphViewer(1000, 900, false);
     gv->createWindow(1200, 900);
     gv->defineEdgeColor("black");
@@ -479,8 +495,9 @@ void showMultiplePathsGV(vector<vector<Vertex<T>*>> percursos) {        // Apres
     }
 }
 
-template <class T>
-T getRestauranteProximo(vector<T> vetor) {      // Devolve o id do vertex onde se encontra o restaurante mais próximo do estafeta
+
+template <class T>       // Devolve o id do vertex onde se encontra o restaurante mais próximo do estafeta
+T getRestauranteProximo(vector<T> vetor) {
     int i = 0;
     T proximo;
     for (T rest : vetor) {
@@ -495,8 +512,9 @@ T getRestauranteProximo(vector<T> vetor) {      // Devolve o id do vertex onde s
     return proximo;
 }
 
-template <class T>
-void apagar(T inf, vector<T> &vetor) {          // Apaga o id de um dado vertex de um vetor de ids de vertices
+
+template <class T>      // Apaga o id de um dado vertex de um vetor de ids de vertices
+void apagar(T inf, vector<T> &vetor) {
     for (typename vector<T>::iterator it = vetor.begin() ; it != vetor.end() ; it++) {
         if ((*it) == inf) {
             vetor.erase(it);
@@ -505,4 +523,14 @@ void apagar(T inf, vector<T> &vetor) {          // Apaga o id de um dado vertex 
     }
 }
 
+
+template <class T>      //Apaga pedido de um vetor de pedidos
+void apagarPedido(Pedido<T>* pedido, vector<Pedido<T>*> &pedidos){
+    for (typename vector<Pedido<T>*>::iterator it = pedidos.begin() ; it != pedidos.end() ; it++) {
+        if ((*it) == pedido) {
+            pedidos.erase(it);
+            break;
+        }
+    }
+}
 #endif //CAL_FP05_UTILS_H

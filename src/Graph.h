@@ -326,8 +326,10 @@ vector<Vertex<T> *> Graph<T>::getPath(const T &origin, const T &dest) const {
     vector<Vertex<T> *> res;
     auto o = findVertex(origin);
     auto v = findVertex(dest);
-    if (v == nullptr || v->dist == INF) // missing or disconnected
+    if (v == nullptr || v->dist == INF) {// missing or disconnected
+        cout<<"ola"<<endl;
         return res;
+    }
     for ( ; v != o && v != nullptr; v = v->path)
         res.push_back(v);
     res.push_back(o);
