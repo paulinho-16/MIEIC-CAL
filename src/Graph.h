@@ -210,6 +210,7 @@ public:
     void setP(int i, int j, int index);
     void resetMatrixW(int n);
     void resetMatrixP(int n);
+    void reset();
 
     int nextVertex(int i, int j);
     double edgeWeight(int i, int j);
@@ -357,6 +358,11 @@ void Graph<T>::resetMatrixW(int n) {
 template <class T>
 void Graph<T>::resetMatrixP(int n) {
     P = vector<vector<int>> (n, vector<int> (n));
+}
+
+template <class T>
+void Graph<T>::reset() {
+    vertexSet.clear();
 }
 
 template <class T>
