@@ -104,10 +104,10 @@ vector<Vertex<T>*> algFase2(Estafeta<T> *estafeta, vector<Pedido<T>*> pedidos) {
     percurso.push_back(graph.findVertex(final));
 
     // Apresenta na consola o percurso efetuado
-    cout << "\n Percurso Completo: \n\n";
+    /*cout << "\n Percurso Completo: \n\n";
     for (Vertex<T>* vertex : percurso) {
         cout << "Vertex " << vertex->getInfo() << " com POS (" << vertex->getLatitude() << ", " << vertex->getLongitude() << ")"<<endl;
-    }
+    }*/
 
     return percurso;
 }

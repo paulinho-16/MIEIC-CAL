@@ -108,6 +108,7 @@ template <class T>       // Constrói os paths dos ficheiros e lê os vértices 
 void readMap(string directory) {
     string nodes_path = directory + "/nodes.txt";
     string edges_path = directory + "/edges.txt";
+    graph.reset();
     readNodes<int>(nodes_path);
     readEdges<int>(edges_path);
 }
@@ -382,7 +383,7 @@ void showPathGV(vector<Vertex<T>*> v) {
 
     // Desenha o percurso enviado como parâmetro
     for (unsigned int i = 0 ; i < v.size() - 1 ; i++) {
-        Sleep(200);
+        Sleep(750);
         if (!isInPedidos(v[i+1]))     // Para evitar pintar os restaurante e as moradas dos Clientes.
             gv->setVertexColor(v[i+1]->getInfo(), "red");
         for (Edge<int> edge : v[i]->getAdj()) {
@@ -480,7 +481,7 @@ void showMultiplePathsGV(vector<vector<Vertex<T>*>> percursos) {
             if(num_percurso % 4 == 2) {color = "blue";}
             if(num_percurso % 4 == 3) {color = "green";}
             if(num_percurso % 4 == 0) {color = "orange";}
-            Sleep(200);
+            Sleep(750);
             if (!isInPedidos(v[i+1]))
                 gv->setVertexColor(v[i+1]->getInfo(), color);
             for (Edge<int> edge : v[i]->getAdj()) {
