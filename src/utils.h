@@ -494,6 +494,8 @@ void showMultiplePathsGV(vector<vector<Vertex<T>*>> percursos) {
             tempo_total_pedido=distancia_total_pedido/pedido->getEstafeta()->getTransporte().getVelocidade();
             cout << "Estafeta " + to_string(n_pedido) << " - " << pedido->getEstafeta()->getNome() << " (" << pedido->getEstafeta()->getNif() << ") - "<<pedido->getEstafeta()->getTransporte().getNome()<<" de capacidade: "<<pedido->getEstafeta()->getTransporte().getCapacidade()<<" pedidos - Duracao da entrega: "<<tempo_total_pedido<<endl;
             pedido->getEstafeta()->setRepetido(true);
+            distancia_total_pedido=0;
+            tempo_total_pedido=0;
         }
     }
 

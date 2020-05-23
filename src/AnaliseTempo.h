@@ -7,6 +7,7 @@
 #include "Graph.h"
 #include "Algoritmos.h"
 #include "utils.h"
+#include "conetividade.h"
 
 extern Estafeta<int>* estafeta_ativo;
 
@@ -141,9 +142,29 @@ void Tempo_Fase_2() {
     escrever.close();
 }
 
+template <class T>
+void Tempo_DFS() {
+    srand(time(NULL));
+    ofstream escrever;
+    escrever.open("GraficoDFS.csv");
+    escrever << "vertex;time" << endl;
+
+    bidirectional_edges = true;
+    readMap<T>("../maps/GridGraphs/4x4");
+
+    // Medição do tempo do algoritmo
+    auto start = std::chrono::high_resolution_clock::now();
+    vector<Vertex<T>*> vetor = dfs(&graph, graph.getVertexSet()[0]);
+    auto finish = std::chrono::high_resolution_clock::now();
+    auto mili = chrono::duration_cast<chrono::microseconds>(finish - start).count();
+    escrever << graph.getNumVertex() << ";" << mili << endl;
+
+}
+
 void Analise_Temporal() {
     Tempo_Fase_1<int>();
     Tempo_Fase_2<int>();
+    Tempo_DFS<int>();
 }
 
 #endif //CAL_FP05_ANALISETEMPO_H
