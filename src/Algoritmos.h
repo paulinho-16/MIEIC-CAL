@@ -330,9 +330,7 @@ void Um_Estafeta_Varios_Pedidos() {
     } while(n_estafeta < 1 || n_estafeta > eatExpress.getNumEstafetas());
     Estafeta<T>* estafeta = eatExpress.getEstafetas().at(n_estafeta-1);
 
-
     // JA TEMOS A LISTA DE PEDIDOS E O ESTAFETA, AGORA É IMPLEMENTAR O ALGORITMO - CHAMAR AQUI E FAZER EM FUNÇÃO DIFERENTE
-
 
     estafeta_ativo = estafeta;
     for (Pedido<T>* pedido : eatExpress.getPedidos()) {
@@ -595,7 +593,7 @@ void Varios_Estafetas_Com_Carga() {
 
     vector<Vertex<T>*> percurso;        // Armazena o percurso de cada estafeta
     vector<vector<Vertex<T>*>> percursos;       // Lista dos percursos dos vários estafetas
-    vector<Vertex<T>*> pedidos_impossiveis;
+    vector<Pedido<T>*> pedidos_impossiveis;
 
     // Atribuição dos estafetas aos pedidos - Critério de Seleção: Estafeta que estiver mais perto do restaurante do pedido
 
