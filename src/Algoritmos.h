@@ -329,9 +329,7 @@ void Um_Estafeta_Varios_Pedidos() {
     } while(n_estafeta < 1 || n_estafeta > eatExpress.getNumEstafetas());
     Estafeta<T>* estafeta = eatExpress.getEstafetas().at(n_estafeta-1);
 
-
     // JA TEMOS A LISTA DE PEDIDOS E O ESTAFETA, AGORA É IMPLEMENTAR O ALGORITMO - CHAMAR AQUI E FAZER EM FUNÇÃO DIFERENTE
-
 
     estafeta_ativo = estafeta;
     for (Pedido<T>* pedido : eatExpress.getPedidos()) {
@@ -344,7 +342,7 @@ void Um_Estafeta_Varios_Pedidos() {
 
         vector<Vertex<T>*> fortemente_conexa = Avaliar_Conetividade(v_estafeta);
 
-        if(!isIn(v_restaurante,fortemente_conexa) || !isIn(v_cliente,fortemente_conexa)){
+        if(!isIn(v_restaurante,fortemente_conexa) || !isIn(v_cliente,fortemente_conexa)) {
             cout<<"Lamentamos, nao há caminho para efetuar estes pedidos!"<<endl;
             return;
         }
