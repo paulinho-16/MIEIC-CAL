@@ -41,10 +41,12 @@ void Tempo_Fase_1() {
     auto finish = std::chrono::high_resolution_clock::now();
     auto mili = chrono::duration_cast<chrono::microseconds>(finish - start).count();
     escrever << graph.getNumVertex() << ";" << mili << endl;
+
     //-------------------------------         Para Grid 8x8         ------------------------------------------
     // Iniciar Grafo e Dados da EatExpress
     bidirectional_edges = true;
     readMap<T>("../maps/GridGraphs/8x8");
+    Recolher_Info();
 
     // Medição do tempo do algoritmo
     start = std::chrono::high_resolution_clock::now();
@@ -56,6 +58,7 @@ void Tempo_Fase_1() {
     // Iniciar Grafo e Dados da EatExpress
     bidirectional_edges = true;
     readMap<T>("../maps/GridGraphs/16x16");
+    Recolher_Info();
 
     // Medição do tempo do algoritmo
     start = std::chrono::high_resolution_clock::now();

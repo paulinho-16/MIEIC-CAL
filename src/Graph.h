@@ -228,7 +228,7 @@ public:
 	void floydWarshallShortestPath();
 	vector<T> getfloydWarshallPath(const T &origin, const T &dest) const;
     vector<Vertex<T> *> NearestNeighborFloyd(const T &origin);
-    Graph<T> invert();
+    Graph<T>* invert();
 
 };
 
@@ -654,14 +654,22 @@ std::vector<Vertex<T> *> Graph<T>::NearestNeighborFloyd(const T &origin){
 /**************************************************************************************************************************/
 
 template <class T>
-Graph<T> Graph<T>::invert(){
-    Graph<T> newGraph = Graph();
-    for(auto v: this->vertexSet)
-        newGraph.addVertex(v);
-    /*for(auto v: this->vertexSet)
+Graph<T>* Graph<T>::invert(){
+    int i=0;
+    Graph<T> *newGraph = new Graph<T>;
+    Vertex<T> *vertex;
+    for(auto v: this->getVertexSet()) {
+        vertex = new Vertex<T>(i, v->getLatitude(), v->getLongitude());
+        newGraph->addVertex(vertex);
+        i++;
+    }
+    int j=0;
+    for(auto v: this->getVertexSet())
         for(Edge<T> e: v->getAdj()) {
-            newGraph.addEdge(e.getDest()->getInfo(), v->getInfo(),e.getWeight());
-        }*/
+            newGraph->addEdge(j,e.getDest()->getInfo(), v->getInfo());
+            j++;
+        }
+
     return newGraph;
 }
 

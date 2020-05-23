@@ -42,20 +42,20 @@ void showConnection(vector<T> vec) {        // Apresenta no ecrã a conetividade
     gv->createWindow(1200, 900);
     gv->defineEdgeColor("black");
     vector<Vertex<T>*> vector_vertexs;
-    for (Vertex<int>* vertex : graph.getVertexSet()) {
+    for (Vertex<T>* vertex : graph.getVertexSet()) {
         gv->setVertexColor(vertex->getInfo(), "black");
         gv->addNode(vertex->getInfo(), vertex->getLatitude(), vertex->getLongitude());
     }
-    for (Vertex<int>* vertex : graph.getVertexSet()) {
-        for (Edge<int> edge : vertex->getAdj()) {
+    for (Vertex<T>* vertex : graph.getVertexSet()) {
+        for (Edge<T> edge : vertex->getAdj()) {
             gv->addEdge(edge.getID(),vertex->getInfo(), edge.getDest()->getInfo(), EdgeType::DIRECTED);
         }
     }
     for (unsigned int i = 0 ; i < vec.size() ; i++) {
         //Sleep(50);
-        Vertex<int>* vertex = graph.findVertex(vec[i]);
+        Vertex<T>* vertex = graph.findVertex(vec[i]);
         gv->setVertexColor(vertex->getInfo(),"green");
-        for (Edge<int> edge : vertex->getAdj()) {
+        for (Edge<T> edge : vertex->getAdj()) {
             //Vertex<int>* vertex2 = graph.findVertex(vec[i+1]);
             //if (edge.getDest() == vertex2) {
                 gv->setEdgeColor(edge.getID(), "green");
@@ -72,10 +72,10 @@ vector<Vertex<T>*> Avaliar_Conetividade(Vertex<T> *v) {               // Avalia 
     cout<<"IM HERE"<<endl;
     vector<Vertex<T>*> res_normal= dfs(&graph,v); // Pesquisa em profundidade no grafo normal
     cout<<"IM HERE 2 "<<endl;
-    Graph<T> invertedGraph = graph.invert(); //Inverter Grafo
+    Graph<T> *invertedGraph = graph.invert(); //Inverter Grafo
     cout<<"IM HERE 3"<<endl;
-    Vertex<T> * invInitial = invertedGraph.findVertex( (v->getInfo()));
-    vector<Vertex<T> *> res_invert = dfs(&invertedGraph, invInitial); // Pesquisa em profundidade no grafo invertido
+    Vertex<T>  *invInitial = invertedGraph->findVertex( (v->getInfo()));
+    vector<Vertex<T> *> res_invert = dfs(invertedGraph, invInitial); // Pesquisa em profundidade no grafo invertido
 
     vector<Vertex<T> *> res;
     for(auto v: res_normal){
