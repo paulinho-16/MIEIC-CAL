@@ -10,6 +10,8 @@ extern Graph<int> graph;
 
 template <class T>
 void dfsVisit(Vertex<T> *v, std::vector<Vertex<T> *> & res) {
+    //cout<<"im here"<<endl;
+    //cout<<v->getAdj()[0].getWeight()<<endl;
     v->visited=true;
     res.push_back(v);
     for(unsigned int i = 0; i < v->getAdj().size(); i++) {
@@ -26,7 +28,7 @@ std::vector<Vertex<T> *> dfs(Graph<T> * graphh, Vertex<T> * initial) {
     for(auto vertex: graphh->getVertexSet()){
         vertex->visited=false;
     }
-    cout<<"WTF"<<endl;
+    //cout<<"WTF"<<endl;
     dfsVisit(initial, res);
 
     return res;

@@ -350,13 +350,14 @@ void Um_Estafeta_Varios_Pedidos() {
         Vertex<T>* v_restaurante=graph.findVertex(pedido->getRestaurante()->getMorada());
         Vertex<T>* v_cliente=graph.findVertex(pedido->getCliente()->getMorada());
 
-        vector<Vertex<T>*> caminho_conexo = dfs(&graph,v_estafeta);
 
-        if(!isIn(v_restaurante,caminho_conexo) || !isIn(v_cliente,caminho_conexo)){
+        /*if(!isIn(v_restaurante,caminho_conexo) || !isIn(v_cliente,caminho_conexo)){
             cout<<"Lamentamos, nao há caminho para efetuar estes pedidos!"<<endl;
             return;
-        }
+        }*/
     }
+    Vertex<T>* v_estafeta=graph.findVertex(estafeta->getPos());
+    vector<Vertex<T>*> caminho_conexo = dfs(&graph,v_estafeta);
     eatExpress.setPedidos(pedidos);
 
     //graph.floydWarshallShortestPath();
