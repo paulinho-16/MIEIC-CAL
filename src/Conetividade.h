@@ -26,9 +26,7 @@ std::vector<Vertex<T> *> dfs(Graph<T> * graphh, Vertex<T> * initial) {
     for(auto vertex: graphh->getVertexSet()){
         vertex->visited=false;
     }
-    cout<<"WTF"<<endl;
     dfsVisit(initial, res);
-
     return res;
 }
 
