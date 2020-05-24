@@ -24,11 +24,9 @@ void dfsVisit(Vertex<T> *v, std::vector<Vertex<T> *> & res) {
 template <class T>
 std::vector<Vertex<T> *> dfs(Graph<T> * graphh, Vertex<T> * initial) {
     vector<Vertex<T> *> res;
-    cout<<res.size()<<endl;
     for(auto vertex: graphh->getVertexSet()){
         vertex->visited=false;
     }
-    //cout<<"WTF"<<endl;
     dfsVisit(initial, res);
 
     return res;
@@ -75,14 +73,10 @@ void showConnection(vector<T> vec) {        // Apresenta no ecrã a conetividade
 template <class T>
 vector<Vertex<T>*> Avaliar_Conetividade(Vertex<T> *v) {               // Avalia a Conetividade do Grafo a partir de V
 
-    cout<<"HERE"<<endl;
     vector<Vertex<T>*> res_normal= dfs(&graph,v); // Pesquisa em profundidade no grafo normal
-    cout<<"HERE1"<<endl;
     Graph<T> *invertedGraph = graph.invert(); //Inverter Grafo
-    cout<<"HERE2"<<endl;
     Vertex<T>  *invInitial = invertedGraph->findVertex( (v->getInfo()));
     vector<Vertex<T> *> res_invert = dfs(invertedGraph, invInitial); // Pesquisa em profundidade no grafo invertido
-    cout<<"HERE3"<<endl;
 
     vector<Vertex<T> *> res;
     for(auto v: res_normal){

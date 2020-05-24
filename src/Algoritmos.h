@@ -266,16 +266,16 @@ void Um_Estafeta_Um_Pedido() {      // Fase 1 - Um único pedido para um único 
 
     vector<Vertex<T>*> caminho_conexo = dfs(&graph,v_estafeta);
 
+    vector<Vertex<T>*> percurso;
+
     if(!isIn(v_restaurante,caminho_conexo) || !isIn(v_cliente,caminho_conexo)){
         cout<<"Lamentamos, nao ha caminho para efetuar esse pedido."<<endl;
-        return;
     }
     else{
         cout<<"Encontramos um caminho!"<<endl;
-        vector<Vertex<T>*> percurso = algFase1(pedido);     // Obtém o percurso completo do estafeta
-        showPathGV(percurso);       // Mostra o percurso do estafeta no grafo
+        percurso = algFase1(pedido);     // Obtém o percurso completo do estafeta
     }
-
+    showPathGV(percurso);       // Mostra o percurso do estafeta no grafo
     char sair = Sair_Programa();
     if (sair == 'N' || sair == 'n')
         Menu_Principal();
@@ -342,82 +342,31 @@ void Um_Estafeta_Varios_Pedidos() {
     // JA TEMOS A LISTA DE PEDIDOS E O ESTAFETA, AGORA É IMPLEMENTAR O ALGORITMO - CHAMAR AQUI E FAZER EM FUNÇÃO DIFERENTE
 
     estafeta_ativo = estafeta;
-    for (Pedido<T>* pedido : eatExpress.getPedidos()) {
+
+    Vertex<T>* v_estafeta=graph.findVertex(estafeta->getPos());
+    vector<Vertex<T>*> caminho_conexo = dfs(&graph,v_estafeta);
+    vector<Pedido<T>*> pedidos_impossiveis;
+    vector<Vertex<T>*> percurso;
+
+    for (Pedido<T>* pedido : pedidos) {
         pedido->setEstafeta(estafeta);
         pedido->setRequisitado(false);
 
-        Vertex<T>* v_estafeta=graph.findVertex(pedido->getEstafeta()->getPos());
         Vertex<T>* v_restaurante=graph.findVertex(pedido->getRestaurante()->getMorada());
         Vertex<T>* v_cliente=graph.findVertex(pedido->getCliente()->getMorada());
-
-
-        /*if(!isIn(v_restaurante,caminho_conexo) || !isIn(v_cliente,caminho_conexo)){
-            cout<<"Lamentamos, nao há caminho para efetuar estes pedidos!"<<endl;
-            return;
-        }*/
-    }
-    Vertex<T>* v_estafeta=graph.findVertex(estafeta->getPos());
-    vector<Vertex<T>*> caminho_conexo = dfs(&graph,v_estafeta);
-    eatExpress.setPedidos(pedidos);
-
-    //graph.floydWarshallShortestPath();
-
-    // DE OUTRA MANEIRA __________________________________________________________________________________________________
-
-    vector<Vertex<T>*> percurso=algFase2(estafeta,pedidos);
-
-    // ________________________________________________________________________________________________________________________
-
-    // COM FILA DE PRIORIDADE
-    /*priority_queue<Vertex<T>*, vector<Vertex<T>*>, Compare<T>> Q;
-
-    for (Pedido<T>* pedido : eatExpress.getPedidos()) {
-        if (!pedido->getRestaurante()->RestauranteJaPedido()) {
-            Q.push(graph.findVertex(pedido->getRestaurante()->getMorada()));
-            pedido->getRestaurante()->setJaPedido(true);
+        if(!isIn(v_restaurante,caminho_conexo) || !isIn(v_cliente,caminho_conexo)){
+            pedidos_impossiveis.push_back(pedido);
         }
     }
-    for (Pedido<T>* pedido : eatExpress.getPedidos()) {
-        Q.push(graph.findVertex(pedido->getCliente()->getMorada()));
-        pedido->getRestaurante()->setJaPedido(false);
-    }*/
 
-    //MOSTRAR Q
-    //while (!Q.empty()) {
-        //Vertex<T>* vert = Q.top();
-        //cout << "VERTEX: " << vert->getLatitude() << ", " << vert->getLongitude() << endl;
-        //Q.pop();
-    //}
-    //system("pause");
+    if(pedidos_impossiveis.size()!=0){
+        cout<<"Lamentamos, nao ha caminho para efetuar estes pedidos!"<<endl;
+    }
+    else{
+        eatExpress.setPedidos(pedidos);
+        percurso=algFase2(estafeta,pedidos);
+    }
 
-    /*vector<Vertex<T>*> percurso;
-    Vertex<T>* vert = Q.top();
-    Q.pop();
-    cout << "VERTEX: " << vert->getLatitude() << ", " << vert->getLongitude() << endl;
-    T init = vert->getInfo();
-    T final;
-    graph.dijkstraShortestPath(estafeta->getPos());
-    vector<Vertex<T>*> vetor = graph.getPath(estafeta->getPos(), init);
-    percurso.insert(percurso.end(), vetor.begin(), vetor.end() - 1);
-    while (!Q.empty()) {
-        //estafeta->setPos(init);
-        vert = Q.top();
-        cout << "VERTEX: " << vert->getLatitude() << ", " << vert->getLongitude() << endl;
-        Q.pop();
-        final = vert->getInfo();
-        graph.dijkstraShortestPath(init);
-        vetor = graph.getPath(init, final);
-        percurso.insert(percurso.end(), vetor.begin(), vetor.end() - 1);
-        init = final;
-    }*/
-
-    //percurso.push_back(graph.findVertex(final));    // Coloca o vertex final
-
-    /*for (Vertex<T>* vertex : percurso) {
-        cout << "VERTEX: " << vertex->getLatitude() << ", " << vertex->getLongitude() << endl;
-    }*/
-
-    //vector<Vertex<T>*> caminho= graph.NearestNeighborFloyd(estafeta->getPos());
 
     for (Pedido<T>* pedido : eatExpress.getPedidos()) {
         pedido->setEstafeta(estafeta);
@@ -480,7 +429,8 @@ void Varios_Estafetas_Sem_Carga() {
         cout << ee << " -> " << estafeta->getNome() <<endl;
         ee++;
     }
-    // JA TEMOS A LISTA DE PEDIDOS, AGORA É IMPLEMENTAR O ALGORITMO, OS ESTAFETAS SÃO ESCOLHIDOS POR UM CRITERIO - CHAMAR AQUI E FAZER EM FUNÇÃO DIFERENTE
+
+    /** JA TEMOS A LISTA DE PEDIDOS, AGORA É IMPLEMENTAR O ALGORITMO, OS ESTAFETAS SÃO ESCOLHIDOS POR UM CRITERIO - CHAMAR AQUI E FAZER EM FUNÇÃO DIFERENTE*/
 
     vector<Vertex<T>*> percurso;        // Armazena o percurso de cada estafeta
     vector<vector<Vertex<T>*>> percursos;       // Lista dos percursos dos vários estafetas
@@ -488,23 +438,16 @@ void Varios_Estafetas_Sem_Carga() {
 
     // Atribuição dos estafetas aos pedidos - Critério de Seleção: Estafeta que estiver mais perto do restaurante do pedido
     for(Pedido<T>* pedido : pedidos) {
-        atribuirEstafeta(pedido);
+        atribuirEstafeta(pedido,pedidos_impossiveis);
         pedido->setRequisitado(false);
-
-        //Verificar se existe caminho com uma pesquisa em profundidade:
-        Vertex<T>* v_estafeta=graph.findVertex(pedido->getEstafeta()->getPos());
-        Vertex<T>* v_restaurante=graph.findVertex(pedido->getRestaurante()->getMorada());
-        Vertex<T>* v_cliente=graph.findVertex(pedido->getCliente()->getMorada());
-        vector<Vertex<T>*> caminho_conexo = dfs(&graph,v_estafeta);
-        if(!isIn(v_restaurante,caminho_conexo) || !isIn(v_cliente,caminho_conexo)){
-            pedidos_impossiveis.push_back(pedido);
-        }
     }
 
-    if(pedidos_impossiveis.size()!=0)
-        cout<<"\nLamentamos, existem "<<pedidos_impossiveis.size()<<" pedidos que nao podem ser efetuados"<<endl;
-    for(Pedido<T>* ped : pedidos_impossiveis){
-        apagarPedido(ped,pedidos);
+
+    if(pedidos_impossiveis.size()!=0) {
+        cout << "\nLamentamos, existem " << pedidos_impossiveis.size() << " pedidos que nao podem ser efetuados"<< endl;
+    }
+    for(Pedido<T>* ped: pedidos_impossiveis){
+        apagarPedido(ped, pedidos);
     }
 
     eatExpress.setPedidos(pedidos);
@@ -534,7 +477,7 @@ void Varios_Estafetas_Sem_Carga() {
             percurso = algFase2(estafeta,pedidos);
             percursos.push_back(percurso);
         }
-        // No caso de ter um único pedido
+            // No caso de ter um único pedido
         else if(num_pedidos == 1) {
             Pedido<T>* pedido;
             for(Pedido<T>* ped:eatExpress.getPedidos()){
@@ -608,23 +551,15 @@ void Varios_Estafetas_Com_Carga() {
     // Atribuição dos estafetas aos pedidos - Critério de Seleção: Estafeta que estiver mais perto do restaurante do pedido
 
     for(Pedido<T>* pedido : pedidos) {
-        atribuirEstafeta(pedido);
+        atribuirEstafeta(pedido,pedidos_impossiveis);
         pedido->setRequisitado(false);
-
-        //Verificar se existe caminho com uma pesquisa em profundidade:
-        Vertex<T>* v_estafeta=graph.findVertex(pedido->getEstafeta()->getPos());
-        Vertex<T>* v_restaurante=graph.findVertex(pedido->getRestaurante()->getMorada());
-        Vertex<T>* v_cliente=graph.findVertex(pedido->getCliente()->getMorada());
-        vector<Vertex<T>*> caminho_conexo = dfs(&graph,v_estafeta);
-        if(!isIn(v_restaurante,caminho_conexo) || !isIn(v_cliente,caminho_conexo)){
-            pedidos_impossiveis.push_back(pedido);
-        }
     }
 
-    if(pedidos_impossiveis.size()!=0)
-        cout<<"\nLamentamos, existem "<<pedidos_impossiveis.size()<<" pedidos que nao podem ser efetuados"<<endl;
-    for(Pedido<T>* ped : pedidos_impossiveis){
-        apagarPedido(ped,pedidos);
+    if(pedidos_impossiveis.size()!=0) {
+        cout << "\nLamentamos, existem " << pedidos_impossiveis.size() << " pedidos que nao podem ser efetuados"<< endl;
+    }
+    for(Pedido<T>* ped: pedidos_impossiveis){
+        apagarPedido(ped, pedidos);
     }
 
     eatExpress.setPedidos(pedidos);

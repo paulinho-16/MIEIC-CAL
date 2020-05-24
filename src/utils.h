@@ -300,16 +300,36 @@ bool isIn( Vertex<T>* vertex,vector<Vertex<T>*> v) {
     return false;
 }
 
+template <class T>
+bool isInEstafeta( Estafeta<T>* estafeta,vector<Estafeta<T>*> v) {
+    for (Estafeta<T>* vert : v) {
+        if (vert->getPos() == estafeta->getPos())
+            return true;
+    }
+    return false;
+}
 
-template <class T>      // Atribui o estafeta que estiver mais perto do restaurante indicado no pedido a esse pedido
-void atribuirEstafeta(Pedido<T> *pedido) {
+template <class T>      // Atribui o estafeta que estiver mais perto do restaurante indicado no pedido a esse pedido e que tenha caminho
+void atribuirEstafeta(Pedido<T> *pedido,vector<Pedido<T>*> &pedidos_impossiveis) {
     double minDist = 10000;
+
+    Vertex<T>* v_restaurante=graph.findVertex(pedido->getRestaurante()->getMorada());
+    Vertex<T>* v_cliente=graph.findVertex(pedido->getCliente()->getMorada());
+
     for(Estafeta<T>* estafeta : eatExpress.getEstafetas()) {
+
+        Vertex<T>* v_estafeta=graph.findVertex(pedido->getEstafeta()->getPos());
+        vector<Vertex<T>*> caminho_conexo = dfs(&graph,v_estafeta);
+
         double d=graph.getDist(pedido->getRestaurante()->getMorada(),estafeta->getPos());
-        if(d < minDist) {
+
+        if(d < minDist && isIn(v_restaurante,caminho_conexo) && isIn(v_cliente,caminho_conexo)) {
             minDist = d;
             pedido->setEstafeta(estafeta);
         }
+    }
+    if(!isInEstafeta(pedido->getEstafeta(),eatExpress.getEstafetas())) {
+        pedidos_impossiveis.push_back(pedido);
     }
 }
 
@@ -349,9 +369,10 @@ void showPathGV(vector<Vertex<T>*> v) {
         }
     }
 
+    if(v.size()==0){return;}
+
     // Mostra na consola a conexão entre os dados apresentados no ecrã e os dados dos clientes, restaurantes e estafetas da empresa
     cout << "\n Dados: " << endl << endl;
-
 
     n_pedido = 0;
     for (Pedido<T>* pedido : eatExpress.getPedidos()) {
@@ -430,15 +451,15 @@ void showMultiplePathsGV(vector<vector<Vertex<T>*>> percursos) {
             gv->setVertexColor(vertex->getInfo(), "yellow");
             gv->setVertexLabel(vertex->getInfo(), "Casa dos Estafetas");
         }
-        else if (vertex->getType() == 1 && (n_pedido = isInPedidos(vertex))) {
+        else if (vertex->getType() == 1 /*&& (n_pedido = isInPedidos(vertex))*/) {
             gv->setVertexColor(vertex->getInfo(), "orange");
             gv->setVertexLabel(vertex->getInfo(), "Cliente " + to_string(n_pedido));
         }
-        else if (vertex->getType() == 2 && (n_pedido = isInPedidos(vertex))) {
+        else if (vertex->getType() == 2 /*&& (n_pedido = isInPedidos(vertex))*/) {
             gv->setVertexColor(vertex->getInfo(), "green");
             gv->setVertexLabel(vertex->getInfo(), "Restaurante " + to_string(n_pedido));
         }
-        else if (vertex->getType() == 3 && (n_pedido = isInPedidos(vertex))) {
+        else if (vertex->getType() == 3 /*&& (n_pedido = isInPedidos(vertex))*/) {
             gv->setVertexColor(vertex->getInfo(), "yellow");
             gv->setVertexLabel(vertex->getInfo(), "Estafeta " + to_string(n_pedido));
         }
@@ -452,6 +473,8 @@ void showMultiplePathsGV(vector<vector<Vertex<T>*>> percursos) {
             gv->addEdge(edge.getID(),vertex->getInfo(), edge.getDest()->getInfo(), EdgeType::DIRECTED);
         }
     }
+
+    if(percursos.size()==0) return;
 
     // Mostra na consola a conexão entre os dados apresentados no ecrã e os dados dos clientes, restaurantes e estafetas da empresa
     cout << "\n Dados: " << endl << endl;
