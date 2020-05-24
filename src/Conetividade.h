@@ -28,7 +28,6 @@ std::vector<Vertex<T> *> dfs(Graph<T> * graphh, Vertex<T> * initial) {
         vertex->visited=false;
     }
     dfsVisit(initial, res);
-
     return res;
 }
 
