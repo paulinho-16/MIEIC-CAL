@@ -3,6 +3,9 @@
 
 #include "Conetividade.h"
 
+#include <chrono>
+// time
+
 extern EatExpress<int> eatExpress;
 extern Graph<int> graph;
 
@@ -14,10 +17,16 @@ char Sair_Programa();
 
 template <class T>       // Algoritmo usado na fase 1 - Um único pedido para um único estafeta
 vector<Vertex<T>*> algFase1(Pedido<T>* pedido) {
+    //auto start = std::chrono::high_resolution_clock::now();
     graph.dijkstraShortestPath(pedido->getEstafeta()->getPos());
+    //auto finish = std::chrono::high_resolution_clock::now();
+    //auto mili = chrono::duration_cast<chrono::microseconds>(finish - start).count();
     vector<Vertex<T>*> estafeta_restaurante = graph.getPath(pedido->getEstafeta()->getPos(), pedido->getRestaurante()->getMorada());    // Contém o caminho mais curto entre a posição do estafeta e o restaurante
     graph.dijkstraShortestPath(pedido->getRestaurante()->getMorada());
+    //start = std::chrono::high_resolution_clock::now();
     vector<Vertex<T>*> restaurante_cliente = graph.getPath(pedido->getRestaurante()->getMorada(), pedido->getCliente()->getMorada());   // Contém o caminho mais curto entre o restaurante e o cliente
+    //finish = std::chrono::high_resolution_clock::now();
+    //mili = chrono::duration_cast<chrono::microseconds>(finish - start).count();
 
     restaurante_cliente.erase(restaurante_cliente.begin());     // Remove um vertex repetido (o restaurante)
     estafeta_restaurante.insert(estafeta_restaurante.end(), restaurante_cliente.begin(), restaurante_cliente.end());    // Une os dois vetores, pelo que estafeta_restaurante conterá o percurso mais curto
