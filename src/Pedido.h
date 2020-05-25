@@ -5,16 +5,14 @@
 #include "Restaurante.h"
 #include "Estafeta.h"
 
+// Classe que trata dos dados de cada pedido da empresa
 template <class T>
 class Pedido {
-    //int id;
     Cliente<T>* cliente;
     Restaurante<T>* restaurante;
     Estafeta<T>* estafeta;
     bool requisitado;
 public:
-    //int getId();
-    //void setId(int i);
 
     Pedido(Cliente<T>* c, Restaurante<T>* r) {
         cliente = c;
@@ -25,16 +23,8 @@ public:
         return cliente;
     }
 
-    void setCliente(Cliente<T>* c) {
-        cliente = c;
-    }
-
     Restaurante<T>* getRestaurante() {
         return restaurante;
-    }
-
-    void setRestaurante(Restaurante<T>* r) {
-        restaurante = r;
     }
 
     void setRequisitado(bool a){

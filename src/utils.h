@@ -60,7 +60,6 @@ void readNodes(string file_directory) {
         graph.addVertex(vertex);
     }
     cout << "Vertex Lidos: " << graph.getNumVertex() << endl;
-   // graph.printVertexs();
     ler.close();
 }
 
@@ -100,7 +99,6 @@ void readEdges(string file_directory) {
     }
     cout << "Edge Lidos: " << graph.getNumEdges() << endl;
     ler.close();
-    //graph.printEdges();
 }
 
 
@@ -125,7 +123,6 @@ void readMap(string directory) {
 void Visualizar_Mapa() {
     gv = new GraphViewer(1200, 900, false);
     gv->createWindow(1200, 900);
-    //gv->defineVertexColor("blue");
     gv->defineEdgeColor("black");
     for (Vertex<int>* vertex : graph.getVertexSet()) {
         switch (vertex->getType()) {
@@ -290,7 +287,7 @@ int isInPedidos(Vertex<T>* vertex) {
     return 0;
 }
 
-
+        // Verifica se um dado vertex pertence a um vetor de vértices
 template <class T>
 bool isIn( Vertex<T>* vertex,vector<Vertex<T>*> v) {
     for (Vertex<T>* vert : v) {
@@ -299,7 +296,7 @@ bool isIn( Vertex<T>* vertex,vector<Vertex<T>*> v) {
     }
     return false;
 }
-
+        // Verifica se um dado estafeta pertence a um vetor de estafetas
 template <class T>
 bool isInEstafeta( Estafeta<T>* estafeta,vector<Estafeta<T>*> v) {
     for (Estafeta<T>* vert : v) {
@@ -328,6 +325,7 @@ void showPathGV(vector<Vertex<T>*> v) {
     gv->createWindow(1200, 900);
     gv->defineEdgeColor("black");
     int n_pedido;
+
     // Desenha o grafo, indicando os clientes, restaurantes e estafetas envolvidos nos pedidos
     for (Vertex<int>* vertex : graph.getVertexSet()) {
         if (vertex->getType() == 4) {
@@ -383,7 +381,8 @@ void showPathGV(vector<Vertex<T>*> v) {
     n_pedido = 0;
     for (Pedido<T>* pedido : eatExpress.getPedidos()) {
         n_pedido++;
-        //calculo do tempo demorado consoante a velocidade do estafeta:
+
+        // Cálculo do tempo demorado consoante a velocidade do estafeta:
         double distancia_total_pedido=0;
         double tempo_total_pedido=0;
         for (unsigned int i = 0 ; i < v.size() - 1 ; i++) {
@@ -408,11 +407,11 @@ void showPathGV(vector<Vertex<T>*> v) {
         pedido->getEstafeta()->setRepetido(false);
     }
 
-    Sleep(2000);
+    Sleep(2000);    // Concede tempo para o GraphViewer abrir
 
     // Desenha o percurso enviado como parâmetro
     for (unsigned int i = 0 ; i < v.size() - 1 ; i++) {
-        Sleep(750);
+        Sleep(750);     // Mostra o percurso construtivamente
         if (!isInPedidos(v[i+1]))     // Para evitar pintar os restaurante e as moradas dos Clientes.
             gv->setVertexColor(v[i+1]->getInfo(), "red");
         for (Edge<int> edge : v[i]->getAdj()) {
@@ -505,8 +504,6 @@ void showMultiplePathsGV(vector<vector<Vertex<T>*>> percursos) {
             tempo_total_pedido=distancia_total_pedido/pedido->getEstafeta()->getTransporte().getVelocidade();
             cout << "Estafeta " + to_string(n_pedido) << " - " << pedido->getEstafeta()->getNome() << " (" << pedido->getEstafeta()->getNif() << ") - "<<pedido->getEstafeta()->getTransporte().getNome()<<" de capacidade: "<<pedido->getEstafeta()->getTransporte().getCapacidade()<<" pedidos - Duracao da entrega: "<<tempo_total_pedido<<endl;
             pedido->getEstafeta()->setRepetido(true);
-            distancia_total_pedido=0;
-            tempo_total_pedido=0;
         }
     }
 
@@ -517,7 +514,7 @@ void showMultiplePathsGV(vector<vector<Vertex<T>*>> percursos) {
         pedido->getEstafeta()->setRepetido(false);
     }
 
-    Sleep(2000);
+    Sleep(2000);    // Concede tempo para o GraphViewer abrir
 
     string color;
     int num_percurso=1;
@@ -528,7 +525,7 @@ void showMultiplePathsGV(vector<vector<Vertex<T>*>> percursos) {
             if(num_percurso % 4 == 2) {color = "blue";}
             if(num_percurso % 4 == 3) {color = "green";}
             if(num_percurso % 4 == 0) {color = "orange";}
-            Sleep(750);
+            Sleep(750);     // Mostra o percurso construtivamente
             if (!isInPedidos(v[i+1]))
                 gv->setVertexColor(v[i+1]->getInfo(), color);
             for (Edge<int> edge : v[i]->getAdj()) {

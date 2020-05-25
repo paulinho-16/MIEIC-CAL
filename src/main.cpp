@@ -15,17 +15,7 @@ bool bidirectional_edges;
 
 void Menu_Principal();
 
-/*void Logotipo() {
-    cout << "        ______      _   ______" << endl;
-    cout << "       |  ____|    | | |  ____|" << endl;
-    cout << "       | |__   __ _| |_| |__  __  ___ __  _ __ ___  ___ ___" << endl;
-    cout << "       |  __| / _` | __|  __| \\ \\/ / '_ \\| '__/ _ \\/ __/ __|" << endl;
-    cout << "       | |___| (_| | |_| |____ >  <| |_) | | |  __/\\__ \\__ \\ " << endl;
-    cout << "       |______\\__,_|\\__|______/_/\\_\\ .__/|_|  \\___||___/___/" << endl;
-    cout << "                                   | |" << endl;
-    cout << "                                   |_|" << endl;
-}*/
-
+// Função que permite perguntar ao utilizador se deseja terminar o programa e obtém a sua resposta
 char Sair_Programa()
 {
     char sair;
@@ -37,13 +27,14 @@ char Sair_Programa()
     return sair;
 }
 
+// Menu que trata da análise da conetividade do grafo
 template <class T>
 void Menu_Conetividade() {
     system("CLS");
     Logotipo();
     cout << "\n\n\t\t     Menu da Conetividade do Grafo \n\n";
     cout<<"\nTesting Connectivity..."<<endl;
-    vector<Vertex<T>*> vec = Avaliar_Conetividade<int>(graph.getVertexSet()[0]); //devolve parte fortemente conexa do grafo a partir da casa dos estafetas
+    vector<Vertex<T>*> vec = Avaliar_Conetividade<int>(graph.getVertexSet()[0]);    // Devolve parte fortemente conexa do grafo a partir da casa dos estafetas
     if(vec.size()==graph.getVertexSet().size()){
         cout<<"Grafo fortemente conexo!"<<endl;
     }
@@ -60,6 +51,7 @@ void Menu_Conetividade() {
         Menu_Principal();
 }
 
+// Menu que trata da visualização do grafo que contém todos os dados da empresa (clientes, restaurantes e estafetas)
 void Menu_Visualizacao() {
     system("CLS");
     Logotipo();
@@ -76,6 +68,7 @@ void Menu_Visualizacao() {
         Menu_Principal();
 }
 
+// Menu que trata da visualização dos clientes da empresa
 template <class T>
 void Visualizar_Clientes() {
     system("CLS");
@@ -95,6 +88,7 @@ void Visualizar_Clientes() {
         Menu_Principal();
 }
 
+// Menu que trata da visualização dos restaurantes da empresa
 template <class T>
 void Visualizar_Restaurantes() {
     system("CLS");
@@ -114,6 +108,7 @@ void Visualizar_Restaurantes() {
         Menu_Principal();
 }
 
+// Menu que trata da visualização dos estafetas da empresa
 template <class T>
 void Visualizar_Estafetas() {
     system("CLS");
@@ -134,6 +129,7 @@ void Visualizar_Estafetas() {
         Menu_Principal();
 }
 
+// Menu que trata da visualização dos meios de transporte da empresa
 void Visualizar_Transportes() {
     system("CLS");
     Logotipo();
@@ -152,6 +148,7 @@ void Visualizar_Transportes() {
         Menu_Principal();
 }
 
+// Menu que trata da visualização dos dados da empresa (clientes, restaurantes e estafetas)
 void Menu_Visualizar_Dados() {
     system("CLS");
     Logotipo();
@@ -189,6 +186,7 @@ void Menu_Visualizar_Dados() {
         Menu_Principal();
 }
 
+// Menu que lista todas as fases do programa para atendimento de pedidos
 void Menu_Efetuar_Pedidos() {
     system("CLS");
     Logotipo();
@@ -228,6 +226,7 @@ void Menu_Efetuar_Pedidos() {
     }
 }
 
+// Função que trata da visualização do Menu Principal
 void Menu_Principal()
 {
     system("CLS");
@@ -265,6 +264,7 @@ void Menu_Principal()
     }
 }
 
+// Função que trata da visualização do Menu Mapas, onde são dados a escolher ao utilizador vários mapas
 template <class T>
 int Menu_Mapas() {
     system("CLS");

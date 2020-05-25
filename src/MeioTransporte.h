@@ -5,6 +5,7 @@
 
 using namespace std;
 
+// Classe que trata dos dados de cada meio de transporte da empresa
 class MeioTransporte {
     string nome;
     int velocidade;
@@ -13,11 +14,8 @@ public:
     MeioTransporte();
     MeioTransporte(string n, int v, int c);
     string getNome();
-    void setNome(string n);
     int getVelocidade();
-    void setVelocidade(int n);
     int getCapacidade();
-    void setCapacidade(int n);
 };
 
 #endif //CAL_FP05_MEIOTRANSPORTE_H

@@ -1,11 +1,12 @@
 #ifndef CAL_FP05_CLIENTE_H
 #define CAL_FP05_CLIENTE_H
 
-
 #include <string>
 
 using namespace std;
 
+
+        // Classe que trata dos dados de cada cliente da empresa
 template <class T>
 class Cliente {
     T morada;

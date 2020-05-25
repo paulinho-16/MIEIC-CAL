@@ -17,16 +17,10 @@ char Sair_Programa();
 
 template <class T>       // Algoritmo usado na fase 1 - Um único pedido para um único estafeta
 vector<Vertex<T>*> algFase1(Pedido<T>* pedido) {
-    //auto start = std::chrono::high_resolution_clock::now();
     graph.dijkstraShortestPath(pedido->getEstafeta()->getPos());
-    //auto finish = std::chrono::high_resolution_clock::now();
-    //auto mili = chrono::duration_cast<chrono::microseconds>(finish - start).count();
     vector<Vertex<T>*> estafeta_restaurante = graph.getPath(pedido->getEstafeta()->getPos(), pedido->getRestaurante()->getMorada());    // Contém o caminho mais curto entre a posição do estafeta e o restaurante
     graph.dijkstraShortestPath(pedido->getRestaurante()->getMorada());
-    //start = std::chrono::high_resolution_clock::now();
     vector<Vertex<T>*> restaurante_cliente = graph.getPath(pedido->getRestaurante()->getMorada(), pedido->getCliente()->getMorada());   // Contém o caminho mais curto entre o restaurante e o cliente
-    //finish = std::chrono::high_resolution_clock::now();
-    //mili = chrono::duration_cast<chrono::microseconds>(finish - start).count();
 
     restaurante_cliente.erase(restaurante_cliente.begin());     // Remove um vertex repetido (o restaurante)
     estafeta_restaurante.insert(estafeta_restaurante.end(), restaurante_cliente.begin(), restaurante_cliente.end());    // Une os dois vetores, pelo que estafeta_restaurante conterá o percurso mais curto
@@ -111,12 +105,6 @@ vector<Vertex<T>*> algFase2(Estafeta<T> *estafeta, vector<Pedido<T>*> pedidos) {
     }
 
     percurso.push_back(graph.findVertex(final));
-
-    // Apresenta na consola o percurso efetuado
-    /*cout << "\n Percurso Completo: \n\n";
-    for (Vertex<T>* vertex : percurso) {
-        cout << "Vertex " << vertex->getInfo() << " com POS (" << vertex->getLatitude() << ", " << vertex->getLongitude() << ")"<<endl;
-    }*/
 
     return percurso;
 }
@@ -209,8 +197,8 @@ vector<Vertex<T>*> algFase4(Estafeta<T> *estafeta, vector<Pedido<T>*> pedidos) {
 
 
 
-template <class T>      // Fase 1 - Um único estafeta um único pedido
-void Um_Estafeta_Um_Pedido() {      // Fase 1 - Um único pedido para um único estafeta
+template <class T>      // Fase 1 - Um único pedido para um único estafeta
+void Um_Estafeta_Um_Pedido() {
     system("CLS");
     Logotipo();
     cout << "\n\n\t\t     Atendimento de um unico Pedido por um unico Estafeta \n\n";
@@ -251,15 +239,15 @@ void Um_Estafeta_Um_Pedido() {      // Fase 1 - Um único pedido para um único 
     } while(n_estafeta < 1 || n_estafeta > eatExpress.getNumEstafetas());
     Estafeta<T>* estafeta = eatExpress.getEstafetas().at(n_estafeta-1);
 
-    // JA TEMOS O CLIENTE, RESTAURANTE E ESTAFETA, AGORA É IMPLEMENTAR O ALGORITMO - CHAMAR AQUI E FAZER EM FUNÇÃO DIFERENTE:
+    // Neste ponto, temos todos os dados de input, nomeadamente o cliente e restaurante introduzidos pelo utilizador e o estafeta que irá atender esse único pedido
 
+    // Contrução do pedido
     Pedido<T> *pedido = new Pedido<T>(cliente, restaurante);
     pedido->setEstafeta(estafeta);
     vector<Pedido<T>*> pedidos = {pedido};
     eatExpress.setPedidos(pedidos);
 
-    //VERIFICAR SE HÁ CAMINHO:
-
+    // Verificação se há caminho
     Vertex<T>* v_estafeta=graph.findVertex(estafeta->getPos());
     Vertex<T>* v_restaurante=graph.findVertex(restaurante->getMorada());
     Vertex<T>* v_cliente=graph.findVertex(cliente->getMorada());
@@ -339,9 +327,11 @@ void Um_Estafeta_Varios_Pedidos() {
     } while(n_estafeta < 1 || n_estafeta > eatExpress.getNumEstafetas());
     Estafeta<T>* estafeta = eatExpress.getEstafetas().at(n_estafeta-1);
 
-    // JA TEMOS A LISTA DE PEDIDOS E O ESTAFETA, AGORA É IMPLEMENTAR O ALGORITMO - CHAMAR AQUI E FAZER EM FUNÇÃO DIFERENTE
+    // Neste ponto, temos todos os dados de input, nomeadamente uma lista dos vários pedidos efetuados pelo utilizador e o estafeta que irá atender esses pedidos, escolhido por ele também
 
     estafeta_ativo = estafeta;
+
+    // Verificação se há caminho
 
     Vertex<T>* v_estafeta=graph.findVertex(estafeta->getPos());
     vector<Vertex<T>*> caminho_conexo = dfs(&graph,v_estafeta);
@@ -372,7 +362,7 @@ void Um_Estafeta_Varios_Pedidos() {
         pedido->setEstafeta(estafeta);
     }
 
-    showPathGV(percurso);
+    showPathGV(percurso);       // Mostra o percurso do estafeta
 
     char sair = Sair_Programa();
     if (sair == 'N' || sair == 'n')
@@ -430,7 +420,9 @@ void Varios_Estafetas_Sem_Carga() {
         ee++;
     }
 
-    /** JA TEMOS A LISTA DE PEDIDOS, AGORA É IMPLEMENTAR O ALGORITMO, OS ESTAFETAS SÃO ESCOLHIDOS POR UM CRITERIO - CHAMAR AQUI E FAZER EM FUNÇÃO DIFERENTE*/
+    // Neste ponto, temos todos os dados de input, nomeadamente a lista dos pedidos efetuados pelo utilizador
+
+    // Verificação se há caminhos possíveis
 
     vector<Vertex<T>*> percurso;        // Armazena o percurso de cada estafeta
     vector<vector<Vertex<T>*>> percursos;       // Lista dos percursos dos vários estafetas
@@ -451,10 +443,11 @@ void Varios_Estafetas_Sem_Carga() {
         }
     }
 
-    if(pedidos_impossiveis.size()!=0)
+    if(pedidos_impossiveis.size()!=0){
         cout<<"\nLamentamos, existem "<<pedidos_impossiveis.size()<<" pedidos que nao podem ser efetuados"<<endl;
-    for(Pedido<T>* ped : pedidos_impossiveis){
-        apagarPedido(ped,pedidos);
+        for(Pedido<T>* ped : pedidos_impossiveis){
+            apagarPedido(ped,pedidos);
+        }
     }
 
     eatExpress.setPedidos(pedidos);
@@ -498,7 +491,7 @@ void Varios_Estafetas_Sem_Carga() {
         }
     }
 
-    showMultiplePathsGV(percursos);
+    showMultiplePathsGV(percursos);     // Mostra os vários percursos dos estafetas
 
     char sair = Sair_Programa();
     if (sair == 'N' || sair == 'n')
@@ -549,7 +542,7 @@ void Varios_Estafetas_Com_Carga() {
         }
     } while (n_cliente != 0 && n_restaurante != 0);
 
-    // JA TEMOS A LISTA DE PEDIDOS, AGORA É IMPLEMENTAR O ALGORITMO, OS ESTAFETAS SÃO ESCOLHIDOS POR UM CRITERIO - CHAMAR AQUI E FAZER EM FUNÇÃO DIFERENTE
+    // Neste ponto, temos todos os dados de input, nomeadamente a lista de pedidos esfetuados pelo utilizador
 
     vector<Vertex<T>*> percurso;        // Armazena o percurso de cada estafeta
     vector<vector<Vertex<T>*>> percursos;       // Lista dos percursos dos vários estafetas
@@ -619,7 +612,7 @@ void Varios_Estafetas_Com_Carga() {
         }
     }
 
-    showMultiplePathsGV(percursos);
+    showMultiplePathsGV(percursos);     // Mostra os vários percursos dos estafetas
 
     char sair = Sair_Programa();
     if (sair == 'N' || sair == 'n')

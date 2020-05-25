@@ -4,6 +4,7 @@
 #include <string>
 using namespace std;
 
+// Classe que trata dos dados de cada restaurante da empresa
 template <class T>
 class Restaurante {
     string nome;
