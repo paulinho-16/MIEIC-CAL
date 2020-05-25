@@ -5,6 +5,7 @@
 
 using namespace std;
 
+// Classe que trata dos dados de cada estafeta da empresa
 template <class T>
 class Estafeta {
     string nome;

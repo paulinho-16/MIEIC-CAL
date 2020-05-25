@@ -9,6 +9,7 @@
 
 #include "Graph.h"
 
+// Classe que contém todos os dados da empresa, nomeadamente clientes, restaurantes, estafetas, pedidos ativos e transportes
 template <class T>
 class EatExpress {
     private:

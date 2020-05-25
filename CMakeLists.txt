@@ -27,13 +27,7 @@ set(PROJECT_HEADERS
         )
 set(PROJECT_SOURCES
         src/main.cpp
-        src/Cliente.cpp
-        src/EatExpress.cpp
-        src/Estafeta.cpp
         src/MeioTransporte.cpp
-        src/Menus.cpp
-        src/Pedido.cpp
-        src/Restaurante.cpp
         GraphViewerLib/connection.cpp
         GraphViewerLib/graphviewer.cpp
         src/Algoritmos.h src/AnaliseTempo.h)
