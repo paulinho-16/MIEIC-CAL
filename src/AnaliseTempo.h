@@ -150,6 +150,32 @@ void Tempo_Alg_1() {
 
     escrever << "7108" << ";" << elapsed*1000 << endl;
 
+    //-------------------------------         Para Mapa Penafiel NAO Conexo     ------------------------------------------
+    // Iniciar Grafo e Dados da EatExpress
+    bidirectional_edges = true;
+    readMap<T>("../maps/MapasNaoConexos/Penafiel");
+    Recolher_Info();
+
+    // Geração Random dos Pedidos
+    cliente_ind = rand() % eatExpress.getNumClientes();
+    restaurante_ind = rand() % eatExpress.getNumRestaurantes();
+    estafeta_ind = rand() % eatExpress.getNumEstafetas();
+    cliente = eatExpress.getClientes().at(cliente_ind);
+    restaurante = eatExpress.getRestaurantes().at(restaurante_ind);
+    pedido = new Pedido<int>(cliente, restaurante);
+    pedido->setEstafeta(eatExpress.getEstafetas().at(estafeta_ind));
+
+    // Medição do tempo do algoritmo
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    vetor = algFase1(pedido);
+    clock_gettime(CLOCK_MONOTONIC, &finish);
+
+    elapsed = (finish.tv_sec - start.tv_sec);
+    elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
+
+    escrever << "10365" << ";" << elapsed*1000 << endl;
+
+
     escrever.close();
 }
 
@@ -321,6 +347,38 @@ void Tempo_Alg_2() {
     elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
 
     escrever << "7108" << ";" << elapsed*1000 << endl;
+
+    //-------------------------------         Para Mapa Penafiel         ------------------------------------------
+    // Iniciar Grafo e Dados da EatExpress
+    pedidos.clear();
+    bidirectional_edges = true;
+    readMap<T>("../maps/MapasNaoConexos/Penafiel");
+    Recolher_Info();
+
+    // Criação de Pedidos Random
+    for (unsigned int i = 0 ; i < 10 ; i++) {
+        int estafeta_ind = rand() % eatExpress.getNumEstafetas();
+        estafeta_ativo = eatExpress.getEstafetas().at(estafeta_ind);
+        int cliente_ind = rand() % eatExpress.getNumClientes();
+        int restaurante_ind = rand() % eatExpress.getNumRestaurantes();
+        Cliente<T> *cliente = eatExpress.getClientes().at(cliente_ind);
+        Restaurante<T> *restaurante = eatExpress.getRestaurantes().at(restaurante_ind);
+        Pedido<T> *pedido = new Pedido<int>(cliente, restaurante);
+        pedido->setEstafeta(estafeta_ativo);
+        pedidos.push_back(pedido);
+    }
+    eatExpress.setPedidos(pedidos);
+
+
+    // Medição do tempo do algoritmo
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    vetor = algFase2(estafeta_ativo, eatExpress.getPedidos());
+    clock_gettime(CLOCK_MONOTONIC, &finish);
+
+    elapsed = (finish.tv_sec - start.tv_sec);
+    elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
+
+    escrever << "10365" << ";" << elapsed*1000 << endl;
 
     escrever.close();
 }
@@ -494,6 +552,38 @@ void Tempo_Alg_4() {
 
     escrever << "7108" << ";" << elapsed*1000 << endl;
 
+    //-------------------------------         Para Mapa Penafiel   nao conexo      ------------------------------------------
+    // Iniciar Grafo e Dados da EatExpress
+    pedidos.clear();
+    bidirectional_edges = true;
+    readMap<T>("../maps/MapasNaoConexos/Penafiel");
+    Recolher_Info();
+
+    // Criação de Pedidos Random
+    for (unsigned int i = 0 ; i < 10 ; i++) {
+        int estafeta_ind = rand() % eatExpress.getNumEstafetas();
+        estafeta_ativo = eatExpress.getEstafetas().at(estafeta_ind);
+        int cliente_ind = rand() % eatExpress.getNumClientes();
+        int restaurante_ind = rand() % eatExpress.getNumRestaurantes();
+        Cliente<T> *cliente = eatExpress.getClientes().at(cliente_ind);
+        Restaurante<T> *restaurante = eatExpress.getRestaurantes().at(restaurante_ind);
+        Pedido<T> *pedido = new Pedido<int>(cliente, restaurante);
+        pedido->setEstafeta(estafeta_ativo);
+        pedidos.push_back(pedido);
+    }
+    eatExpress.setPedidos(pedidos);
+
+
+    // Medição do tempo do algoritmo
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    vetor = algFase4(estafeta_ativo, eatExpress.getPedidos());
+    clock_gettime(CLOCK_MONOTONIC, &finish);
+
+    elapsed = (finish.tv_sec - start.tv_sec);
+    elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
+
+    escrever << "10365" << ";" << elapsed*1000 << endl;
+
     escrever.close();
 }
 
@@ -521,7 +611,7 @@ void Tempo_DFS() {
     elapsed = (finish.tv_sec - start.tv_sec);
     elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
 
-    escrever << "25" << ";" << elapsed*1000 << endl;
+    escrever << "25.0" << ";" << elapsed*1000 << endl;
 
     //-------------------------------         Para Grid 8x8         ------------------------------------------
     // Iniciar Grafo e Dados da EatExpress
@@ -537,7 +627,7 @@ void Tempo_DFS() {
     elapsed = (finish.tv_sec - start.tv_sec);
     elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
 
-    escrever << "81" << ";" << elapsed*1000 << endl;
+    escrever << "81.0" << ";" << elapsed*1000 << endl;
 
     //-------------------------------         Para Grid 16x16         ------------------------------------------
     // Iniciar Grafo e Dados da EatExpress
@@ -553,7 +643,7 @@ void Tempo_DFS() {
     elapsed = (finish.tv_sec - start.tv_sec);
     elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
 
-    escrever << "289" << ";" << elapsed*1000 << endl;
+    escrever << "289.0" << ";" << elapsed*1000 << endl;
 
     //-------------------------------         Para Mapa Penafiel         ------------------------------------------
     // Iniciar Grafo e Dados da EatExpress
@@ -569,7 +659,7 @@ void Tempo_DFS() {
     elapsed = (finish.tv_sec - start.tv_sec);
     elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
 
-    escrever << "3964" << ";" << elapsed*1000 << endl;
+    escrever << "3964.0" << ";" << elapsed*1000 << endl;
 
     //-------------------------------         Para Mapa Espinho         ------------------------------------------
     // Iniciar Grafo e Dados da EatExpress
@@ -585,7 +675,84 @@ void Tempo_DFS() {
     elapsed = (finish.tv_sec - start.tv_sec);
     elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
 
-    escrever << "7108" << ";" << elapsed*1000 << endl;
+    escrever << "7108.0" << ";" << elapsed*1000 << endl;
+
+    escrever.close();
+}
+
+template <class T>
+void Tempo_Avaliar_Conetividade() {
+    srand(time(NULL));
+    ofstream escrever;
+    escrever.open("GraficoConetividade.csv");
+    escrever << "vertex;time" << endl;
+
+    struct timespec start, finish;
+    double elapsed;
+
+    //-------------------------------         Para Grid 4x4         ------------------------------------------
+    // Iniciar Grafo e Dados da EatExpress
+    bidirectional_edges = true;
+    readMap<T>("../maps/GridGraphs/4x4");
+    Recolher_Info();
+
+    // Medição do tempo do algoritmo
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    vector<Vertex<T>*> vetor = Avaliar_Conetividade(graph.getVertexSet()[0]);
+    clock_gettime(CLOCK_MONOTONIC, &finish);
+
+    elapsed = (finish.tv_sec - start.tv_sec);
+    elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
+
+    escrever << "25.0" << ";" << elapsed*1000 << endl;
+
+    //-------------------------------         Para Grid 8x8         ------------------------------------------
+    // Iniciar Grafo e Dados da EatExpress
+    bidirectional_edges = true;
+    readMap<T>("../maps/GridGraphs/8x8");
+    Recolher_Info();
+
+    // Medição do tempo do algoritmo
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    vector<Vertex<T>*> vetor1 = Avaliar_Conetividade(graph.getVertexSet()[0]);
+    clock_gettime(CLOCK_MONOTONIC, &finish);
+
+    elapsed = (finish.tv_sec - start.tv_sec);
+    elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
+
+    escrever << "81.0" << ";" << elapsed*1000 << endl;
+
+    //-------------------------------         Para Grid 16x16         ------------------------------------------
+    // Iniciar Grafo e Dados da EatExpress
+    bidirectional_edges = true;
+    readMap<T>("../maps/GridGraphs/16x16");
+    Recolher_Info();
+
+    // Medição do tempo do algoritmo
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    vector<Vertex<T>*> vetor2 = Avaliar_Conetividade(graph.getVertexSet()[0]);
+    clock_gettime(CLOCK_MONOTONIC, &finish);
+
+    elapsed = (finish.tv_sec - start.tv_sec);
+    elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
+
+    escrever << "289.0" << ";" << elapsed*1000 << endl;
+
+    //-------------------------------         Para Mapa Penafiel         ------------------------------------------
+    // Iniciar Grafo e Dados da EatExpress
+    bidirectional_edges = false;
+    readMap<T>("../maps/MapasConexos/Penafiel");
+    Recolher_Info();
+
+    // Medição do tempo do algoritmo
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    vector<Vertex<T>*> vetor3 = Avaliar_Conetividade(graph.getVertexSet()[0]);
+    clock_gettime(CLOCK_MONOTONIC, &finish);
+
+    elapsed = (finish.tv_sec - start.tv_sec);
+    elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
+
+    escrever << "3964.0" << ";" << elapsed*1000 << endl;
 
     escrever.close();
 }
@@ -649,13 +816,81 @@ void Tempo_Dijkstra() {
     elapsed = (finish.tv_sec - start.tv_sec);
     elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
     escrever << "289" << ";" << elapsed*1000 << endl;
+
+    bidirectional_edges = false;
+    readMap<T>("../maps/MapasNaoConexos/Espinho");
+
+    // Medição do tempo do algoritmo
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    for (unsigned int i = 1 ; i <= 50 ; i++) {
+        Vertex<T> *src = graph.findVertex(rand() % graph.getNumVertex());
+        graph.dijkstraShortestPath(src->getInfo());
+    }
+
+    clock_gettime(CLOCK_MONOTONIC, &finish);
+
+    elapsed = (finish.tv_sec - start.tv_sec);
+    elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
+    escrever << "17772" << ";" << elapsed*1000 << endl;
+
+    bidirectional_edges = false;
+    readMap<T>("../maps/MapasNaoConexos/Penafiel");
+
+    // Medição do tempo do algoritmo
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    for (unsigned int i = 1 ; i <= 50 ; i++) {
+        Vertex<T> *src = graph.findVertex(rand() % graph.getNumVertex());
+        graph.dijkstraShortestPath(src->getInfo());
+    }
+
+    clock_gettime(CLOCK_MONOTONIC, &finish);
+
+    elapsed = (finish.tv_sec - start.tv_sec);
+    elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
+    escrever << "10365" << ";" << elapsed*1000 << endl;
+
+
+    bidirectional_edges = false;
+    readMap<T>("../maps/MapasConexos/Espinho");
+
+    // Medição do tempo do algoritmo
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    for (unsigned int i = 1 ; i <= 50 ; i++) {
+        Vertex<T> *src = graph.findVertex(rand() % graph.getNumVertex());
+        graph.dijkstraShortestPath(src->getInfo());
+    }
+
+    clock_gettime(CLOCK_MONOTONIC, &finish);
+
+    elapsed = (finish.tv_sec - start.tv_sec);
+    elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
+    escrever << "7108" << ";" << elapsed*1000 << endl;
+
+    /*bidirectional_edges = false;
+    readMap<T>("../maps/MapasConexos/Penafiel");
+
+    // Medição do tempo do algoritmo
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    for (unsigned int i = 1 ; i <= 50 ; i++) {
+        Vertex<T> *src = graph.findVertex(rand() % graph.getNumVertex());
+        graph.dijkstraShortestPath(src->getInfo());
+    }
+
+    clock_gettime(CLOCK_MONOTONIC, &finish);
+
+    elapsed = (finish.tv_sec - start.tv_sec);
+    elapsed += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
+    escrever << "3964" << ";" << elapsed*1000 << endl;*/
+
 }
 
+
 void Analise_Temporal() {
-    Tempo_DFS<int>();
-    Tempo_Dijkstra<int>();
-    Tempo_Alg_1<int>();
-    Tempo_Alg_2<int>();
+    //Tempo_DFS<int>();
+    //Tempo_Avaliar_Conetividade<int>();
+    //Tempo_Dijkstra<int>();
+    //Tempo_Alg_1<int>();
+    //Tempo_Alg_2<int>();
     Tempo_Alg_4<int>();
     system("pause");
 }
