@@ -24,13 +24,15 @@ void dfsVisit(Vertex<T> *v, std::vector<Vertex<T> *> & res) {
 template <class T>
 std::vector<Vertex<T> *> dfs(Graph<T> * graphh, Vertex<T> * initial) {
     vector<Vertex<T> *> res;
+    cout<<res.size()<<endl;
     for(auto vertex: graphh->getVertexSet()){
         vertex->visited=false;
     }
+    //cout<<"WTF"<<endl;
     dfsVisit(initial, res);
+
     return res;
 }
-
 template <class T>
 bool containsVertex(std::vector<Vertex<T> *> vectorVert, Vertex<T> * vert){
     for(auto v : vectorVert)
