@@ -252,11 +252,12 @@ void Um_Estafeta_Um_Pedido() {
     Vertex<T>* v_restaurante=graph.findVertex(restaurante->getMorada());
     Vertex<T>* v_cliente=graph.findVertex(cliente->getMorada());
 
-    vector<Vertex<T>*> caminho_conexo = dfs(&graph,v_estafeta);
+    vector<Vertex<T>*> caminho_conexo_e = dfs(&graph,v_estafeta);
+    vector<Vertex<T>*> caminho_conexo_r = dfs(&graph,v_restaurante);
 
     vector<Vertex<T>*> percurso;
 
-    if(!isIn(v_restaurante,caminho_conexo) || !isIn(v_cliente,caminho_conexo)){
+    if(!isIn(v_restaurante,caminho_conexo_e) || !isIn(v_cliente,caminho_conexo_r)){
         cout<<"Lamentamos, nao ha caminho para efetuar esse pedido."<<endl;
     }
     else{
@@ -334,7 +335,7 @@ void Um_Estafeta_Varios_Pedidos() {
     // Verificação se há caminho
 
     Vertex<T>* v_estafeta=graph.findVertex(estafeta->getPos());
-    vector<Vertex<T>*> caminho_conexo = dfs(&graph,v_estafeta);
+    vector<Vertex<T>*> caminho_conexo_e = dfs(&graph,v_estafeta);
     vector<Pedido<T>*> pedidos_impossiveis;
     vector<Vertex<T>*> percurso;
 
@@ -344,7 +345,8 @@ void Um_Estafeta_Varios_Pedidos() {
 
         Vertex<T>* v_restaurante=graph.findVertex(pedido->getRestaurante()->getMorada());
         Vertex<T>* v_cliente=graph.findVertex(pedido->getCliente()->getMorada());
-        if(!isIn(v_restaurante,caminho_conexo) || !isIn(v_cliente,caminho_conexo)){
+        vector<Vertex<T>*> caminho_conexo_r = dfs(&graph,v_restaurante);
+        if(!isIn(v_restaurante,caminho_conexo_e) || !isIn(v_cliente,caminho_conexo_r)){
             pedidos_impossiveis.push_back(pedido);
         }
     }
@@ -437,8 +439,9 @@ void Varios_Estafetas_Sem_Carga() {
         Vertex<T>* v_estafeta=graph.findVertex(pedido->getEstafeta()->getPos());
         Vertex<T>* v_restaurante=graph.findVertex(pedido->getRestaurante()->getMorada());
         Vertex<T>* v_cliente=graph.findVertex(pedido->getCliente()->getMorada());
-        vector<Vertex<T>*> caminho_conexo = dfs(&graph,v_estafeta);
-        if(!isIn(v_restaurante,caminho_conexo) || !isIn(v_cliente,caminho_conexo)){
+        vector<Vertex<T>*> caminho_conexo_e = dfs(&graph,v_estafeta);
+        vector<Vertex<T>*> caminho_conexo_r = dfs(&graph,v_restaurante);
+        if(!isIn(v_restaurante,caminho_conexo_e) || !isIn(v_cliente,caminho_conexo_r)){
             pedidos_impossiveis.push_back(pedido);
         }
     }
@@ -558,8 +561,9 @@ void Varios_Estafetas_Com_Carga() {
         Vertex<T>* v_estafeta=graph.findVertex(pedido->getEstafeta()->getPos());
         Vertex<T>* v_restaurante=graph.findVertex(pedido->getRestaurante()->getMorada());
         Vertex<T>* v_cliente=graph.findVertex(pedido->getCliente()->getMorada());
-        vector<Vertex<T>*> caminho_conexo = dfs(&graph,v_estafeta);
-        if(!isIn(v_restaurante,caminho_conexo) || !isIn(v_cliente,caminho_conexo)){
+        vector<Vertex<T>*> caminho_conexo_e = dfs(&graph,v_estafeta);
+        vector<Vertex<T>*> caminho_conexo_r = dfs(&graph,v_restaurante);
+        if(!isIn(v_restaurante,caminho_conexo_e) || !isIn(v_cliente,caminho_conexo_r)){
             pedidos_impossiveis.push_back(pedido);
         }
     }
