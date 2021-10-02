@@ -1,0 +1,29 @@
+8x8:
+    - Testar Conetividade
+
+    - Exemplos de casos da Fase 1: C - Joaquim, R - Ancora Mar, E - Ruben
+
+    - Exemplos de casos da Fase 2:
+ 	C - Manuel, R - Pizzaria Viana
+	C - Mariana, R - McDonalds		E - Luis Miguel
+	C - Antonio, R - Casa dos Frangos
+
+    - Exemplos de casos da Fase 3:
+	C - Joaquim, R - Pizzaria Viana
+	C - Antonio, R - Oceano				(Caso do mesmo cliente: C1 R7 C2 R8 C3 R7)
+	C - Mariana, R - Pizzaria Ramos
+
+    - Exemplos de casos da Fase 4:
+	C - Joaquim, R - Os Manos
+	C - Manuel, R - 100 Montaditos		(Para se notar capacidade. Testar o mesmo input na Fase 3 para comparar)
+	C - Antonio, R - BomApetite
+
+PERSONALIZADO:
+    - Caso de Caminho possível: C - Mariana, R - Oceano, E - Ze Carlos
+    - Caso de Caminho que não é possível: C - Manuel, R - Pizzaria Ramos, E - Filipe
+
+Mapa de Penafiel Não Conexo:
+   - Testar Conetividade
+
+Mapa de Penafiel Conexo:
+   - C - Mariana, R - Pizzaria Ramos, E - Raquel
