@@ -90,3 +90,8 @@ fabric.properties
 .idea/**/markdown-navigator/
 
 # End of https://www.gitignore.io/api/clion
+
+# CLion
+.idea/
+lib/
+desktop.ini
